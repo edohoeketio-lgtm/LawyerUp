@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function OTPPage() {
+    const router = useRouter();
     const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
     const [timeLeft, setTimeLeft] = useState(299); // 4:59 in seconds
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -92,8 +94,8 @@ export default function OTPPage() {
                                     onKeyDown={(e) => handleKeyDown(e, index)}
                                     onPaste={handlePaste}
                                     className={`h-16 w-14 rounded-xl border text-center text-3xl font-normal outline-none transition-all duration-200 ${digit
-                                            ? "border-[#013328] text-[#013328] bg-white"
-                                            : "border-gray-200 bg-white text-gray-900"
+                                        ? "border-[#013328] text-[#013328] bg-white"
+                                        : "border-gray-200 bg-white text-gray-900"
                                         } focus:border-[#013328] focus:ring-1 focus:ring-[#013328] focus:ring-offset-0`}
                                 />
                             ))}
@@ -114,8 +116,8 @@ export default function OTPPage() {
                                     onKeyDown={(e) => handleKeyDown(e, index + 3)}
                                     onPaste={handlePaste}
                                     className={`h-16 w-14 rounded-xl border text-center text-3xl font-normal outline-none transition-all duration-200 ${digit
-                                            ? "border-[#013328] text-[#013328] bg-white"
-                                            : "border-gray-200 bg-white text-gray-900"
+                                        ? "border-[#013328] text-[#013328] bg-white"
+                                        : "border-gray-200 bg-white text-gray-900"
                                         } focus:border-[#013328] focus:ring-1 focus:ring-[#013328] focus:ring-offset-0`}
                                 />
                             ))}
@@ -133,6 +135,7 @@ export default function OTPPage() {
 
                     <button
                         disabled={!isComplete}
+                        onClick={() => router.push("/welcome")}
                         className={`w-full rounded-lg py-4 text-sm font-medium text-white transition-all duration-200 ${isComplete ? "bg-[#013328] shadow-lg hover:bg-[#012a2b] hover:shadow-xl" : "bg-[#8CA39D] cursor-not-allowed opacity-80"
                             }`}
                     >
@@ -143,3 +146,5 @@ export default function OTPPage() {
         </main>
     );
 }
+
+
