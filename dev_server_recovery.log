@@ -1,0 +1,1445 @@
+
+> temp_app@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.8 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.10.13:3000
+
+ ✓ Starting...
+ ✓ Ready in 614ms
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/static/development/_buildManifest.js.tmp.8yw4dntdcpx'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/static/development/_buildManifest.js.tmp.8yw4dntdcpx'
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /Users/sk/Documents/LawyerUp/.next/dev/server/pages/_document.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/require.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/load-components.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/utils.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/options.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/index.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/dev/server/pages/_document.js:1:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /Users/sk/Documents/LawyerUp/.next/dev/server/pages/_document.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/require.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/load-components.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/utils.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/options.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/index.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/dev/server/pages/_document.js:1:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /Users/sk/Documents/LawyerUp/.next/dev/server/pages/_document.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/require.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/load-components.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/utils.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/options.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/index.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/dev/server/pages/_document.js:1:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /Users/sk/Documents/LawyerUp/.next/dev/server/pages/_document.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/require.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/load-components.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/utils.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/options.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/index.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/dev/server/pages/_document.js:1:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: Cannot find module '../chunks/ssr/[turbopack]_runtime.js'
+Require stack:
+- /Users/sk/Documents/LawyerUp/.next/dev/server/pages/_document.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/require.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/load-components.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/utils.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/options.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/swc/index.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/config.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at Object.<anonymous> (.next/dev/server/pages/_document.js:1:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+ GET /signup 500 in 2.2s (compile: 2.2s, render: 15ms)
+ GET /signup 500 in 2.2s (compile: 2.2s, render: 15ms)
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+ GET / 500 in 2.2s (compile: 2.2s, render: 11ms)
+ GET / 500 in 2.2s (compile: 2.2s, render: 11ms)
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+ GET /client 500 in 2.2s (compile: 2.2s, render: 11ms)
+ GET /client 500 in 2.2s (compile: 2.2s, render: 11ms)
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/signup/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/client/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+[?25h

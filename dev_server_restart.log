@@ -1,0 +1,218 @@
+
+> temp_app@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.8 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.10.13:3000
+
+ ✓ Starting...
+ ✓ Ready in 670ms
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/static/development/_buildManifest.js.tmp.i5efm6i4n2'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/static/development/_buildManifest.js.tmp.i5efm6i4n2'
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+ GET / 500 in 2.6s (compile: 2.6s, render: 12ms)
+ GET / 500 in 2.6s (compile: 2.6s, render: 14ms)
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/routes-manifest.json'
+}
+ GET / 500 in 104ms (compile: 95ms, render: 9ms)
+ GET / 500 in 104ms (compile: 95ms, render: 9ms)
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/app/page/build-manifest.json'
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ GET /signup 500 in 293ms
+ GET /signup 500 in 293ms
+ ⨯ Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: Cannot find module '/Users/sk/Documents/LawyerUp/.next/dev/server/middleware-manifest.json'
+Require stack:
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/dev/next-dev-server.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/next.js
+- /Users/sk/Documents/LawyerUp/node_modules/next/dist/server/lib/start-server.js
+    at ignore-listed frames {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+Error: ENOENT: no such file or directory, open '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+    at ignore-listed frames {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/sk/Documents/LawyerUp/.next/dev/server/pages/_app/build-manifest.json'
+}
+ GET /signup 500 in 76ms
+ GET /signup 500 in 77ms
+[?25h
