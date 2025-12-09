@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function OTPPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const name = searchParams.get("name");
     const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
     const [timeLeft, setTimeLeft] = useState(299); // 4:59 in seconds
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -135,7 +137,10 @@ export default function OTPPage() {
 
                     <button
                         disabled={!isComplete}
-                        onClick={() => router.push("/welcome")}
+                        onClick={() => {
+                            const redirectUrl = name ? `/welcome?name=${encodeURIComponent(name)}` : "/welcome";
+                            router.push(redirectUrl);
+                        }}
                         className={`w-full rounded-lg py-4 text-sm font-medium text-white transition-all duration-200 ${isComplete ? "bg-[#013328] shadow-lg hover:bg-[#012a2b] hover:shadow-xl" : "bg-[#8CA39D] cursor-not-allowed opacity-80"
                             }`}
                     >

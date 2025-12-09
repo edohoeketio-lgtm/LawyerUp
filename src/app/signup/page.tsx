@@ -90,7 +90,8 @@ export default function SignupPage() {
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 2000));
 
-            router.push("/otp");
+            const encodedName = encodeURIComponent(formData.name);
+            router.push(`/otp?name=${encodedName}`);
         }
     };
 

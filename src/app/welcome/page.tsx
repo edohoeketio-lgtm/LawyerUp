@@ -1,41 +1,48 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { PartyPopper } from "lucide-react";
 
 export default function WelcomePage() {
-    return (
-        <main className="flex min-h-screen items-center justify-center bg-[#F2FFF2] p-4 text-center">
-            <div className="w-full max-w-md space-y-8">
-                <div className="space-y-4">
-                    <p className="font-sans text-xs font-bold tracking-widest text-gray-500 uppercase">
-                        Welcome Nsikan
-                    </p>
+    const searchParams = useSearchParams();
+    const name = searchParams.get("name") || "";
+    const nameDisplay = name ? ` ${name.toUpperCase()}` : "";
+    const profileSetupUrl = name ? `/profile-setup?name=${encodeURIComponent(name)}` : "/profile-setup";
 
-                    <div className="flex flex-col items-center justify-center gap-2">
-                        <div className="flex items-center justify-center gap-3">
-                            <span className="text-4xl">🎉</span>
-                            <h1 className="font-serif text-4xl text-[#013328]">
-                                Your Account is Ready!
-                            </h1>
-                        </div>
-                        <p className="font-sans text-sm text-gray-600 max-w-sm mx-auto">
-                            You’re all set to connect with top legal minds. What’s next?
-                        </p>
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-center bg-white p-4 text-center">
+            <div className="max-w-md space-y-6">
+                {/* Celebration Icon */}
+                <div className="flex justify-center">
+                    <div className="rounded-full bg-green-50 p-6">
+                        <PartyPopper size={48} className="text-[#013328]" />
                     </div>
                 </div>
 
-                <div className="space-y-3 pt-4">
+                <div className="space-y-4">
+                    <p className="font-serif text-sm tracking-widest text-[#013328] uppercase">
+                        WELCOME{nameDisplay}
+                    </p>
+                    <h1 className="font-serif text-4xl text-black">
+                        🎉 Your Account is Ready!
+                    </h1>
+                    <p className="font-sans text-sm text-gray-500">
+                        We&apos;re excited to have you. You can verify your profile now or explore available lawyers.
+                    </p>
+                </div>
+
+                <div className="space-y-3 pt-8">
                     <Link
                         href="/"
-                        className="block w-full rounded-lg bg-[#013328] py-4 text-sm font-medium text-white shadow-lg transition-all hover:bg-[#012a2b] hover:shadow-xl"
+                        className="block w-full rounded-lg bg-[#013328] py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#012a2b] shadow-lg hover:shadow-xl"
                     >
-                        Explore Lawyer Up
+                        Explore LawyerUp
                     </Link>
 
                     <Link
-                        href="/profile-setup"
-                        className="block w-full rounded-lg border border-transparent py-4 text-sm font-medium text-[#013328] transition-colors hover:bg-[#013328]/5"
+                        href={profileSetupUrl}
+                        className="block w-full rounded-lg py-4 text-sm font-medium text-gray-500 transition-colors hover:text-black hover:bg-gray-50"
                     >
                         Complete my profile
                     </Link>
