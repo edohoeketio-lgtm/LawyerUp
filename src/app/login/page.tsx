@@ -14,6 +14,7 @@ export default function LoginPage() {
 
     const searchParams = useSearchParams(); // Added
     const success = searchParams.get("success"); // Added
+    const router = useRouter();
 
     const isValid = formData.email.trim() !== "" && formData.password.trim() !== "";
 
@@ -22,9 +23,20 @@ export default function LoginPage() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (isValid) {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            // Redirect to Dashboard
+            router.push("/dashboard");
+        }
+    };
+
     return (
         <main className="relative flex min-h-screen items-center justify-center bg-white p-4">
-            {/* Success Banner */}
+            {/* Success Banner (from Password Update) */}
             {success && (
                 <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-md animate-in fade-in slide-in-from-top-4 duration-500">
                     <div className="mx-4 flex items-center justify-center gap-2 rounded-lg bg-[#D1FADF] px-4 py-3 text-sm font-medium text-[#006056] shadow-sm ring-1 ring-[#006056]/10">
@@ -47,7 +59,7 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-gray-500">
                             Email Address
@@ -93,7 +105,7 @@ export default function LoginPage() {
                     </div>
 
                     <button
-                        type="button"
+                        type="submit"
                         disabled={!isValid}
                         className={`w-full rounded-lg py-3 text-sm font-medium text-white transition-colors ${isValid ? "bg-[#013328] hover:bg-[#012a2b]" : "bg-[#9CAFA9] cursor-not-allowed"
                             }`}
