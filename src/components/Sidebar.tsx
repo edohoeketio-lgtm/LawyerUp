@@ -80,8 +80,17 @@ export default function Sidebar() {
             {/* User Profile Snippet (Bottom) */}
             <div className="mt-auto border-t border-white/10 p-4">
                 <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 flex-shrink-0 rounded-full bg-white/10 p-1">
-                        <img src="/avatars/user_placeholder.png" alt="User" className="h-full w-full rounded-full object-cover" />
+                    <div className="relative h-10 w-10 flex-shrink-0">
+                        <img
+                            src="/avatars/user_dp.png"
+                            alt="User"
+                            className="h-full w-full rounded-full object-cover"
+                        />
+                        <img
+                            src="/icons/status_blob.png"
+                            alt="Online"
+                            className="absolute -bottom-1 -right-1 h-4 w-4"
+                        />
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <p className="truncate text-sm font-medium text-white">Nsikan Etukudoh</p>
