@@ -1,13 +1,18 @@
 "use client";
 
 import { Bell, Calendar } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 
 export default function TopBar() {
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentView = searchParams.get("view") || "client";
+
+    const isDiscover = pathname === "/dashboard/discover" || pathname?.startsWith("/dashboard/lawyer");
+    const title = isDiscover ? "Discover" : "Home";
+    const iconSrc = isDiscover ? "/icons/discover.svg" : "/icons/home.svg";
 
     const setView = (view: string) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -18,16 +23,16 @@ export default function TopBar() {
     return (
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-[#E4E7EC] bg-white px-8">
             <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
+                <div className="flex items-center justify-center">
                     <Image
-                        src="/icons/home_icon.png"
-                        alt="Home"
+                        src={iconSrc}
+                        alt={title}
                         width={24}
                         height={24}
-                        className="h-6 w-6 object-contain"
+                        className={`h-6 w-6 object-contain ${isDiscover ? "brightness-0" : ""}`}
                     />
                 </div>
-                <h1 className="font-serif text-xl font-medium text-black">Home</h1>
+                <h1 className="font-serif text-xl font-medium text-black">{title}</h1>
             </div>
 
             <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-1">

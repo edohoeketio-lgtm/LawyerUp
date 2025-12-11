@@ -1,3 +1,21 @@
+export interface Review {
+    id: string;
+    userName: string;
+    userInitial: string;
+    userColor: string;
+    rating: number;
+    timeAgo: string;
+    tag: "Legal advice" | "Mentorship";
+    content: string;
+}
+
+export interface Achievement {
+    id: string;
+    title: string;
+    iconType: "consultation_blue" | "mentorship_red" | "consultation_green" | "mentorship_orange" | "consultation_purple" | "consultation_gold" | "session_blue";
+    date: string;
+}
+
 export interface Lawyer {
     id: string;
     name: string;
@@ -28,6 +46,8 @@ export interface Lawyer {
         school: string;
         period: string;
     }[];
+    reviews?: Review[];
+    achievements?: Achievement[];
 }
 
 const baseLawyers: Lawyer[] = [
@@ -42,16 +62,103 @@ const baseLawyers: Lawyer[] = [
         stats: { sessions: 71, reviews: 55, consultationMinutes: 1392, mentoringMinutes: 691 },
         tags: ["Business", "Corporate"],
         consultationPrice: 100,
-        mentorshipPrice: 80,
+        mentorshipPrice: 150,
         bio: "With over a decade of experience in criminal defense, I specialize in helping individuals navigate complex legal situations.",
-        languages: ["English", "Spanish"],
+        languages: ["English", "Spanish", "French"],
         experience: [
-            { role: "Senior Defense Attorney", company: "Jenkins & Co", period: "2018 - Present" },
-            { role: "Legal Consultant", company: "Freelance", period: "2015 - 2018" }
+            { role: "Senior Attorney", company: "Legal Partners", period: "2018 - Present" },
+            { role: "Junior Associate", company: "Law Firm Co.", period: "2015 - 2018" }
         ],
         education: [
-            { degree: "Juris Doctor (J.D.)", school: "Harvard Law School", period: "2010 - 2013" },
-            { degree: "Bachelor of Laws", school: "University of California", period: "2006 - 2010" }
+            { degree: "J.D.", school: "Harvard Law School", period: "2012 - 2015" },
+            { degree: "B.A. Political Science", school: "Yale University", period: "2008 - 2012" }
+        ],
+        reviews: [
+            {
+                id: "1",
+                userName: "Esther H.",
+                userInitial: "E",
+                userColor: "bg-orange-600",
+                rating: 5,
+                timeAgo: "1 day",
+                tag: "Legal advice",
+                content: "Extremely knowledgeable and reassuring. She explained everything clearly and gave me a solid plan of action. Highly recommended!"
+            },
+            {
+                id: "2",
+                userName: "Mark D.",
+                userInitial: "M",
+                userColor: "bg-blue-600",
+                rating: 4,
+                timeAgo: "3 days",
+                tag: "Mentorship",
+                content: "Great session. Sarah is very experienced and gave me good career advice. A bit pricey, but worth it."
+            },
+            {
+                id: "3",
+                userName: "Sarah J.",
+                userInitial: "S",
+                userColor: "bg-green-600",
+                rating: 5,
+                timeAgo: "1 week",
+                tag: "Legal advice",
+                content: "I was so stressed about my case, but Sarah calmed me down immediately. She knows her stuff!"
+            },
+            {
+                id: "4",
+                userName: "Daniel T.",
+                userInitial: "D",
+                userColor: "bg-red-600",
+                rating: 4,
+                timeAgo: "3 weeks",
+                tag: "Mentorship",
+                content: "Helped prep me for mock trial. Built my confidence and voice. Excellent feedback style, though we started a bit late."
+            },
+            {
+                id: "5",
+                userName: "Chukwudi E.",
+                userInitial: "C",
+                userColor: "bg-purple-600",
+                rating: 5,
+                timeAgo: "1 month",
+                tag: "Legal advice",
+                content: "Resolved a tricky ecommerce issue. Told me what rights I actually had. Sharp and fast response."
+            },
+            {
+                id: "6",
+                userName: "Helen L.",
+                userInitial: "H",
+                userColor: "bg-gray-600",
+                rating: 3,
+                timeAgo: "2 months",
+                tag: "Mentorship",
+                content: "Gave clarity on the land ownership issue, but I felt the session was a bit rushed compared to what I expected."
+            },
+            {
+                id: "7",
+                userName: "Amaka N.",
+                userInitial: "A",
+                userColor: "bg-blue-800",
+                rating: 5,
+                timeAgo: "2 months",
+                tag: "Legal advice",
+                content: "Straightforward and encouraging. He shared tips I never got in school. A mentor you can trust"
+            },
+            {
+                id: "8",
+                userName: "Travis W.",
+                userInitial: "T",
+                userColor: "bg-orange-600",
+                rating: 2,
+                timeAgo: "3 months",
+                tag: "Legal advice",
+                content: "He knows his stuff, but I didn't feel fully listened to during the beginning of the consultation."
+            }
+        ],
+        achievements: [
+            { id: "1", iconType: "consultation_blue", title: "100 Consultation minutes", date: "Jan 2024" },
+            { id: "2", iconType: "mentorship_red", title: "50 Mentorship sessions", date: "Feb 2024" },
+            { id: "3", iconType: "consultation_green", title: "Top Rated Lawyer 2023", date: "Mar 2024" }
         ]
     },
     {

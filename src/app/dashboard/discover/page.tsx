@@ -20,18 +20,6 @@ export default function DiscoverPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h2 className="font-serif text-3xl font-medium text-black">Discover</h2>
-                <div className="flex gap-2">
-                    <button className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Top Rated
-                    </button>
-                    <button className="flex items-center gap-2 rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
-                        Book a session
-                    </button>
-                </div>
-            </div>
-
             {/* Search and Filter Bar */}
             <div className="flex flex-col gap-4 sm:flex-row">
                 <div className="relative flex-1">

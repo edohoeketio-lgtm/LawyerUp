@@ -1,18 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
     const pathname = usePathname();
 
     const navItems = [
-        { iconSrc: "/icons/home.png", label: "Home", href: "/dashboard" },
-        { iconSrc: "/icons/bookmarks.png", label: "Discover", href: "/dashboard/discover" },
-        { iconSrc: "/icons/account.png", label: "Forum", href: "/dashboard/forum" },
-        { iconSrc: "/icons/forum.png", label: "Bookings", href: "/dashboard/bookings" },
-        { iconSrc: "/icons/bookings.png", label: "Bookmarks", href: "/dashboard/bookmarks" },
-        { iconSrc: "/icons/discover.png", label: "Account", href: "/dashboard/account" },
+        { iconSrc: "/icons/home.svg", label: "Home", href: "/dashboard" },
+        { iconSrc: "/icons/discover.svg", label: "Discover", href: "/dashboard/discover" },
+        { iconSrc: "/icons/forum.svg", label: "Forum", href: "/dashboard/forum" },
+        { iconSrc: "/icons/bookings.svg", label: "Bookings", href: "/dashboard/bookings" },
+        { iconSrc: "/icons/bookmarks.svg", label: "Bookmarks", href: "/dashboard/bookmarks" },
+        { iconSrc: "/icons/account.svg", label: "Account", href: "/dashboard/account" },
     ];
 
     return (
@@ -31,20 +32,13 @@ export default function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 space-y-1 px-3 py-6">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    if (item.label === "Discover") { // Apply specific changes for Discover
-                        return (
-                            <Link
-                                key={item.href}
-                                href="/dashboard/discover"
-                                className={`flex items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors ${isActive ? "bg-[#e0e7ff] text-[#006056]" : "text-gray-500 hover:bg-gray-100 hover:text-black"
-                                    }`}
-                            >
-                                <Image src="/icons/compass_icon.png" alt="Discover" width={20} height={20} />
-                                Discover
-                            </Link>
-                        );
+                    let isActive = pathname === item.href;
+
+                    // Special case: Keep "Discover" active when viewing a lawyer profile
+                    if (item.label === "Discover" && pathname?.startsWith("/dashboard/lawyer/")) {
+                        isActive = true;
                     }
+
                     return (
                         <Link
                             key={item.href}
@@ -55,9 +49,11 @@ export default function Sidebar() {
                                 }`}
                         >
                             {item.iconSrc ? (
-                                <img
+                                <Image
                                     src={item.iconSrc}
                                     alt={item.label}
+                                    width={20}
+                                    height={20}
                                     className="h-5 w-5 object-contain"
                                 />
                             ) : (
