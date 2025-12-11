@@ -32,6 +32,19 @@ export default function Sidebar() {
             <nav className="flex-1 space-y-1 px-3 py-6">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
+                    if (item.label === "Discover") { // Apply specific changes for Discover
+                        return (
+                            <Link
+                                key={item.href}
+                                href="/dashboard/discover"
+                                className={`flex items-center gap-3 rounded-lg px-4 py-3 font-medium transition-colors ${isActive ? "bg-[#e0e7ff] text-[#006056]" : "text-gray-500 hover:bg-gray-100 hover:text-black"
+                                    }`}
+                            >
+                                <Image src="/icons/compass_icon.png" alt="Discover" width={20} height={20} />
+                                Discover
+                            </Link>
+                        );
+                    }
                     return (
                         <Link
                             key={item.href}
@@ -86,11 +99,9 @@ export default function Sidebar() {
                             alt="User"
                             className="h-full w-full rounded-full object-cover"
                         />
-                        <img
-                            src="/icons/status_blob.png"
-                            alt="Online"
-                            className="absolute -bottom-1 -right-1 h-4 w-4"
-                        />
+                        <div
+                            className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#013328] ${true ? "bg-green-500" : "bg-red-500"}`} // Toggle true/false here to test
+                        ></div>
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <p className="truncate text-sm font-medium text-white">Nsikan Etukudoh</p>

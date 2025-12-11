@@ -1,12 +1,45 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Check, ArrowRight, UserPlus, FileText, Clock, ChevronRight, ChevronLeft } from "lucide-react";
+import { lawyers } from "@/data/lawyers";
+import LawyerCard from "@/components/LawyerCard";
 
 export default function DashboardPage() {
     const searchParams = useSearchParams();
     const view = searchParams?.get("view") || "client"; // 'client' (Legal Advice) or 'lawyer' (Mentorship)
     const isLawyerView = view === "lawyer";
+
+    // Calendar State
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    // Calendar Helpers
+    const getWeekDays = (date: Date) => {
+        const start = new Date(date);
+        start.setDate(start.getDate() - start.getDay()); // Start on Sunday
+        return Array.from({ length: 7 }, (_, i) => {
+            const d = new Date(start);
+            d.setDate(d.getDate() + i);
+            return d;
+        });
+    };
+
+    const weekDays = getWeekDays(currentDate);
+    const startOfWeek = weekDays[0];
+    const endOfWeek = weekDays[6];
+
+    const formatDateRange = (start: Date, end: Date) => {
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+        return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
+    };
+
+    const navigateWeek = (direction: 'prev' | 'next') => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + (direction === 'next' ? 7 : -7));
+        setCurrentDate(newDate);
+    };
 
     return (
         <div className="space-y-8">
@@ -68,7 +101,7 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Upcoming Sessions */}
+            {/* Upcoming Sessions (Interactive Calendar) */}
             <div>
                 <div className="mb-4 flex items-center justify-between">
                     <h3 className="font-serif text-lg text-black">Upcoming Sessions</h3>
@@ -79,25 +112,48 @@ export default function DashboardPage() {
 
                 <div className="rounded-xl border border-gray-100 bg-white p-6">
                     <div className="mb-6 flex items-center justify-between text-black">
-                        <button className="rounded-full bg-gray-50 p-2 hover:bg-gray-100"><ChevronLeft size={16} /></button>
-                        <span className="font-medium">15 Dec - 21 Dec</span>
-                        <button className="rounded-full bg-gray-50 p-2 hover:bg-gray-100"><ChevronRight size={16} /></button>
+                        <button
+                            onClick={() => navigateWeek('prev')}
+                            className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
+                        >
+                            <ChevronLeft size={16} />
+                        </button>
+                        <span className="font-medium">{formatDateRange(startOfWeek, endOfWeek)}</span>
+                        <button
+                            onClick={() => navigateWeek('next')}
+                            className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
+                        >
+                            <ChevronRight size={16} />
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-7 text-center">
-                        {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((day, i) => (
-                            <div key={day} className="space-y-2">
-                                <span className="text-xs font-medium text-gray-400">{day}</span>
-                                <div className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm ${i === 1 ? "font-bold text-black" : "text-gray-400"}`}>
-                                    {15 + i}
+                        {weekDays.map((day, i) => {
+                            const isToday = new Date().toDateString() === day.toDateString();
+
+                            return (
+                                <div key={i} className="space-y-2">
+                                    <span className={`text-xs font-medium ${isToday ? "text-green-700" : "text-gray-400"}`}>
+                                        {day.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}
+                                    </span>
+                                    <div
+                                        className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm
+                                            ${isToday
+                                                ? "bg-green-50 text-green-700 font-bold"
+                                                : "text-gray-400"
+                                            }
+                                        `}
+                                    >
+                                        {day.getDate()}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     <div className="mt-8 text-center">
                         <p className="text-xs text-gray-400">
-                            No upcoming sessions this week <a href="#" className="font-medium text-[#006056] underline">Book a session</a>
+                            No upcoming sessions this week <a href="#" className="font-medium text-[#006056] underline hover:text-[#004d45]">Book a session</a>
                         </p>
                     </div>
                 </div>
@@ -107,29 +163,14 @@ export default function DashboardPage() {
             <div>
                 <div className="mb-4 flex items-center justify-between">
                     <h3 className="font-serif text-lg text-black">Suggested Lawyers</h3>
-                    <button className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
+                    <Link href="/dashboard/discover" className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
                         Explore Lawyers <ArrowRight size={14} />
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-100">
-                            <div className="aspect-[4/5] bg-gray-200"></div> {/* Placeholder Image */}
-                            <div className="p-3">
-                                <h4 className="font-medium text-black text-sm mb-1">Lawyer Name {i}</h4>
-                                <p className="text-[10px] text-gray-500 flex items-center gap-1">
-                                    <FileText size={10} /> Criminal Defense
-                                </p>
-                                <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-1">
-                                    <Clock size={10} /> 71 sessions (55 reviews)
-                                </p>
-                                <div className="mt-2 flex gap-1">
-                                    <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600">Business</span>
-                                    <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-600">+3</span>
-                                </div>
-                            </div>
-                        </div>
+                    {lawyers.slice(0, 5).map((lawyer) => (
+                        <LawyerCard key={lawyer.id} lawyer={lawyer} />
                     ))}
                 </div>
             </div>
