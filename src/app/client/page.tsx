@@ -26,7 +26,7 @@ export default function ClientPage() {
                 </h1>
                 <div className="flex justify-center pt-8">
                     <div className="flex flex-col items-center gap-2 animate-pulse">
-                        <img
+                        <Image
                             src="/logo.svg"
                             alt="Lawyer Up Logo"
                             width={60}

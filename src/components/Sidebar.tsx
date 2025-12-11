@@ -48,17 +48,13 @@ export default function Sidebar() {
                                 : "text-white hover:bg-white/5"
                                 }`}
                         >
-                            {item.iconSrc ? (
-                                <Image
-                                    src={item.iconSrc}
-                                    alt={item.label}
-                                    width={20}
-                                    height={20}
-                                    className="h-5 w-5 object-contain"
-                                />
-                            ) : (
-                                <item.icon className="h-5 w-5" />
-                            )}
+                            <Image
+                                src={item.iconSrc}
+                                alt={item.label}
+                                width={20}
+                                height={20}
+                                className="h-5 w-5 object-contain"
+                            />
                             {item.label}
                         </Link>
                     );

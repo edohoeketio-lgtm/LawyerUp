@@ -5,11 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
-    ChevronLeft, MoreHorizontal, Globe, Linkedin, Clock, CheckCircle,
-    Award, ArrowLeft, ArrowRight, Book, Star, Search, ChevronDown,
-    Medal, MessageSquare, MessageCircle, Hexagon, ExternalLink, Info
+    ChevronLeft, MoreHorizontal, Globe, Linkedin,
+    ArrowLeft, ArrowRight, Star, ChevronDown, Clock,
+    Medal, ExternalLink, Info, Award
 } from "lucide-react";
-import { getLawyerById, Lawyer, Review, Achievement } from "@/data/lawyers";
+import { getLawyerById, Lawyer } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
 import BookingModal from "@/components/BookingModal";
 import { lawyers } from "@/data/lawyers";
@@ -44,8 +44,8 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
             {/* Header Profile Card */}
             <div className="rounded-xl border border-gray-100 bg-white p-6 md:flex md:items-start md:justify-between">
                 <div className="flex gap-6">
-                    <div className="h-24 w-24 overflow-hidden rounded-full ring-4 ring-gray-50">
-                        <img src={lawyer.image} alt={lawyer.name} className="h-full w-full object-cover" />
+                    <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-gray-50">
+                        <Image src={lawyer.image} alt={lawyer.name} fill className="object-cover" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
@@ -228,7 +228,8 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
     );
 }
 
-function OverviewTab({ lawyer, similarLawyers, setActiveTab }: { lawyer: Lawyer, similarLawyers: Lawyer[], setActiveTab: (tab: string) => void }) {
+function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyers: Lawyer[], activeTab?: string, setActiveTab: (tab: string) => void }) {
+    // Note: setActiveTab kept in interface for compatibility
     const [showRepInfo, setShowRepInfo] = useState(false);
     return (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -576,7 +577,7 @@ function ReviewsTab({ lawyer }: { lawyer: Lawyer }) {
                         </div>
                         <div className="space-y-4 text-sm text-gray-600">
                             <p>
-                                At LawyerUp, we take trust seriously. Here's how our review process works to ensure authenticity:
+                                At LawyerUp, we take trust seriously. Here&apos;s how our review process works to ensure authenticity:
                             </p>
                             <ul className="list-disc pl-5 space-y-2">
                                 <li><strong>Verified Sessions Only:</strong> Reviews can only be submitted by clients who have completed a booked session with the lawyer.</li>
@@ -616,7 +617,7 @@ function AchievementsTab({ lawyer }: { lawyer: Lawyer }) {
     }
 
     const getIcon = (type: string) => {
-        const size = 40; // Icon container size
+        // const size = 40; // removed unused
 
         switch (type) {
             // Mapping new 3D icons to types
