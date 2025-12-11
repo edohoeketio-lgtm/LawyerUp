@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { User, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 

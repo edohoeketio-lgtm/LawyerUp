@@ -12,6 +12,17 @@ export default function DashboardPage() {
     const view = searchParams?.get("view") || "client"; // 'client' (Legal Advice) or 'lawyer' (Mentorship)
     const isLawyerView = view === "lawyer";
 
+    // Blocking State
+    const [blockedIds, setBlockedIds] = useState<string[]>([]);
+
+    useEffect(() => {
+        const stored = localStorage.getItem("blockedLawyers");
+        if (stored) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            setBlockedIds(JSON.parse(stored));
+        }
+    }, []);
+
     // Calendar State
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -169,9 +180,12 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                    {lawyers.slice(0, 5).map((lawyer) => (
-                        <LawyerCard key={lawyer.id} lawyer={lawyer} />
-                    ))}
+                    {lawyers
+                        .filter(l => !blockedIds.includes(l.id))
+                        .slice(0, 5)
+                        .map((lawyer) => (
+                            <LawyerCard key={lawyer.id} lawyer={lawyer} />
+                        ))}
                 </div>
             </div>
 

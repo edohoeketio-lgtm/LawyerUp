@@ -7,11 +7,13 @@ import { vi } from 'vitest'
 vi.mock('next/navigation', () => ({
     useRouter: () => ({
         push: vi.fn(),
+        replace: vi.fn(),
+        prefetch: vi.fn(),
     }),
     useSearchParams: () => ({
-        get: vi.fn(() => 'client'),
-        toString: vi.fn(() => ''),
+        get: vi.fn(),
     }),
+    usePathname: () => "/dashboard", // Added mock
 }))
 
 describe('TopBar', () => {

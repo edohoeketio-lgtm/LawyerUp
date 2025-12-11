@@ -11,12 +11,17 @@ import {
 } from "lucide-react";
 import { getLawyerById, Lawyer, Review, Achievement } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
+import BookingModal from "@/components/BookingModal";
 import { lawyers } from "@/data/lawyers";
 
 export default function LawyerDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const lawyer = getLawyerById(id);
     const [activeTab, setActiveTab] = useState("Overview");
+    const [showMoreMenu, setShowMoreMenu] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [showBookingModal, setShowBookingModal] = useState(false);
+    const [reportReason, setReportReason] = useState("");
 
     if (!lawyer) {
         notFound();
@@ -26,6 +31,7 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
 
     return (
         <div className="space-y-8 pb-12">
+            <BookingModal lawyer={lawyer} isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
             {/* Breadcrumb / Back Navigation */}
             <div className="flex items-center gap-2 text-sm text-gray-500">
                 <Link href="/dashboard" className="hover:text-black">Back</Link>
@@ -68,14 +74,126 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                         <span className="block text-xs font-medium text-gray-500">Mentorship</span>
                         <span className="block text-sm font-bold text-[#006056]">${lawyer.mentorshipPrice}</span>
                     </div>
-                    <button className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]">
+                    <button
+                        onClick={() => setShowBookingModal(true)}
+                        className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]"
+                    >
                         <Image src="/icons/bookings.svg" alt="Book" width={18} height={18} className="h-[18px] w-[18px] object-contain" /> Book a session
                     </button>
-                    <button className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50">
-                        <MoreHorizontal size={20} className="text-gray-500" />
-                    </button>
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowMoreMenu(!showMoreMenu)}
+                            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 bg-white"
+                        >
+                            <MoreHorizontal size={20} className="text-gray-500" />
+                        </button>
+
+                        {showMoreMenu && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setShowMoreMenu(false)}
+                                />
+                                <div className="absolute right-0 top-full z-20 mt-2 w-56 rounded-xl border border-gray-100 bg-white p-2 shadow-lg ring-1 ring-black/5">
+                                    <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-black hover:bg-gray-50">
+                                        <div className="flex h-6 w-6 items-center justify-center rounded bg-black text-white">
+                                            <Linkedin size={14} fill="currentColor" className="stroke-0" />
+                                        </div>
+                                        Share on LinkedIn
+                                    </button>
+                                    <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-black hover:bg-gray-50">
+                                        <div className="flex h-6 w-6 items-center justify-center rounded bg-black text-white">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231h0.001zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644z" />
+                                            </svg>
+                                        </div>
+                                        Post this X
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setShowMoreMenu(false);
+                                            setShowReportModal(true);
+                                        }}
+                                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                    >
+                                        <div className="flex h-6 w-6 items-center justify-center">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+                                                <line x1="4" y1="22" x2="4" y2="15" />
+                                            </svg>
+                                        </div>
+                                        Report profile
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
+
+            {/* Report Modal */}
+            {showReportModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+                    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+                        <h3 className="mb-2 text-xl font-bold text-black">Report Profile</h3>
+                        <p className="mb-6 text-sm text-gray-500">
+                            Please select a reason for reporting this profile. This will be reviewed by our trust and safety team.
+                        </p>
+
+                        <div className="space-y-3">
+                            {["Fake profile or impersonation", "Inappropriate content", "Harassment or bullying", "Scam or fraud", "Other"].map((reason) => (
+                                <div key={reason}>
+                                    <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 hover:bg-gray-50">
+                                        <input
+                                            type="radio"
+                                            name="report_reason"
+                                            className="h-4 w-4 border-gray-300 text-[#004d45] focus:ring-[#006056]"
+                                            checked={reportReason === reason}
+                                            onChange={() => setReportReason(reason)}
+                                        />
+                                        <span className="text-sm font-medium text-gray-700">{reason}</span>
+                                    </label>
+                                    {reason === "Other" && reportReason === "Other" && (
+                                        <textarea
+                                            className="mt-2 w-full rounded-lg border border-gray-200 p-2 text-sm focus:border-[#006056] focus:outline-none focus:ring-1 focus:ring-[#006056]"
+                                            placeholder="Please provide more details..."
+                                            rows={3}
+                                            onClick={(e) => e.stopPropagation()} // Prevent bubbling if needed
+                                        ></textarea>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowReportModal(false)}
+                                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowReportModal(false);
+
+                                    // Block the lawyer locally
+                                    const blocked = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+                                    if (!blocked.includes(lawyer.id)) {
+                                        blocked.push(lawyer.id);
+                                        localStorage.setItem("blockedLawyers", JSON.stringify(blocked));
+                                    }
+
+                                    alert("Report submitted. You will no longer see this profile.");
+                                    window.location.href = "/dashboard"; // Force reload/redirect to clear state
+                                }}
+                                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                            >
+                                Submit Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                 {/* Left Column: Content Tabs */}
@@ -234,7 +352,9 @@ function OverviewTab({ lawyer, similarLawyers, setActiveTab }: { lawyer: Lawyer,
                                 <Image src="/icons/stat-medal.png" alt="R.E.P Score" fill className="object-contain" />
                             </div>
                             <div>
-                                <p className="font-bold text-black text-lg">24</p>
+                                <p className="font-bold text-black text-lg">
+                                    {lawyer.stats.reviews > 0 ? "24" : "N/A"}
+                                </p>
                                 <div className="flex items-center gap-1">
                                     <p className="text-xs text-gray-500">R.E.P Score</p>
                                     <button onClick={() => setShowRepInfo(true)} className="text-gray-400 hover:text-gray-600">

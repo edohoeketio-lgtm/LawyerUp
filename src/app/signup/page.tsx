@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
@@ -23,52 +24,40 @@ export default function SignupPage() {
         password: false,
     });
 
-    const [errors, setErrors] = useState({
-        name: "",
-        email: "",
-        password: "",
-    });
-
-    const [isValid, setIsValid] = useState(false);
-
-    // Validation Logic
-    useEffect(() => {
+    // Derived Validation
+    const getErrors = (data: typeof formData) => {
         const newErrors = {
             name: "",
             email: "",
             password: "",
         };
 
-        let valid = true;
-
         // Name Validation
-        if (!formData.name.trim()) {
+        if (!data.name.trim()) {
             newErrors.name = "Name is required";
-            valid = false;
         }
 
         // Email Validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
+        if (!emailRegex.test(data.email)) {
             newErrors.email = "Please enter a valid email address";
-            valid = false;
         }
 
         // Password Validation
-        const hasNumber = /\d/.test(formData.password);
-        const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(formData.password);
+        const hasNumber = /\d/.test(data.password);
+        const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(data.password);
 
-        if (!formData.password) {
+        if (!data.password) {
             newErrors.password = "Password is required";
-            valid = false;
         } else if (!hasNumber || !hasSymbol) {
             newErrors.password = "Password must contain at least one number and one symbol";
-            valid = false;
         }
 
-        setErrors(newErrors);
-        setIsValid(valid);
-    }, [formData]);
+        return newErrors;
+    };
+
+    const errors = getErrors(formData);
+    const isValid = !errors.name && !errors.email && !errors.password;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -101,7 +90,7 @@ export default function SignupPage() {
             {isSubmitting && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-md transition-all duration-500">
                     <div className="flex flex-col items-center gap-2 animate-pulse">
-                        <img
+                        <Image
                             src="/logo.svg"
                             alt="Lawyer Up Logo"
                             width={60}

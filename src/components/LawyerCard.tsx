@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FileText, Clock } from "lucide-react";
 import { Lawyer } from "@/data/lawyers";
 
@@ -11,10 +12,11 @@ export default function LawyerCard({ lawyer }: LawyerCardProps) {
         <Link href={`/dashboard/lawyer/${lawyer.id}`}>
             <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-100 transition-all hover:shadow-md hover:ring-2 hover:ring-gray-200">
                 <div className="aspect-[4/5] relative">
-                    <img
+                    <Image
                         src={lawyer.image}
                         alt={lawyer.name}
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                     />
                 </div>
                 <div className="p-3">

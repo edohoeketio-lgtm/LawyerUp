@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function UpdatePasswordPage() {
@@ -15,18 +14,13 @@ export default function UpdatePasswordPage() {
         confirmPassword: ""
     });
 
-    const [isValid, setIsValid] = useState(false);
-
-    useEffect(() => {
-        const { password, confirmPassword } = formData;
-
-        const hasLength = password.length >= 8;
-        const hasNumber = /\d/.test(password);
-        const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        const passwordsMatch = password === confirmPassword && password !== "";
-
-        setIsValid(hasLength && hasNumber && hasSymbol && passwordsMatch);
-    }, [formData]);
+    // Derived Validation
+    const { password, confirmPassword } = formData;
+    const hasLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const passwordsMatch = password === confirmPassword && password !== "";
+    const isValid = hasLength && hasNumber && hasSymbol && passwordsMatch;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

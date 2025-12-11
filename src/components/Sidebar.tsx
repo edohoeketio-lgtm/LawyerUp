@@ -20,7 +20,7 @@ export default function Sidebar() {
         <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-[#E4E7EC] bg-[#013328] text-white transition-transform">
             {/* Logo */}
             <div className="flex h-16 items-center" style={{ paddingLeft: "23px" }}>
-                <img
+                <Image
                     src="/logo_original.png"
                     alt="LawyerUp"
                     width={115}
@@ -67,19 +67,26 @@ export default function Sidebar() {
 
             {/* Bottom Card */}
             <div className="p-4">
-                <div className="rounded-xl bg-white/5 p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
-                        <img src="/icons/welcome_card.jpg" alt="" className="h-6 w-6 object-contain" />
+                <div className="relative overflow-hidden rounded-2xl bg-[#022c22] p-5 shadow-lg">
+                    {/* Background Element */}
+                    <div className="absolute right-0 top-0 h-24 w-24 opacity-40 mix-blend-multiply relative">
+                        <Image src="/icons/sidebar-card-bg.png" alt="" fill className="object-contain object-top-right" />
                     </div>
-                    <h3 className="mb-1 font-serif text-sm font-medium text-white">Welcome</h3>
-                    <p className="mb-3 text-xs text-gray-400">
+
+                    <div className="relative z-10 mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                        <Image src="/icons/welcome_card.jpg" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
+                    </div>
+
+                    <h3 className="relative z-10 mb-2 font-serif text-lg font-medium text-white">Welcome</h3>
+                    <p className="relative z-10 mb-6 text-sm leading-relaxed text-gray-300">
                         Get to know your Lawyer Up Dashboard with our short walkthrough course.
                     </p>
-                    <div className="flex items-center justify-between">
-                        <button className="text-xs font-medium text-[#c0f0bf] hover:underline">
+
+                    <div className="relative z-10 flex items-center gap-6">
+                        <button className="text-sm font-bold text-[#9FFF6F] hover:text-[#b4ff8f] hover:underline">
                             Start Tutorial
                         </button>
-                        <button className="text-xs text-gray-500 hover:text-gray-400">
+                        <button className="text-sm font-medium text-gray-400 hover:text-white">
                             Close
                         </button>
                     </div>
@@ -90,10 +97,11 @@ export default function Sidebar() {
             <div className="mt-auto border-t border-white/10 p-4">
                 <div className="flex items-center gap-3">
                     <div className="relative h-10 w-10 flex-shrink-0">
-                        <img
+                        <Image
                             src="/avatars/user_dp.png"
                             alt="User"
-                            className="h-full w-full rounded-full object-cover"
+                            fill
+                            className="rounded-full object-cover"
                         />
                         <div
                             className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#013328] ${true ? "bg-green-500" : "bg-red-500"}`} // Toggle true/false here to test
