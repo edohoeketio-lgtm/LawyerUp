@@ -2,6 +2,7 @@
 
 import { Bell, Calendar } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 export default function TopBar() {
     const router = useRouter();
@@ -18,9 +19,13 @@ export default function TopBar() {
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-[#E4E7EC] bg-white px-8">
             <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
-                    <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
+                    <Image
+                        src="/icons/home_icon.png"
+                        alt="Home"
+                        width={24}
+                        height={24}
+                        className="h-6 w-6 object-contain"
+                    />
                 </div>
                 <h1 className="font-serif text-xl font-medium text-black">Home</h1>
             </div>

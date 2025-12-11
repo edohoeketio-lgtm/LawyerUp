@@ -6,7 +6,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col">
       {/* HEADER - distinct white container */}
       <header className="w-full bg-white p-6 text-center z-10">
-        <p className="text-xs tracking-widest text-gray-500 uppercase font-sans">
+        <p className="text-xs tracking-widest text-gray-500 uppercase font-medium">
           Choose Your Experience
         </p>
       </header>
@@ -15,10 +15,10 @@ export default function Home() {
         {/* Left Section - Get Legal Support */}
         <section className="group flex flex-1 flex-col items-center justify-center bg-white p-10 text-center transition-colors duration-300 hover:bg-[#F2FFF2]">
           <div className="max-w-md space-y-6">
-            <h1 className="font-serif text-5xl text-black">
+            <h1 className="text-5xl font-bold text-black">
               Get Legal Support
             </h1>
-            <p className="font-sans text-sm text-gray-600">
+            <p className="text-sm text-gray-600">
               Book legal advice or connect with mentors.
             </p>
             <div className="flex justify-center pt-4">
@@ -34,10 +34,10 @@ export default function Home() {
         {/* Right Section - Give Legal Support */}
         <section className="group flex flex-1 flex-col items-center justify-center bg-white p-10 text-center transition-colors duration-300 hover:bg-[#F2FFF2]">
           <div className="max-w-md space-y-6">
-            <h1 className="font-serif text-5xl text-black">
+            <h1 className="text-5xl font-bold text-black">
               Give Legal Support
             </h1>
-            <p className="font-sans text-sm text-gray-600">
+            <p className="text-sm text-gray-600">
               Join as a verified lawyer
             </p>
             <div className="flex justify-center pt-4">

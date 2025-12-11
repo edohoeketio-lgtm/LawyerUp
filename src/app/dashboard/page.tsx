@@ -5,7 +5,7 @@ import { Check, ArrowRight, UserPlus, FileText, Clock, ChevronRight, ChevronLeft
 
 export default function DashboardPage() {
     const searchParams = useSearchParams();
-    const view = searchParams.get("view") || "client"; // 'client' (Legal Advice) or 'lawyer' (Mentorship)
+    const view = searchParams?.get("view") || "client"; // 'client' (Legal Advice) or 'lawyer' (Mentorship)
     const isLawyerView = view === "lawyer";
 
     return (
@@ -24,8 +24,8 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="mb-6 flex items-center gap-4">
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#FFEBC8]">
-                        <div className="h-full w-1/4 rounded-full bg-[#D4A045]"></div>
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
+                        <div className="h-full w-1/4 rounded-full bg-[#523300]"></div>
                     </div>
                     <span className="text-xs font-medium">25% complete</span>
                 </div>

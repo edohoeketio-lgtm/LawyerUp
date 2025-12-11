@@ -6,7 +6,7 @@ import { PartyPopper } from "lucide-react";
 
 export default function WelcomePage() {
     const searchParams = useSearchParams();
-    const name = searchParams.get("name") || "";
+    const name = searchParams?.get("name") || "";
     const nameDisplay = name ? ` ${name.toUpperCase()}` : "";
     const profileSetupUrl = name ? `/profile-setup?name=${encodeURIComponent(name)}` : "/profile-setup";
 
@@ -34,7 +34,7 @@ export default function WelcomePage() {
 
                 <div className="space-y-3 pt-8">
                     <Link
-                        href="/"
+                        href="/dashboard"
                         className="block w-full rounded-lg bg-[#013328] py-4 text-sm font-medium text-white transition-all duration-200 hover:bg-[#012a2b] shadow-lg hover:shadow-xl"
                     >
                         Explore LawyerUp
