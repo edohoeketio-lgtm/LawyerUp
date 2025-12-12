@@ -1,31 +1,54 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import TopBar from '../TopBar'
 
-// Mock useSearchParams and useRouter
-import { vi } from 'vitest'
+// Mock Hooks
+const pushMock = vi.fn();
+const usePathnameMock = vi.fn();
+
 vi.mock('next/navigation', () => ({
-    useRouter: () => ({
-        push: vi.fn(),
-        replace: vi.fn(),
-        prefetch: vi.fn(),
-    }),
-    useSearchParams: () => ({
-        get: vi.fn(),
-    }),
-    usePathname: () => "/dashboard", // Added mock
+    useRouter: () => ({ push: pushMock }),
+    useSearchParams: () => ({ get: vi.fn() }),
+    usePathname: () => usePathnameMock(),
 }))
 
-describe('TopBar', () => {
-    it('renders the Home title', () => {
-        render(<TopBar />)
-        const homeHeading = screen.getByText('Home')
-        expect(homeHeading).toBeDefined()
-    })
+// Mock Image
+vi.mock('next/image', () => ({
+    default: (props: any) => <img {...props} />
+}));
 
-    it('renders the Legal advice button', () => {
+// Mock Link
+vi.mock('next/link', () => ({
+    default: ({ children, href }: { children: React.ReactNode, href: string }) => <a href={href}>{children}</a>
+}));
+
+describe('TopBar', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        usePathnameMock.mockReturnValue('/dashboard');
+    });
+
+    it('renders the Home title on dashboard', () => {
         render(<TopBar />)
-        const button = screen.getByText('Legal advice')
-        expect(button).toBeDefined()
-    })
+        expect(screen.getByText('Home')).toBeDefined()
+    });
+
+    it('renders "Book a session" link pointing to discover page', () => {
+        render(<TopBar />)
+        const link = screen.getByText('Book a session').closest('a');
+        expect(link).toBeDefined();
+        expect(link?.getAttribute('href')).toBe('/dashboard/discover');
+    });
+
+    it('hides "Book a session" link on lawyer detail pages', () => {
+        usePathnameMock.mockReturnValue('/dashboard/lawyer/123');
+        render(<TopBar />);
+        expect(screen.queryByText('Book a session')).toBeNull();
+    });
+
+    it('renders Discover title on discover page', () => {
+        usePathnameMock.mockReturnValue('/dashboard/discover');
+        render(<TopBar />);
+        expect(screen.getByText('Discover')).toBeDefined();
+    });
 })

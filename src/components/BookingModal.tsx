@@ -48,7 +48,7 @@ export default function BookingModal({ lawyer, isOpen, onClose }: BookingModalPr
             <div className="flex h-[600px] w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl">
                 {/* Left Side: Summary Panel (35%) */}
                 <div className="hidden w-[35%] flex-col border-r border-gray-100 bg-gray-50 p-8 lg:flex">
-                    <button onClick={onClose} className="mb-6 w-fit rounded-full bg-white p-2 hover:bg-gray-100">
+                    <button onClick={onClose} data-testid="close-modal-button" className="mb-6 w-fit rounded-full bg-white p-2 hover:bg-gray-100">
                         <X size={20} className="text-gray-500" />
                     </button>
 

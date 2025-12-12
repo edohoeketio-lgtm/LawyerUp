@@ -354,7 +354,9 @@ function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyer
                             </div>
                             <div>
                                 <p className="font-bold text-black text-lg">
-                                    {lawyer.stats.reviews > 0 ? "24" : "N/A"}
+                                    {lawyer.reviews && lawyer.reviews.length > 0
+                                        ? Math.round(lawyer.reviews.reduce((acc, r) => acc + r.rating, 0) / lawyer.reviews.length * 20)
+                                        : "N/A"}
                                 </p>
                                 <div className="flex items-center gap-1">
                                     <p className="text-xs text-gray-500">R.E.P Score</p>
@@ -364,7 +366,7 @@ function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyer
                                 </div>
                                 {showRepInfo && (
                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10 text-center">
-                                        Reliability, Expertise, and Professionalism Score based on client feedback.
+                                        Reliability, Expertise, and Professionalism Score based on client feedback (0-100).
                                         {/* Arrow */}
                                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
                                     </div>

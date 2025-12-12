@@ -3,6 +3,7 @@
 import { Bell, Calendar } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function TopBar() {
     const router = useRouter();
@@ -29,7 +30,7 @@ export default function TopBar() {
                         alt={title}
                         width={24}
                         height={24}
-                        className={`h-6 w-6 object-contain ${isDiscover ? "brightness-0" : ""}`}
+                        className="h-6 w-6 object-contain brightness-0"
                     />
                 </div>
                 <h1 className="font-serif text-xl font-medium text-black">{title}</h1>
@@ -61,10 +62,15 @@ export default function TopBar() {
                     <Bell size={20} />
                     <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
                 </button>
-                <button className="flex items-center gap-2 rounded-lg bg-[#013328] px-4 py-2 text-sm font-medium text-white hover:bg-[#012a2b]">
-                    <Calendar size={18} />
-                    Book a session
-                </button>
+                {!pathname?.startsWith("/dashboard/lawyer/") && (
+                    <Link
+                        href="/dashboard/discover"
+                        className="flex items-center gap-2 rounded-lg bg-[#013328] px-4 py-2 text-sm font-medium text-white hover:bg-[#012a2b]"
+                    >
+                        <Calendar size={18} />
+                        Book a session
+                    </Link>
+                )}
             </div>
         </header>
     );
