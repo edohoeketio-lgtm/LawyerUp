@@ -105,7 +105,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         </div>
 
                         <div className="relative z-10 mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                            <Image src="/icons/welcome_card.jpg" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
+                            <Image src="/icons/welcome_card.png" alt="" width={24} height={24} className="h-6 w-6 object-contain" />
                         </div>
 
                         <h3 className="relative z-10 mb-2 font-serif text-lg font-medium text-white">Welcome</h3>

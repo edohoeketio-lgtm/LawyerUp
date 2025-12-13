@@ -3,6 +3,7 @@
 import { auth, User } from "@/utils/auth";
 import { allCountries } from "@/data/countries";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ChevronRight, Calendar, Bell, Trash2 } from "lucide-react";
 
@@ -10,6 +11,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 
 export default function AccountSettingsPage() {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy">("Personal");
     const [user, setUser] = useState<User | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -204,7 +206,10 @@ export default function AccountSettingsPage() {
                         <div>
                             <h3 className="mb-2 text-base font-medium text-black">Password</h3>
                             <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
-                            <button className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50">
+                            <button
+                                onClick={() => router.push("/update-password")}
+                                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50"
+                            >
                                 Change password
                             </button>
                         </div>
