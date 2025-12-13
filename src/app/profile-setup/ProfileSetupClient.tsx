@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const LOCATION_DATA = {
     Nigeria: {
@@ -35,6 +35,7 @@ const LOCATION_DATA = {
 type CountryName = keyof typeof LOCATION_DATA;
 
 export default function ProfileSetupClient() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const name = searchParams.get("name") || "Guest";
     const [formData, setFormData] = useState({
@@ -63,7 +64,7 @@ export default function ProfileSetupClient() {
             <div className="w-full max-w-lg space-y-8">
                 <div className="flex items-center justify-between">
                     <h1 className="font-serif text-3xl text-black">Set up your profile</h1>
-                    <Link href="/" className="text-sm font-medium text-[#013328] hover:underline">
+                    <Link href="/dashboard" className="text-sm font-medium text-[#013328] hover:underline">
                         Skip for now
                     </Link>
                 </div>
@@ -175,7 +176,8 @@ export default function ProfileSetupClient() {
                     </div>
 
                     <button
-                        type="button" // Change to submit when connecting to backend
+                        type="button"
+                        onClick={() => router.push("/dashboard")}
                         className="w-full rounded-lg bg-[#013328] py-3 text-sm font-medium text-white transition-colors hover:bg-[#012a2b]"
                     >
                         Complete profile setup

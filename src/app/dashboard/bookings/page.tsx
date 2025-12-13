@@ -44,7 +44,7 @@ export default function BookingsPage() {
                     {["upcoming", "past", "cancelled"].map((tab) => (
                         <button
                             key={tab}
-                            onClick={() => setActiveTab(tab as any)}
+                            onClick={() => setActiveTab(tab as typeof activeTab)}
                             className={`pb-4 text-sm font-medium transition-all relative ${activeTab === tab
                                 ? "text-black"
                                 : "text-gray-500 hover:text-gray-700"
@@ -78,7 +78,7 @@ export default function BookingsPage() {
                         </div>
                         <h3 className="text-lg font-bold text-black">No {activeTab} bookings</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mb-6">
-                            You don't have any {activeTab} sessions at the moment.
+                            You don&apos;t have any {activeTab} sessions at the moment.
                         </p>
                         {activeTab === "upcoming" && (
                             <Link

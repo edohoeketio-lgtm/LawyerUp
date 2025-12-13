@@ -34,7 +34,7 @@ export default function AccountSettingsPage() {
                 {["Personal", "Security", "Privacy"].map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab as any)}
+                        onClick={() => setActiveTab(tab as typeof activeTab)}
                         className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${activeTab === tab
                             ? "bg-black text-white"
                             : "bg-transparent text-gray-500 hover:text-black"
@@ -137,11 +137,11 @@ export default function AccountSettingsPage() {
                             <h3 className="mb-4 text-base font-medium text-[#004d45]">Q&A Activity</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Allow others to see the questions I've asked</span>
+                                    <span className="text-sm font-bold text-gray-500">Allow others to see the questions I&apos;ve asked</span>
                                     <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Show my display name on public answers I've tipped</span>
+                                    <span className="text-sm font-bold text-gray-500">Show my display name on public answers I&apos;ve tipped</span>
                                     <input type="checkbox" className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                             </div>

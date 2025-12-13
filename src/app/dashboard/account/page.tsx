@@ -37,6 +37,16 @@ const consultedLawyers = [
         reviews: 55,
         tags: ["Business Law", "+3"]
     },
+    {
+        id: "4",
+        name: "Darrell Steward",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        country: "us",
+        specialty: "Family Law Attorney",
+        sessions: 42,
+        reviews: 38,
+        tags: ["Family Law", "+2"]
+    },
 ];
 
 import EditProfileModal from "@/components/profile/EditProfileModal";
@@ -111,7 +121,7 @@ export default function ProfilePage() {
                 {["Overview", "Achievements", "Consulted Lawyers"].map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setActiveTab(tab as any)}
+                        onClick={() => setActiveTab(tab as typeof activeTab)}
                         className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${activeTab === tab
                             ? "bg-black text-white"
                             : "bg-transparent text-gray-500 hover:text-black"
@@ -124,7 +134,7 @@ export default function ProfilePage() {
 
             {/* Content */}
             {activeTab === "Consulted Lawyers" && (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {consultedLawyers.map((lawyer) => (
                         <div key={lawyer.id} className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
                             {/* Card Image */}

@@ -39,6 +39,7 @@ export default function ChatPage() {
 
     useEffect(() => {
         if (lawyerId && initialChats[lawyerId]) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setMessages(initialChats[lawyerId]);
         } else {
             setMessages([]);

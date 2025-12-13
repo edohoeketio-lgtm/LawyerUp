@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 
@@ -10,7 +11,9 @@ export default function DashboardLayout({
         <div className="min-h-screen bg-[#FAFAFA]">
             <Sidebar />
             <div className="ml-64 flex min-h-screen flex-col">
-                <TopBar />
+                <Suspense>
+                    <TopBar />
+                </Suspense>
                 <main className="flex-1 p-8">
                     {children}
                 </main>

@@ -2,13 +2,24 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { X, ChevronDown, Map, Plus } from "lucide-react";
+import { X, ChevronDown, Map } from "lucide-react";
+
+interface ProfileData {
+    role: string;
+    jobTitle: string;
+    workplace: string;
+    gender: string;
+    location: string;
+    languages: string[];
+    bio: string;
+    [key: string]: unknown;
+}
 
 interface EditProfileModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (data: any) => void;
-    initialData?: any; // Replace with proper type if available
+    onSave: (data: ProfileData) => void;
+    initialData?: Partial<ProfileData>;
 }
 
 export default function EditProfileModal({ isOpen, onClose, onSave, initialData }: EditProfileModalProps) {
@@ -154,12 +165,12 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                             <label className="text-xs font-bold text-gray-500">Languages spoken</label>
                             <div className="rounded-lg border border-gray-200 p-2">
                                 <div className="flex flex-wrap gap-2">
-                                    {formData.languages.map((lang) => (
+                                    {formData.languages.map((lang: string) => (
                                         <span key={lang} className="flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
                                             {lang}
                                             <button
                                                 type="button"
-                                                onClick={() => setFormData({ ...formData, languages: formData.languages.filter(l => l !== lang) })}
+                                                onClick={() => setFormData({ ...formData, languages: formData.languages.filter((l: string) => l !== lang) })}
                                                 className="text-gray-400 hover:text-gray-600"
                                             >
                                                 <X size={12} />
