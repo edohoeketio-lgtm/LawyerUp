@@ -3,11 +3,11 @@
 import { use, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import {
     ChevronLeft, MoreHorizontal, Globe, Linkedin,
     ArrowLeft, ArrowRight, Star, ChevronDown, Clock,
-    Medal, ExternalLink, Info, Award
+    Medal, ExternalLink, Info, Award, MessageSquare
 } from "lucide-react";
 import { getLawyerById, Lawyer } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
@@ -17,6 +17,9 @@ import { lawyers } from "@/data/lawyers";
 export default function LawyerDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const lawyer = getLawyerById(id);
+    const searchParams = useSearchParams();
+    const source = searchParams.get("source");
+
     const [activeTab, setActiveTab] = useState("Overview");
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
@@ -74,12 +77,21 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                         <span className="block text-xs font-medium text-gray-500">Mentorship</span>
                         <span className="block text-sm font-bold text-[#006056]">${lawyer.mentorshipPrice}</span>
                     </div>
-                    <button
-                        onClick={() => setShowBookingModal(true)}
-                        className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]"
-                    >
-                        <Image src="/icons/bookings.svg" alt="Book" width={18} height={18} className="h-[18px] w-[18px] object-contain" /> Book a session
-                    </button>
+                    {source === "chat" ? (
+                        <Link
+                            href={`/dashboard/messages/${lawyer.id}`}
+                            className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]"
+                        >
+                            <MessageSquare size={18} /> Chat
+                        </Link>
+                    ) : (
+                        <button
+                            onClick={() => setShowBookingModal(true)}
+                            className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]"
+                        >
+                            <Image src="/icons/bookings.svg" alt="Book" width={18} height={18} className="h-[18px] w-[18px] object-contain" /> Book a session
+                        </button>
+                    )}
                     <div className="relative">
                         <button
                             onClick={() => setShowMoreMenu(!showMoreMenu)}

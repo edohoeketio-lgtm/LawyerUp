@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { bookings, Booking, getBookingLawyer } from "@/data/bookings";
-import { Calendar, Clock, Video, MoreHorizontal, FileText, AlertCircle } from "lucide-react";
+import { Calendar, Clock, Video, MoreHorizontal, FileText, AlertCircle, MessageSquare } from "lucide-react";
 import ReviewModal from "@/components/ReviewModal";
 
 export default function BookingsPage() {
@@ -167,9 +167,17 @@ function BookingCard({ booking, onLeaveReview }: { booking: Booking, onLeaveRevi
 
                 <div className="flex gap-2 w-full sm:w-auto">
                     {booking.status === "confirmed" && (
-                        <button className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
-                            <Video size={16} /> Join Call
-                        </button>
+                        <>
+                            <Link
+                                href={`/dashboard/messages/${lawyer.id}`}
+                                className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                <MessageSquare size={16} />
+                            </Link>
+                            <button className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
+                                <Video size={16} /> Join Call
+                            </button>
+                        </>
                     )}
                     {booking.status === "completed" && (
                         <button

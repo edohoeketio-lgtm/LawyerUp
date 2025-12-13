@@ -40,8 +40,15 @@ describe('TopBar', () => {
         expect(link?.getAttribute('href')).toBe('/dashboard/discover');
     });
 
-    it('hides "Book a session" link on lawyer detail pages', () => {
+    it('hides "Book a session" button on lawyer detail pages and discover page', () => {
+        // Lawyer Detail Page
         usePathnameMock.mockReturnValue('/dashboard/lawyer/123');
+        const { unmount } = render(<TopBar />);
+        expect(screen.queryByText('Book a session')).toBeNull();
+        unmount();
+
+        // Discover Page
+        usePathnameMock.mockReturnValue('/dashboard/discover');
         render(<TopBar />);
         expect(screen.queryByText('Book a session')).toBeNull();
     });

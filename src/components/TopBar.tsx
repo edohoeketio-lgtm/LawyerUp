@@ -62,7 +62,7 @@ export default function TopBar() {
                     <Bell size={20} />
                     <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
                 </button>
-                {!pathname?.startsWith("/dashboard/lawyer/") && (
+                {!pathname?.startsWith("/dashboard/lawyer/") && pathname !== "/dashboard/discover" && (
                     <Link
                         href="/dashboard/discover"
                         className="flex items-center gap-2 rounded-lg bg-[#013328] px-4 py-2 text-sm font-medium text-white hover:bg-[#012a2b]"

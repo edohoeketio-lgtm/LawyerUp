@@ -2,36 +2,113 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronRight, Calendar, Bell, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Settings, Edit2, Briefcase, Calendar, MessageSquare } from "lucide-react";
 
-export default function AccountPage() {
-    const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy">("Personal");
+// Mock Lawyer data based on card screenshot
+const consultedLawyers = [
+    {
+        id: "1",
+        name: "Ralph Edwards",
+        image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        country: "gb", // UK flag
+        specialty: "Criminal Defense Attorney",
+        sessions: 71,
+        reviews: 55,
+        tags: ["Business Law", "+3"]
+    },
+    {
+        id: "2",
+        name: "Annette Black",
+        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        country: "jp", // Japan flag
+        specialty: "Criminal Defense Attorney",
+        sessions: 71,
+        reviews: 55,
+        tags: ["Business Law", "+3"]
+    },
+    {
+        id: "3",
+        name: "Wade Warren",
+        image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        country: "no", // Norway flag
+        specialty: "Criminal Defense Attorney",
+        sessions: 71,
+        reviews: 55,
+        tags: ["Business Law", "+3"]
+    },
+];
 
-    // Mock User Data matching screenshot
-    const user = {
-        name: "Nsikan Etukudoh",
-        email: "nsikan@lawyer.up",
-        location: "Lagos, Nigeria",
-        language: "English",
-        timezone: "GMT (Greenwich Mean Time)"
-    };
+import EditProfileModal from "@/components/profile/EditProfileModal";
+
+export default function ProfilePage() {
+    const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Consulted Lawyers");
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     return (
-        <div className="max-w-[700px]">
-            {/* Breadcrumb */}
-            <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
-                <button className="hover:text-black">Back</button>
-                <ChevronRight size={14} />
-                <span>Account</span>
-                <ChevronRight size={14} />
-                <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-black">Settings</span>
+        <div className="space-y-8">
+            <EditProfileModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onSave={(data) => {
+                    console.log("Saved profile:", data);
+                    setIsEditModalOpen(false);
+                }}
+            />
+            {/* Header */}
+            <div className="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-sm sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex gap-6">
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-gray-100">
+                        <Image
+                            src="/avatars/user_dp.png"
+                            alt="Nsikan"
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                    <div>
+                        <div className="mb-1 flex items-center gap-3">
+                            <h1 className="font-serif text-2xl font-bold text-black">Nsikan Etukudoh</h1>
+                            <Image
+                                src="https://flagcdn.com/ng.svg"
+                                alt="Nigeria"
+                                width={20}
+                                height={15}
+                                className="object-contain" // Simplified flag
+                            />
+                        </div>
+                        <p className="text-sm font-medium text-gray-500">
+                            Creative at <span className="font-bold text-black">Lawyer Up</span>
+                        </p>
+                        <div className="mt-3">
+                            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
+                                I need Legal help
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => setIsEditModalOpen(true)}
+                        className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                        <Edit2 size={16} />
+                        Edit profile
+                    </button>
+                    <Link
+                        href="/dashboard/account/settings"
+                        className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                        <Settings size={16} />
+                        Settings
+                    </Link>
+                </div>
             </div>
 
-            <h1 className="mb-6 font-serif text-2xl font-bold text-black">Settings</h1>
-
             {/* Tabs */}
-            <div className="mb-8 flex items-center gap-1 rounded-full border border-gray-100 bg-white p-1 w-fit">
-                {["Personal", "Security", "Privacy"].map((tab) => (
+            <div className="flex gap-1 rounded-full border border-gray-100 bg-white p-1 w-fit">
+                {["Overview", "Achievements", "Consulted Lawyers"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as any)}
@@ -46,134 +123,60 @@ export default function AccountPage() {
             </div>
 
             {/* Content */}
-            <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-
-                {activeTab === "Personal" && (
-                    <div className="space-y-8">
-                        {/* Name */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-400">First and last name</label>
-                            <div className="rounded-lg bg-gray-50 px-4 py-3 text-sm font-medium text-black">
-                                {user.name}
-                            </div>
-                        </div>
-
-                        {/* Email */}
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-sm font-bold text-gray-400">Email address</label>
-                                <span className="text-xs font-medium text-gray-400">Verified</span>
-                            </div>
-                            <div className="rounded-lg bg-gray-50 px-4 py-3 text-sm font-medium text-black">
-                                {user.email}
-                            </div>
-                        </div>
-
-                        {/* Location */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-400">City, Country</label>
-                            <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-4 py-3 text-sm font-medium text-black">
+            {activeTab === "Consulted Lawyers" && (
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {consultedLawyers.map((lawyer) => (
+                        <div key={lawyer.id} className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
+                            {/* Card Image */}
+                            <div className="relative h-48 w-full bg-gray-100">
                                 <Image
-                                    src="https://flagcdn.com/ng.svg"
-                                    alt="Nigeria"
-                                    width={16}
-                                    height={12}
-                                    className="object-contain"
+                                    src={lawyer.image}
+                                    alt={lawyer.name}
+                                    fill
+                                    className="object-cover"
                                 />
-                                {user.location}
+                            </div>
+
+                            {/* Card Content */}
+                            <div className="p-4">
+                                <div className="mb-1 flex items-center gap-2">
+                                    <h3 className="font-bold text-black">{lawyer.name}</h3>
+                                    <Image
+                                        src={`https://flagcdn.com/${lawyer.country}.svg`}
+                                        alt={lawyer.country}
+                                        width={14}
+                                        height={10}
+                                        className="object-cover rounded-sm"
+                                    />
+                                </div>
+                                <div className="mb-3 flex items-center gap-2 text-xs text-gray-500">
+                                    <Briefcase size={12} />
+                                    <span>{lawyer.specialty}</span>
+                                </div>
+
+                                <div className="mb-4 flex items-center gap-2 text-xs text-gray-500">
+                                    <Calendar size={12} />
+                                    <span>{lawyer.sessions} sessions ({lawyer.reviews} reviews)</span>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {lawyer.tags.map((tag) => (
+                                        <span key={tag} className="rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-medium text-gray-600">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         </div>
+                    ))}
+                </div>
+            )}
 
-                        {/* Language */}
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-sm font-bold text-gray-400">Preferred Language</label>
-                                <button className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2">Change</button>
-                            </div>
-                            <div className="w-fit rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-black">
-                                {user.language}
-                            </div>
-                        </div>
-
-                        {/* Timezone */}
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <label className="text-sm font-bold text-gray-400">Timezone</label>
-                                <button className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2">Change</button>
-                            </div>
-                            <div className="w-fit rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-black">
-                                {user.timezone}
-                            </div>
-                        </div>
-
-                        <div className="pt-4 border-t border-gray-100">
-                            <button className="flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-600">
-                                <Trash2 size={16} />
-                                Delete your account
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === "Privacy" && (
-                    <div className="space-y-8">
-                        {/* Profile Visibility */}
-                        <div>
-                            <h3 className="mb-4 text-base font-medium text-[#004d45]">Profile Visibility</h3>
-                            <div className="space-y-3">
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Public (For community features like Q&A upvotes)</span>
-                                    <input type="radio" name="visibility" className="h-5 w-5 accent-[#004d45] border-gray-300" />
-                                </label>
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Private (Default)</span>
-                                    <input type="radio" name="visibility" defaultChecked className="h-5 w-5 accent-[#004d45] border-gray-300" />
-                                </label>
-                            </div>
-                        </div>
-
-                        {/* Q&A Activity */}
-                        <div>
-                            <h3 className="mb-4 text-base font-medium text-[#004d45]">Q&A Activity</h3>
-                            <div className="space-y-3">
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Allow others to see the questions I've asked</span>
-                                    <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
-                                </label>
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Show my display name on public answers I've tipped</span>
-                                    <input type="checkbox" className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
-                                </label>
-                            </div>
-                        </div>
-
-                        {/* Communication */}
-                        <div>
-                            <h3 className="mb-4 text-base font-medium text-[#004d45]">Communication Preferences</h3>
-                            <div className="space-y-3">
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Receive updates about session tips & reminders</span>
-                                    <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
-                                </label>
-                                <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Receive occasional product news and platform updates</span>
-                                    <input type="checkbox" className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === "Security" && (
-                    <div className="flex flex-col items-center justify-center py-12 text-center text-gray-500">
-                        <div className="mb-4 rounded-full bg-gray-50 p-4">
-                            <div className="h-6 w-6 border-2 border-gray-300 rounded"></div>
-                        </div>
-                        <p>Security settings coming soon</p>
-                    </div>
-                )}
-
-            </div>
+            {activeTab !== "Consulted Lawyers" && (
+                <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50">
+                    <p className="text-gray-400">Content for {activeTab} coming soon...</p>
+                </div>
+            )}
         </div>
     );
 }
