@@ -3,19 +3,27 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { bookings, Booking, getBookingLawyer } from "@/data/bookings";
+import { bookings, Booking, getBookingLawyer, BookingStatus } from "@/data/bookings";
 import { Calendar, Clock, Video, MoreHorizontal, FileText, AlertCircle, MessageSquare } from "lucide-react";
 import ReviewModal from "@/components/ReviewModal";
 
+import BookingDetailsModal from "@/components/dashboard/BookingDetailsModal";
+import BookingModal from "@/components/BookingModal";
+
 export default function BookingsPage() {
-    const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "cancelled">("upcoming");
+    const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "cancelled" | "rescheduled">("upcoming");
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedBookingForReview, setSelectedBookingForReview] = useState<Booking | null>(null);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [selectedBookingForDetails, setSelectedBookingForDetails] = useState<Booking | null>(null);
+    const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+    const [selectedBookingForReschedule, setSelectedBookingForReschedule] = useState<Booking | null>(null);
 
     const filteredBookings = bookings.filter(b => {
         if (activeTab === "upcoming") return b.status === "confirmed" || b.status === "pending";
         if (activeTab === "past") return b.status === "completed";
         if (activeTab === "cancelled") return b.status === "cancelled";
+        if (activeTab === "rescheduled") return b.status === "rescheduled";
         return false;
     });
 
@@ -31,6 +39,35 @@ export default function BookingsPage() {
         setSelectedBookingForReview(null);
     };
 
+    const handleOpenDetails = (booking: Booking) => {
+        setSelectedBookingForDetails(booking);
+        setIsDetailsOpen(true);
+    };
+
+    const handleOpenReschedule = (booking: Booking) => {
+        const bookingDate = new Date(`${booking.date}T${booking.time.replace(" AM", ":00").replace(" PM", ":00")}`); // simplified parsing
+        const now = new Date();
+        const diffInHours = (bookingDate.getTime() - now.getTime()) / 1000 / 60 / 60;
+
+        if (diffInHours < 1) {
+            alert("You cannot reschedule less than 1 hour before the session.");
+            return;
+        }
+
+        setSelectedBookingForReschedule(booking);
+        setIsRescheduleOpen(true);
+    };
+
+    const handleSubmitReschedule = (date: Date, time: string, topic: string) => {
+        // In a real app, this would be an API call
+        if (selectedBookingForReschedule) {
+            // Mock update locally for demo (in reality, state management needed or refetch)
+            alert(`Reschedule request sent for ${date.toDateString()} at ${time}. Status updated to Pending.`);
+            setIsRescheduleOpen(false);
+            // Force refresh or update local list logic would be here
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div>
@@ -41,7 +78,7 @@ export default function BookingsPage() {
             {/* Tabs */}
             <div className="border-b border-gray-200">
                 <div className="flex gap-8">
-                    {["upcoming", "past", "cancelled"].map((tab) => (
+                    {["upcoming", "past", "rescheduled", "cancelled"].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -68,6 +105,8 @@ export default function BookingsPage() {
                                 key={booking.id}
                                 booking={booking}
                                 onLeaveReview={() => handleOpenReview(booking)}
+                                onViewDetails={() => handleOpenDetails(booking)}
+                                onReschedule={() => handleOpenReschedule(booking)}
                             />
                         ))}
                     </div>
@@ -101,19 +140,44 @@ export default function BookingsPage() {
                     lawyerName={getBookingLawyer(selectedBookingForReview)?.name || "Lawyer"}
                 />
             )}
+
+            {/* Details Modal */}
+            <BookingDetailsModal
+                isOpen={isDetailsOpen}
+                onClose={() => setIsDetailsOpen(false)}
+                booking={selectedBookingForDetails}
+            />
+
+            {/* Reschedule Modal */}
+            {selectedBookingForReschedule && (
+                <BookingModal
+                    lawyer={getBookingLawyer(selectedBookingForReschedule)!}
+                    isOpen={isRescheduleOpen}
+                    onClose={() => setIsRescheduleOpen(false)}
+                    initialTopic={selectedBookingForReschedule.topic}
+                    initialDate={new Date(selectedBookingForReschedule.date)}
+                    initialTime={selectedBookingForReschedule.time}
+                    mode="reschedule"
+                    rescheduleCount={selectedBookingForReschedule.rescheduleCount || 0}
+                    onSubmitReschedule={handleSubmitReschedule}
+                />
+            )}
         </div>
     );
 }
 
-function BookingCard({ booking, onLeaveReview }: { booking: Booking, onLeaveReview?: () => void }) {
+function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule }: { booking: Booking, onLeaveReview?: () => void, onViewDetails?: () => void, onReschedule?: () => void }) {
     const lawyer = getBookingLawyer(booking);
+    const [showMenu, setShowMenu] = useState(false);
+
     if (!lawyer) return null;
 
-    const statusColors = {
+    const statusColors: Record<BookingStatus, string> = {
         confirmed: "bg-green-100 text-green-800",
         pending: "bg-yellow-100 text-yellow-800",
         completed: "bg-gray-100 text-gray-800",
-        cancelled: "bg-red-50 text-red-600"
+        cancelled: "bg-red-50 text-red-600",
+        rescheduled: "bg-orange-100 text-orange-800"
     };
 
     return (
@@ -165,7 +229,7 @@ function BookingCard({ booking, onLeaveReview }: { booking: Booking, onLeaveRevi
                     <span className="font-bold text-[#006056]">${booking.price}</span>
                 </div>
 
-                <div className="flex gap-2 w-full sm:w-auto">
+                <div className="flex gap-2 w-full sm:w-auto relative">
                     {booking.status === "confirmed" && (
                         <>
                             <Link
@@ -188,9 +252,58 @@ function BookingCard({ booking, onLeaveReview }: { booking: Booking, onLeaveRevi
                         </button>
                     )}
                     {(booking.status === "confirmed" || booking.status === "pending") && (
-                        <button className="flex items-center justify-center rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-colors" title="Cancel Booking">
-                            <MoreHorizontal size={18} />
-                        </button>
+                        <>
+                            <button
+                                onClick={() => setShowMenu(!showMenu)}
+                                className="flex items-center justify-center rounded-lg border border-gray-200 p-2 text-gray-500 hover:bg-gray-50 transition-colors"
+                            >
+                                <MoreHorizontal size={18} />
+                            </button>
+
+                            {showMenu && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-10"
+                                        onClick={() => setShowMenu(false)}
+                                    ></div>
+                                    <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-gray-100 bg-white p-1 shadow-lg z-20">
+                                        <button
+                                            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                            onClick={() => {
+                                                if (onViewDetails) onViewDetails();
+                                                setShowMenu(false);
+                                            }}
+                                        >
+                                            <FileText size={14} />
+                                            View details
+                                        </button>
+                                        <button
+                                            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                            onClick={() => {
+                                                if (onReschedule) onReschedule();
+                                                setShowMenu(false);
+                                            }}
+                                        >
+                                            <Calendar size={14} />
+                                            Reschedule
+                                        </button>
+                                        <div className="my-1 h-px bg-gray-100"></div>
+                                        <button
+                                            className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                                            onClick={() => {
+                                                if (confirm("Are you sure you want to cancel this session?")) {
+                                                    alert("Session cancelled");
+                                                }
+                                                setShowMenu(false);
+                                            }}
+                                        >
+                                            <AlertCircle size={14} />
+                                            Cancel session
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

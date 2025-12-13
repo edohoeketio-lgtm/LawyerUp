@@ -18,6 +18,11 @@ interface ProfileData {
     lastName?: string;
     legalInterests?: string[];
     timezone?: string;
+    availability?: {
+        days: string[];
+        startTime: string;
+        endTime: string;
+    };
     [key: string]: unknown;
 }
 
@@ -29,10 +34,10 @@ interface EditProfileModalProps {
 }
 
 export default function EditProfileModal({ isOpen, onClose, onSave, initialData }: EditProfileModalProps) {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<ProfileData>({
+        role: "legal_help",
         firstName: "",
         lastName: "",
-        role: "legal_help",
         jobTitle: "",
         workplace: "",
         gender: "Prefer not to say",
@@ -41,6 +46,11 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
         bio: "",
         legalInterests: [],
         timezone: "",
+        availability: {
+            days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+            startTime: "09:00",
+            endTime: "17:00"
+        },
         ...initialData
     });
 
@@ -374,6 +384,86 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                 )}
                             </div>
                         </div>
+
+                        {/* Availability (Lawyers Only) */}
+                        {formData.role === "lawyer" && (
+                            <div className="space-y-3 pt-2 border-t border-gray-100">
+                                <h3 className="text-sm font-bold text-gray-900">Availability</h3>
+
+                                {/* Days Selector */}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-500">Available Days</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => {
+                                            const isSelected = (formData.availability?.days || []).includes(day);
+                                            return (
+                                                <button
+                                                    key={day}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const currentDays = formData.availability?.days || [];
+                                                        const newDays = isSelected
+                                                            ? currentDays.filter(d => d !== day)
+                                                            : [...currentDays, day];
+
+                                                        setFormData({
+                                                            ...formData,
+                                                            availability: {
+                                                                startTime: formData.availability?.startTime || "09:00",
+                                                                endTime: formData.availability?.endTime || "17:00",
+                                                                days: newDays
+                                                            }
+                                                        });
+                                                    }}
+                                                    className={`h-8 w-10 text-xs font-medium rounded-lg border transition-colors ${isSelected
+                                                        ? "bg-[#004d45] text-white border-[#004d45]"
+                                                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                                                        }`}
+                                                >
+                                                    {day}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Time Range */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500">Start Time</label>
+                                        <input
+                                            type="time"
+                                            value={formData.availability?.startTime || "09:00"}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                availability: {
+                                                    days: formData.availability?.days || [],
+                                                    endTime: formData.availability?.endTime || "17:00",
+                                                    startTime: e.target.value
+                                                }
+                                            })}
+                                            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-black focus:border-[#004d45] focus:outline-none"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500">End Time</label>
+                                        <input
+                                            type="time"
+                                            value={formData.availability?.endTime || "17:00"}
+                                            onChange={(e) => setFormData({
+                                                ...formData,
+                                                availability: {
+                                                    days: formData.availability?.days || [],
+                                                    startTime: formData.availability?.startTime || "09:00",
+                                                    endTime: e.target.value
+                                                }
+                                            })}
+                                            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-black focus:border-[#004d45] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Bio */}
                         <div className="space-y-1">

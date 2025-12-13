@@ -11,12 +11,28 @@ interface BookingModalProps {
     onClose: () => void;
     initialTopic?: string;
     initialDescription?: string;
+    mode?: 'booking' | 'reschedule';
+    rescheduleCount?: number;
+    initialDate?: Date;
+    initialTime?: string;
+    onSubmitReschedule?: (date: Date, time: string, topic: string) => void;
 }
 
-export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "", initialDescription = "" }: BookingModalProps) {
+export default function BookingModal({
+    lawyer,
+    isOpen,
+    onClose,
+    initialTopic = "",
+    initialDescription = "",
+    mode = 'booking',
+    rescheduleCount = 0,
+    initialDate,
+    initialTime,
+    onSubmitReschedule
+}: BookingModalProps) {
     const [step, setStep] = useState(1);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedTime, setSelectedTime] = useState<string | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(initialDate || null);
+    const [selectedTime, setSelectedTime] = useState<string | null>(initialTime || null);
     const [topic, setTopic] = useState(initialTopic);
     const [description, setDescription] = useState(initialDescription);
 
@@ -28,15 +44,26 @@ export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "
         setDescription(initialDescription);
     }
 
+    // Reset or Initialize when opening
+    if (isOpen && mode === 'reschedule' && (!selectedDate && initialDate)) {
+        setSelectedDate(initialDate);
+        setSelectedTime(initialTime || null);
+    }
+
     if (!isOpen) return null;
 
     const handleNext = () => {
         if (step === 1 && selectedDate) setStep(2);
         else if (step === 2 && selectedTime) setStep(3);
         else if (step === 3) {
-            // Submit logic would go here
-            alert("Booking Request Sent! The lawyer will review your topic.");
-            onClose();
+            if (mode === 'reschedule' && onSubmitReschedule && selectedDate && selectedTime) {
+                onSubmitReschedule(selectedDate, selectedTime, topic);
+                onClose();
+            } else {
+                // Submit logic would go here
+                alert("Booking Request Sent! The lawyer will review your topic.");
+                onClose();
+            }
         }
     };
 
@@ -118,6 +145,20 @@ export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "
                                 {step === 2 && "Select a Time"}
                                 {step === 3 && (initialTopic ? "Confirm Session Details" : "Session Topic")}
                             </h2>
+                            {mode === 'reschedule' && step === 1 && (
+                                <div className="mt-2 rounded-lg bg-orange-50 p-3 text-xs text-orange-800 border border-orange-100">
+                                    <p className="font-bold mb-1">Rescheduling Policy</p>
+                                    <ul className="list-disc pl-4 space-y-0.5">
+                                        <li>You have rescheduled <b>{rescheduleCount} times</b> previously.</li>
+                                        {rescheduleCount >= 2 && (
+                                            <li className="font-semibold">Notice: Rescheduling more than 2 times attracts a $50 fee.</li>
+                                        )}
+                                        {rescheduleCount >= 5 && (
+                                            <li className="font-bold text-red-600">Warning: Excessive rescheduling (5+) will result in account suspension.</li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                         {/* Mobile Close Button */}
                         <button onClick={onClose} className="rounded-full bg-gray-100 p-2 lg:hidden">

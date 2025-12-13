@@ -5,54 +5,10 @@ import { auth, User } from "@/utils/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { Settings, Edit2, Briefcase, Calendar, MessageSquare, Clock, Check, Video } from "lucide-react";
-
-// Mock Lawyer data based on card screenshot
-const consultedLawyers = [
-    {
-        id: "1",
-        name: "Ralph Edwards",
-        image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        country: "gb", // UK flag
-        specialty: "Criminal Defense Attorney",
-        sessions: 71,
-        reviews: 55,
-        tags: ["Business Law", "+3"]
-    },
-    {
-        id: "2",
-        name: "Annette Black",
-        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        country: "jp", // Japan flag
-        specialty: "Criminal Defense Attorney",
-        sessions: 71,
-        reviews: 55,
-        tags: ["Business Law", "+3"]
-    },
-    {
-        id: "3",
-        name: "Wade Warren",
-        image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        country: "no", // Norway flag
-        specialty: "Criminal Defense Attorney",
-        sessions: 71,
-        reviews: 55,
-        tags: ["Business Law", "+3"]
-    },
-    {
-        id: "4",
-        name: "Darrell Steward",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        country: "us",
-        specialty: "Family Law Attorney",
-        sessions: 42,
-        reviews: 38,
-        tags: ["Family Law", "+2"]
-    },
-];
-
-import EditProfileModal from "@/components/profile/EditProfileModal";
-
+import { lawyers } from "@/data/lawyers";
 import { bookings } from "@/data/bookings";
+import LawyerCard from "@/components/LawyerCard";
+import EditProfileModal from "@/components/profile/EditProfileModal";
 
 // Helper for Bio expansion
 function ContentExpander({ text }: { text: string }) {
@@ -97,14 +53,21 @@ function isSessionJoinable(dateStr: string, timeStr: string) {
     return diffInMinutes <= 5 && diffInMinutes > -60;
 }
 
+import { useSearchParams } from "next/navigation";
+
 export default function ProfilePage() {
-    const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Overview"); // Default to Overview
+    const searchParams = useSearchParams();
+    const shouldEdit = searchParams.get("edit") === "true";
+    const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Overview");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         setUser(auth.getSession());
-    }, []);
+        if (shouldEdit) {
+            setIsEditModalOpen(true);
+        }
+    }, [shouldEdit]);
 
     // Get mock/real sessions
     const upcomingSessions = bookings.filter(b => b.status === 'confirmed').slice(0, 3);
@@ -129,6 +92,7 @@ export default function ProfilePage() {
                     role: user.role === "client" ? "legal_help" : user.role
                 } as any : {}} // Cast to avoid index signature issues
             />
+
             {/* Header */}
             <div className="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-sm sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex gap-6">
@@ -150,7 +114,7 @@ export default function ProfilePage() {
                                 alt="Nigeria"
                                 width={20}
                                 height={15}
-                                className="object-contain" // Simplified flag
+                                className="object-contain"
                             />
                         </div>
                         <p className="text-sm font-medium text-gray-500">
@@ -206,49 +170,8 @@ export default function ProfilePage() {
             {/* Content */}
             {activeTab === "Consulted Lawyers" && (
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                    {consultedLawyers.map((lawyer) => (
-                        <div key={lawyer.id} className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
-                            {/* Card Image */}
-                            <div className="relative h-48 w-full bg-gray-100">
-                                <Image
-                                    src={lawyer.image}
-                                    alt={lawyer.name}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-
-                            {/* Card Content */}
-                            <div className="p-4">
-                                <div className="mb-1 flex items-center gap-2">
-                                    <h3 className="font-bold text-black">{lawyer.name}</h3>
-                                    <Image
-                                        src={`https://flagcdn.com/${lawyer.country}.svg`}
-                                        alt={lawyer.country}
-                                        width={14}
-                                        height={10}
-                                        className="object-cover rounded-sm"
-                                    />
-                                </div>
-                                <div className="mb-3 flex items-center gap-2 text-xs text-gray-500">
-                                    <Briefcase size={12} />
-                                    <span>{lawyer.specialty}</span>
-                                </div>
-
-                                <div className="mb-4 flex items-center gap-2 text-xs text-gray-500">
-                                    <Calendar size={12} />
-                                    <span>{lawyer.sessions} sessions ({lawyer.reviews} reviews)</span>
-                                </div>
-
-                                <div className="flex flex-wrap gap-2">
-                                    {lawyer.tags.map((tag) => (
-                                        <span key={tag} className="rounded-md bg-gray-100 px-2.5 py-1 text-[10px] font-medium text-gray-600">
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                    {lawyers.slice(0, 4).map((lawyer) => (
+                        <LawyerCard key={lawyer.id} lawyer={lawyer} />
                     ))}
                 </div>
             )}

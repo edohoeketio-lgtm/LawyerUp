@@ -1,7 +1,7 @@
 "use client";
 
 import { NAV_ITEMS } from "@/data/navigation";
-import { Bell, Calendar, Menu } from "lucide-react";
+import { Bell, Calendar, Menu, MessageSquare, Info } from "lucide-react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +17,43 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentView = searchParams.get("view") || "client";
+
+    // Notification State
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    // Mock Notifications - Curated for high importance
+    const notifications = [
+        {
+            id: 1,
+            type: 'booking',
+            text: "Upcoming Session: 'Landlord Dispute' starts in 1 hour",
+            time: "Just now",
+            unread: true
+        },
+        {
+            id: 2,
+            type: 'message',
+            text: "New message from Barr. Sarah James regarding your case",
+            time: "25 mins ago",
+            unread: true
+        },
+        {
+            id: 3,
+            type: 'system',
+            text: "Payment successful for session with Adv. Michael",
+            time: "2 hours ago",
+            unread: false
+        },
+        {
+            id: 4,
+            type: 'system',
+            text: "Action Required: Verify your email to enable video calls",
+            time: "1 day ago",
+            unread: false
+        },
+    ];
+
+    const unreadCount = notifications.filter(n => n.unread).length;
 
     const [user, setUser] = useState<User | null>(null);
 
@@ -89,10 +126,70 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
             )}
 
             <div className="flex items-center gap-4">
-                <button className="relative rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200">
-                    <Bell size={20} />
-                    <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                </button>
+                <div className="relative">
+                    <button
+                        onClick={() => setShowNotifications(!showNotifications)}
+                        className={`relative rounded-full p-2 transition-colors ${showNotifications ? "bg-gray-200 text-black" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                    >
+                        <Bell size={20} />
+                        {unreadCount > 0 && (
+                            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                        )}
+                    </button>
+
+                    {/* Notification Dropdown */}
+                    {showNotifications && (
+                        <>
+                            <div
+                                className="fixed inset-0 z-40"
+                                onClick={() => setShowNotifications(false)}
+                            ></div>
+                            <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-xl border border-gray-100 bg-white shadow-xl ring-1 ring-black/5 animate-in fade-in zoom-in-95 duration-200">
+                                <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                                    <h3 className="font-serif text-sm font-bold text-black">Notifications</h3>
+                                    <button className="text-xs text-[#004d45] hover:underline">Mark all as read</button>
+                                </div>
+                                <div className="max-h-[320px] overflow-y-auto py-2">
+                                    {notifications.map((notification) => (
+                                        <div
+                                            key={notification.id}
+                                            className="relative flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer group"
+                                        >
+                                            <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${notification.type === 'booking' ? 'bg-green-50 text-green-600' :
+                                                notification.type === 'message' ? 'bg-blue-50 text-blue-600' :
+                                                    'bg-yellow-50 text-yellow-600'
+                                                }`}>
+                                                {notification.type === 'booking' && <Calendar size={14} />}
+                                                {notification.type === 'message' && <MessageSquare size={14} />}
+                                                {notification.type === 'system' && <Info size={14} />}
+                                            </div>
+                                            <div className="flex-1 space-y-1">
+                                                <p className={`text-sm leading-snug ${notification.unread ? 'font-medium text-black' : 'text-gray-600'}`}>
+                                                    {notification.text}
+                                                </p>
+                                                <p className="text-xs text-gray-400">{notification.time}</p>
+                                            </div>
+                                            {notification.unread && (
+                                                <div className="mt-2 h-2 w-2 shrink-0 rounded-full bg-blue-500"></div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="border-t border-gray-100 px-4 py-2 text-center">
+                                    <Link
+                                        href="/dashboard/notifications"
+                                        className="text-xs font-medium text-gray-500 hover:text-black"
+                                        onClick={() => setShowNotifications(false)}
+                                    >
+                                        View all notifications
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+
                 {!pathname?.startsWith("/dashboard/lawyer/") && pathname !== "/dashboard/discover" && (
                     <Link
                         href="/dashboard/discover"

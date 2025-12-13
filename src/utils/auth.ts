@@ -14,6 +14,11 @@ export interface User {
     languages?: string[];
     bio?: string;
     timezone?: string;
+    availability?: {
+        days: string[];
+        startTime: string;
+        endTime: string;
+    };
 }
 
 const USERS_KEY = "lawyerup_users";

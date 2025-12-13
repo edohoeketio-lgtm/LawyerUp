@@ -137,49 +137,107 @@ export default function DashboardClient() {
                     <p className="text-xs text-gray-600">Get more by setting up a profile that portrays you</p>
                 </div>
 
-                <div className="mb-6 flex items-center gap-4">
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
-                        <div className="h-full w-1/4 rounded-full bg-[#523300]"></div>
-                    </div>
-                    <span className="text-xs font-medium">25% complete</span>
-                </div>
+                {(() => {
+                    // Determine completion status
+                    const hasLanguageAndTimezone = user?.languages && user?.languages.length > 0 && user?.timezone;
+                    const hasLegalInterests = user?.legalInterests && user?.legalInterests.length > 0;
+                    const hasBookedSession = bookings.some(b => b.status === "confirmed" || b.status === "completed");
 
-                <div className="relative space-y-0 text-sm">
-                    {/* Vertical Line */}
-                    <div className="absolute left-[9px] top-2 h-[calc(100%-16px)] w-0.5 bg-[#8F6B20]"></div>
+                    const completedCount = [
+                        hasLanguageAndTimezone,
+                        hasLegalInterests,
+                        hasBookedSession
+                    ].filter(Boolean).length;
 
-                    {/* Step 1: Done */}
-                    <div className="relative flex items-center gap-3">
-                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
-                            <Check size={12} strokeWidth={3} />
-                        </div>
-                        <span className="font-medium text-[#8F6B20] line-through decoration-2">Set preferred language & timezone</span>
-                    </div>
+                    const totalSteps = isLawyerView ? 4 : 3; // Lawyers have bar membership step
+                    const percentComplete = Math.round((completedCount / totalSteps) * 100);
 
-                    {/* Step 2: Bar Membership (Conditional) */}
-                    {isLawyerView && (
-                        <div className="relative flex items-center gap-3 pt-6">
-                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                            <span className="font-medium text-[#4A3B18]">Bar membership No.</span>
-                        </div>
-                    )}
+                    return (
+                        <>
+                            <div className="mb-6 flex items-center gap-4">
+                                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
+                                    <div
+                                        className="h-full rounded-full bg-[#523300] transition-all duration-300"
+                                        style={{ width: `${percentComplete}%` }}
+                                    ></div>
+                                </div>
+                                <span className="text-xs font-medium">{percentComplete}% complete</span>
+                            </div>
 
-                    {/* Step 3: Mentorship Topics / Preferences */}
-                    <div className="relative flex items-center gap-3 pt-6">
-                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                        <span className="font-medium text-[#4A3B18]">
-                            {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
-                        </span>
-                    </div>
+                            <div className="relative space-y-0 text-sm">
+                                {/* Vertical Line */}
+                                <div className="absolute left-[9px] top-2 h-[calc(100%-16px)] w-0.5 bg-[#8F6B20]"></div>
 
-                    {/* Step 4: First Session */}
-                    <div className="relative flex items-center gap-3 pt-6">
-                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                        <span className="font-medium text-[#4A3B18]">
-                            Book your first session - <span className="font-normal text-gray-600">Speak to an expert</span>
-                        </span>
-                    </div>
-                </div>
+                                {/* Step 1: Language & Timezone */}
+                                <div className="relative flex items-center gap-3">
+                                    {hasLanguageAndTimezone ? (
+                                        <>
+                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                                <Check size={12} strokeWidth={3} />
+                                            </div>
+                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">Set preferred language & timezone</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                            <span className="font-medium text-[#4A3B18]">Set preferred language & timezone</span>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Step 2: Bar Membership (Conditional for Lawyers) */}
+                                {isLawyerView && (
+                                    <div className="relative flex items-center gap-3 pt-6">
+                                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                        <span className="font-medium text-[#4A3B18]">Bar membership No.</span>
+                                    </div>
+                                )}
+
+                                {/* Step 3: Legal Interests */}
+                                <div className="relative flex items-center gap-3 pt-6">
+                                    {hasLegalInterests ? (
+                                        <>
+                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                                <Check size={12} strokeWidth={3} />
+                                            </div>
+                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">
+                                                {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                            <span className="font-medium text-[#4A3B18]">
+                                                {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Step 4: First Session */}
+                                <div className="relative flex items-center gap-3 pt-6">
+                                    {hasBookedSession ? (
+                                        <>
+                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                                <Check size={12} strokeWidth={3} />
+                                            </div>
+                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">
+                                                Book your first session - <span className="font-normal">Speak to an expert</span>
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                            <span className="font-medium text-[#4A3B18]">
+                                                Book your first session - <span className="font-normal text-gray-600">Speak to an expert</span>
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </>
+                    );
+                })()}
             </div>
 
             {/* Upcoming Sessions (Interactive Calendar) */}

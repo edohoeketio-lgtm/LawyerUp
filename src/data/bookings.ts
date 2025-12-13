@@ -1,19 +1,20 @@
 import { Lawyer, getLawyerById } from "./lawyers";
 
-export type BookingStatus = "confirmed" | "pending" | "completed" | "cancelled";
+export type BookingStatus = "confirmed" | "pending" | "completed" | "cancelled" | "rescheduled";
 export type SessionType = "consultation" | "mentorship";
 
 export interface Booking {
     id: string;
     lawyerId: string;
-    date: string; // ISO string or just a date string like "2025-04-15"
+    date: string; // ISO date string YYYY-MM-DD
     time: string;
-    type: SessionType;
-    status: BookingStatus;
-    price: number;
     duration: number; // in minutes
-    meetingLink?: string;
+    type: 'consultation' | 'mentorship';
+    meetingLink?: string; // only if confirmed status
     topic?: string;
+    price: number;
+    status: BookingStatus;
+    rescheduleCount?: number;
 }
 
 const today = new Date();
@@ -24,49 +25,52 @@ lastMonth.setMonth(today.getMonth() - 1);
 
 export const bookings: Booking[] = [
     {
-        id: "bk_1",
+        id: "1",
         lawyerId: "1", // Sarah Jenkins
-        date: nextWeek.toISOString().split('T')[0], // Next week
+        date: "2025-04-15",
         time: "10:00 AM",
+        duration: 60,
         type: "consultation",
+        topic: "Intellectual Property Dispute",
+        price: 150,
         status: "confirmed",
-        price: 100,
-        duration: 60,
-        meetingLink: "https://zoom.us/j/123456789",
-        topic: "Contract Review for Startup"
+        rescheduleCount: 0
     },
     {
-        id: "bk_2",
-        lawyerId: "3", // Michael Ross
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3).toISOString().split('T')[0], // 3 days from now
+        id: "2",
+        lawyerId: "3", // David Chen
+        date: "2025-04-18",
         time: "2:00 PM",
-        type: "mentorship",
-        status: "pending",
-        price: 180,
-        duration: 60,
-        topic: "Career pivoting advice"
-    },
-    {
-        id: "bk_3",
-        lawyerId: "2", // David Okon
-        date: lastMonth.toISOString().split('T')[0], // Last month
-        time: "11:00 AM",
-        type: "consultation",
-        status: "completed",
-        price: 120,
-        duration: 60,
-        topic: "Property Dispute"
-    },
-    {
-        id: "bk_4",
-        lawyerId: "5", // James Carter
-        date: "2024-12-01",
-        time: "09:00 AM",
-        type: "mentorship",
-        status: "cancelled",
-        price: 130,
         duration: 45,
-        topic: "Initial Mentorship Session"
+        type: "mentorship",
+        topic: "Career guidance in Corporate Law",
+        price: 100,
+        status: "pending",
+        rescheduleCount: 0
+    },
+    {
+        id: "3",
+        lawyerId: "2", // MichaelRoss
+        date: "2025-03-10",
+        time: "11:00 AM",
+        duration: 60,
+        type: "consultation",
+        topic: "Contract Review",
+        price: 200,
+        status: "completed",
+        rescheduleCount: 0
+    },
+    {
+        id: "4",
+        lawyerId: "4", // Rabbi Cohen
+        date: "2025-04-20",
+        time: "4:00 PM",
+        duration: 30,
+        type: "consultation",
+        topic: "Family Law Consultation",
+        price: 120,
+        status: "rescheduled",
+        rescheduleCount: 1
     }
 ];
 

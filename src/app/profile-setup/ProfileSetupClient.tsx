@@ -33,7 +33,7 @@ export default function ProfileSetupClient() {
                 });
             }
         }
-        router.push("/dashboard");
+        router.push("/dashboard/account?edit=true");
     };
 
     return (
