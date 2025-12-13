@@ -32,8 +32,11 @@ export default function ChatPage() {
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
-    const [isAttaching, setIsAttaching] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
 
+    // We removed 'isAttaching' state in favor of direct file input trigger
+    // but we can keep it if we wanted the "mock menu", but simpler is better as per user request
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const lawyer = getLawyerDetails(lawyerId);
@@ -43,7 +46,6 @@ export default function ChatPage() {
             const conversation = mockConversations.find(c => c.lawyerId === lawyerId);
             if (conversation) {
                 // Ensure messages have 'type' and 'isMe' for UI compatibility if data doesn't have it
-                // My mock data has senderId: 'me' | lawyerId
                 const formattedMessages: Message[] = conversation.messages.map(m => ({
                     ...m,
                     type: "text", // Default to text for compatibility
@@ -78,19 +80,22 @@ export default function ChatPage() {
         setNewMessage("");
     };
 
-    const handleSendImage = () => {
-        // Simulate image upload
-        const msg: Message = {
-            id: Date.now().toString(),
-            senderId: "me",
-            content: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80", // Mock image doc
-            timestamp: new Date().toISOString(),
-            type: "image",
-            isMe: true,
-            isRead: true
-        };
-        setMessages([...messages, msg]);
-        setIsAttaching(false);
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            // Simulate upload delay
+            setTimeout(() => {
+                const msg: Message = {
+                    id: Date.now().toString(),
+                    senderId: "me",
+                    content: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80", // Mock image doc
+                    timestamp: new Date().toISOString(),
+                    type: "image",
+                    isMe: true,
+                    isRead: true
+                };
+                setMessages(prev => [...prev, msg]);
+            }, 500);
+        }
     };
 
     if (!lawyer) {
@@ -98,11 +103,14 @@ export default function ChatPage() {
     }
 
     return (
-        <div className="flex h-[calc(100vh-120px)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div
+            className="flex h-[calc(100vh-120px)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+            onClick={() => setShowMenu(false)}
+        >
             {/* Chat Header */}
             <div className="flex items-center justify-between border-b border-gray-100 p-4">
                 <div className="flex items-center gap-4">
-                    <Link href="/dashboard/bookings" className="text-gray-400 hover:text-gray-600">
+                    <Link href="/dashboard/messages" className="text-gray-400 hover:text-gray-600">
                         <ArrowLeft size={20} />
                     </Link>
                     <Link href={`/dashboard/lawyer/${lawyer.id}?source=chat`} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -118,8 +126,35 @@ export default function ChatPage() {
                         </div>
                     </Link>
                 </div>
-                <div className="flex items-center gap-4 text-gray-400">
-                    <button className="hover:text-gray-600"><MoreVertical size={20} /></button>
+                <div className="relative">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setShowMenu(!showMenu);
+                        }}
+                        className={`p-2 rounded-full transition-colors ${showMenu ? "bg-gray-100 text-gray-600" : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"}`}
+                    >
+                        <MoreVertical size={20} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {showMenu && (
+                        <div className="absolute right-0 top-12 z-50 w-48 rounded-xl border border-gray-100 bg-white shadow-xl py-2 overflow-hidden">
+                            <Link href={`/dashboard/lawyer/${lawyer.id}`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                View Profile
+                            </Link>
+                            <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                Report Issue
+                            </button>
+                            <div className="h-px bg-gray-100 my-1"></div>
+                            <button
+                                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                onClick={() => alert("User blocked (Mock Action)")}
+                            >
+                                Block User
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -148,7 +183,6 @@ export default function ChatPage() {
             </div>
 
             {/* Input Area */}
-            {/* Input Area or Read-Only Banner */}
             <div className="border-t border-gray-100 bg-white p-4">
                 {(() => {
                     // Check booking status
@@ -181,21 +215,20 @@ export default function ChatPage() {
 
                     return (
                         <>
-                            {isAttaching && (
-                                <div className="mb-2 flex gap-2 overflow-x-auto p-2">
-                                    <button onClick={handleSendImage} className="relative flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-300 bg-gray-50 text-xs text-gray-500 hover:bg-gray-100">
-                                        <ImageIcon size={20} />
-                                        Send Mock Img
-                                    </button>
-                                </div>
-                            )}
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleFileSelect}
+                            />
 
                             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                                 <button
                                     type="button"
-                                    onClick={() => setIsAttaching(!isAttaching)}
-                                    aria-label="Attach image"
-                                    className={`rounded-full p-2 transition-colors ${isAttaching ? "bg-gray-100 text-black" : "text-gray-400 hover:bg-gray-100"}`}
+                                    onClick={() => fileInputRef.current?.click()}
+                                    aria-label="Attach file"
+                                    className="rounded-full p-2 transition-colors text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                                 >
                                     <Paperclip size={20} />
                                 </button>
@@ -204,12 +237,16 @@ export default function ChatPage() {
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     placeholder="Type a message..."
-                                    className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none focus:border-[#004d45] focus:bg-white"
+                                    className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none focus:border-[#004d45] focus:bg-white transition-all"
                                 />
                                 <button
                                     type="submit"
                                     aria-label="Send message"
-                                    className="rounded-full bg-[#004d45] p-2.5 text-white shadow-sm transition-colors hover:bg-[#003a34]"
+                                    disabled={!newMessage.trim()}
+                                    className={`rounded-full p-2.5 shadow-sm transition-colors ${newMessage.trim()
+                                            ? "bg-[#004d45] text-white hover:bg-[#003a34]"
+                                            : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                                        }`}
                                 >
                                     <Send size={18} />
                                 </button>
