@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { auth } from "@/utils/auth";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function SignupPage() {
@@ -74,13 +75,37 @@ export default function SignupPage() {
         if (isValid) {
             setIsSubmitting(true);
             // Handle valid submission with simulation delay
-            console.log("Form submitted", formData, role);
+            // console.log("Form submitted", formData, role); // Original line
 
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // Simulate API call (Original line)
+            // await new Promise((resolve) => setTimeout(resolve, 2000)); // Original line
 
-            const encodedName = encodeURIComponent(formData.name);
-            router.push(`/otp?name=${encodedName}`);
+            // const encodedName = encodeURIComponent(formData.name); // Original line
+            // router.push(`/otp?name=${encodedName}`); // Original line
+            try {
+                // Register user locally
+                auth.registerUser({
+                    firstName: formData.name.split(' ')[0] || '', // Assuming first word is first name
+                    lastName: formData.name.split(' ').slice(1).join(' ') || '', // Remaining words are last name
+                    email: formData.email,
+                    password: formData.password,
+                    role: role,
+                });
+
+                // Auto login/set session
+                auth.login(formData.email, formData.password);
+
+                // Redirect based on role
+                if (role === "client") {
+                    router.push("/profile-setup?name=" + encodeURIComponent(formData.name.split(' ')[0] || ''));
+                } else {
+                    router.push("/lawyer/verification"); // Or wherever lawyers go
+                }
+            } catch (error: any) {
+                alert(error.message); // Simple error handling for now
+            } finally {
+                setIsSubmitting(false); // Ensure submitting state is reset
+            }
         }
     };
 

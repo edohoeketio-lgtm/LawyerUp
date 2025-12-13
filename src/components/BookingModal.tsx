@@ -9,14 +9,16 @@ interface BookingModalProps {
     lawyer: Lawyer;
     isOpen: boolean;
     onClose: () => void;
+    initialTopic?: string;
+    initialDescription?: string;
 }
 
-export default function BookingModal({ lawyer, isOpen, onClose }: BookingModalProps) {
+export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "", initialDescription = "" }: BookingModalProps) {
     const [step, setStep] = useState(1);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
-    const [topic, setTopic] = useState("");
-    const [description, setDescription] = useState("");
+    const [topic, setTopic] = useState(initialTopic);
+    const [description, setDescription] = useState(initialDescription);
 
     if (!isOpen) return null;
 

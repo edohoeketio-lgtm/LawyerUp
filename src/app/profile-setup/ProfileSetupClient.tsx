@@ -1,62 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Map } from "lucide-react";
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
-const LOCATION_DATA = {
-    Nigeria: {
-        flag: "🇳🇬",
-        cities: ["Lagos", "Abuja", "Port Harcourt", "Ibadan", "Kano"],
-    },
-    "United States": {
-        flag: "🇺🇸",
-        cities: ["New York", "Los Angeles", "Chicago", "Houston", "Miami"],
-    },
-    "United Kingdom": {
-        flag: "🇬🇧",
-        cities: ["London", "Manchester", "Birmingham", "Liverpool", "Edinburgh"],
-    },
-    Canada: {
-        flag: "🇨🇦",
-        cities: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa"],
-    },
-    Ghana: {
-        flag: "🇬🇭",
-        cities: ["Accra", "Kumasi", "Tamale", "Takoradi", "Cape Coast"],
-    },
-    "South Africa": {
-        flag: "🇿🇦",
-        cities: ["Johannesburg", "Cape Town", "Durban", "Pretoria"],
-    },
-};
-
-type CountryName = keyof typeof LOCATION_DATA;
+import { allCountries } from "@/data/countries";
 
 export default function ProfileSetupClient() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const name = searchParams.get("name") || "Guest";
     const [formData, setFormData] = useState({
-        country: "Nigeria" as CountryName,
-        city: "",
+        country: "Nigeria",
         language: "English",
         timezone: "GMT (Greenwich Mean Time)",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-
-        if (name === "country") {
-            setFormData(prev => ({
-                ...prev,
-                country: value as CountryName,
-                city: "", // Reset city when country changes
-            }));
-        } else {
-            setFormData(prev => ({ ...prev, [name]: value }));
-        }
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     return (
@@ -93,8 +55,8 @@ export default function ProfileSetupClient() {
                                 Country
                             </label>
                             <div className="relative">
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg">
-                                    {LOCATION_DATA[formData.country]?.flag}
+                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <Map size={18} />
                                 </div>
                                 <select
                                     name="country"
@@ -102,7 +64,7 @@ export default function ProfileSetupClient() {
                                     onChange={handleChange}
                                     className="w-full appearance-none rounded-lg border border-gray-200 bg-white py-3 pl-12 pr-10 text-sm outline-none focus:border-[#013328]"
                                 >
-                                    {Object.keys(LOCATION_DATA).map((country) => (
+                                    {allCountries.map((country) => (
                                         <option key={country} value={country}>
                                             {country}
                                         </option>
@@ -112,29 +74,7 @@ export default function ProfileSetupClient() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-medium text-gray-500">
-                                City
-                            </label>
-                            <div className="relative">
-                                <select
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    disabled={!formData.country}
-                                    className={`w-full appearance-none rounded-lg border border-gray-200 bg-white py-3 px-4 text-sm outline-none focus:border-[#013328] ${!formData.country ? "bg-gray-50 text-gray-400 cursor-not-allowed" : ""
-                                        }`}
-                                >
-                                    <option value="">Select city</option>
-                                    {LOCATION_DATA[formData.country]?.cities.map((city) => (
-                                        <option key={city} value={city}>
-                                            {city}
-                                        </option>
-                                    ))}
-                                </select>
-                                <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className="space-y-2">

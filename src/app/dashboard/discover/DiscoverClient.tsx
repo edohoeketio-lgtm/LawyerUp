@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { lawyers } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
+import { allSectors } from "@/data/sectors";
+import { auth } from "@/utils/auth";
 
 export default function DiscoverClient() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -20,34 +22,21 @@ export default function DiscoverClient() {
         }
     }, []);
 
-    // Extensive list of law sectors
-    const allSectors = [
-        "Administrative Law", "Admiralty & Maritime Law", "Agency Law", "Alcohol Law", "Alternative Dispute Resolution",
-        "Animal Law", "Antitrust & Trade Regulation", "Appellate Practice", "Arbitration", "Art Law",
-        "Animal Law", "Antitrust & Trade Regulation", "Appellate Practice", "Arbitration", "Art Law",
-        "Aviation Law", "Banking & Finance Law", "Bankruptcy Law", "Biotechnology Law", "Business Law",
-        "Cannabis Law", "Civil Rights Law", "Class Action Law", "Communications Law", "Compliance Law",
-        "Computer & Internet Law", "Constitutional Law", "Construction Law", "Consumer Protection Law", "Contract Law",
-        "Copyright Law", "Corporate Law", "Criminal Law", "Cryptocurrency & Blockchain Law", "Cybersecurity Law",
-        "Defamation Law", "Derivatives & Futures Law", "Disability Law", "Drone Law", "E-Commerce Law",
-        "Education Law", "Elder Law", "Election & Political Law", "Eminent Domain", "Employee Benefits (ERISA)",
-        "Employment / Labour Law", "Energy & Natural Resources Law", "Entertainment & Media Law", "Environmental Law", "Equipment Finance Law",
-        "Estate Planning", "Ethics & Professional Responsibility", "Family Law", "Fashion Law", "Federal Law",
-        "Fintech Law", "Food & Drug Law", "Franchise Law", "Gaming Law", "Government Contracts",
-        "Health Care Law", "Human Rights Law", "Immigration Law", "Import & Export Law", "Insurance Law",
-        "Intellectual Property (IP) Law", "International Law", "Investment Management Law", "Juvenile Law", "Land Use & Zoning Law",
-        "Landlord-Tenant Law", "Legal Malpractice Law", "Libel & Slander Law", "Life Sciences Law", "Litigation",
-        "Media Law", "Medical Malpractice Law", "Mergers & Acquisitions (M&A)", "Military Law", "Mining Law",
-        "Municipal Law", "Music Law", "Native American Law", "Non-Profit / Charity Law", "Occupational Safety & Health (OSHA)",
-        "Oil & Gas Law", "Patent Law", "Personal Injury Law", "Pharmaceutical Law", "Privacy & Data Security Law",
-        "Private Equity Law", "Product Liability Law", "Professional Liability Law", "Property Law", "Public Finance Law",
-        "Public Interest Law", "Qui Tam / Whistleblower Law", "Railroad Law", "Real Estate Law", "Regulatory Law",
-        "Religious Institutions Law", "Retirement Law", "Rocket & Space Law", "Securities Law", "Sexual Harassment Law",
-        "Social Security Disability", "Space Law", "Sports Law", "Startups & Emerging Companies", "Tax Law",
-        "Technology Law", "Telecommunications Law", "Tort Law", "Trademark Law", "Transportation Law",
-        "Trusts & Estates Law", "Venture Capital Law", "Veterans Benefits", "Water Law", "White Collar Crime",
-        "Workers' Compensation", "Zoning, Planning & Land Use"
-    ].sort();
+    // State for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(8);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setItemsPerPage(window.innerWidth >= 1024 ? 20 : 8);
+        };
+
+        // Set initial
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Combine with any unique ones from actual data if missing
     const availableSectors = Array.from(new Set([...allSectors, ...lawyers.map(l => l.sector)]));
@@ -58,14 +47,33 @@ export default function DiscoverClient() {
     const filteredLawyers = lawyers.filter(lawyer => {
         const matchesSearch = lawyer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             lawyer.sector.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSector = selectedSector === "All" || lawyer.sector === selectedSector;
+        const isBlocked = blockedIds.includes(lawyer.id);
 
-        // Loose matching for sector to handle slight variations (e.g. "Corporate" vs "Corporate Law")
-        const matchesSector = selectedSector === "All" || lawyer.sector.includes(selectedSector) || selectedSector.includes(lawyer.sector);
+        return matchesSearch && matchesSector && !isBlocked;
+    }).sort((a, b) => { // smart sort based on user interest
+        const userInterests = auth.getSession()?.legalInterests || [];
+        if (userInterests.length === 0) return 0;
 
-        const matchesBlocked = !blockedIds.includes(lawyer.id);
+        const aMatches = userInterests.includes(a.sector);
+        const bMatches = userInterests.includes(b.sector);
 
-        return matchesSearch && matchesSector && matchesBlocked;
+        if (aMatches && !bMatches) return -1;
+        if (!aMatches && bMatches) return 1;
+        return 0;
     });
+
+    // Pagination Logic
+    const totalPages = Math.ceil(filteredLawyers.length / itemsPerPage);
+    const paginatedLawyers = filteredLawyers.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Reset page when filter changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, selectedSector, itemsPerPage]);
 
     return (
         <div className="space-y-6" onClick={() => setShowFilter(false)}>
@@ -97,7 +105,7 @@ export default function DiscoverClient() {
 
                     {/* Filter Popover */}
                     {showFilter && (
-                        <div className="absolute right-0 top-full z-50 mt-2 w-[600px] rounded-xl border border-[#006056] bg-white p-4 shadow-xl">
+                        <div className="absolute right-0 top-full z-50 mt-2 w-[300px] sm:w-[600px] rounded-xl border border-[#006056] bg-white p-4 shadow-xl">
                             {/* Filter Search */}
                             <div className="relative mb-4">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -112,7 +120,7 @@ export default function DiscoverClient() {
                             </div>
 
                             {/* Tags Grid */}
-                            <div className="flex flex-wrap gap-2 max-h-[400px] overflow-y-auto custom-scrollbar">
+                            <div className="flex flex-wrap gap-2 max-h-[300px] overflow-y-auto custom-scrollbar">
                                 <button
                                     onClick={() => {
                                         setSelectedSector("All");
@@ -132,9 +140,6 @@ export default function DiscoverClient() {
                                         key={sector}
                                         onClick={() => {
                                             setSelectedSector(selectedSector === sector ? "All" : sector);
-                                            // Optional: close on select? User might want to browse. 
-                                            // Let's keep it open or close? Design usually implies select one and go.
-                                            // But for buttons, closing feels snappy.
                                             setShowFilter(false);
                                         }}
                                         className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors
@@ -154,24 +159,34 @@ export default function DiscoverClient() {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                {filteredLawyers.map((lawyer) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {paginatedLawyers.map((lawyer) => (
                     <LawyerCard key={lawyer.id} lawyer={lawyer} />
                 ))}
             </div>
 
-            {/* Pagination Visual */}
-            <div className="mt-8 flex justify-center">
-                <div className="flex items-center gap-2">
-                    <button className="rounded-lg border border-gray-200 p-2 text-gray-400 hover:bg-gray-50" disabled>
-                        Previous
-                    </button>
-                    <span className="text-sm text-gray-600">Page 1 of 1</span>
-                    <button className="rounded-lg border border-gray-200 p-2 text-gray-400 hover:bg-gray-50" disabled>
-                        Next
-                    </button>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="mt-8 flex justify-center">
+                    <div className="flex items-center gap-2">
+                        <button
+                            className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                        >
+                            Previous
+                        </button>
+                        <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
+                        <button
+                            className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

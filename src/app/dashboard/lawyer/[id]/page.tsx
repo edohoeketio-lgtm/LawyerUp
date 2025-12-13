@@ -12,6 +12,7 @@ import {
 import { getLawyerById, Lawyer } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
 import BookingModal from "@/components/BookingModal";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { lawyers } from "@/data/lawyers";
 
 export default function LawyerDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -24,25 +25,38 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [showReportModal, setShowReportModal] = useState(false);
     const [showBookingModal, setShowBookingModal] = useState(false);
+    const [bookingParams, setBookingParams] = useState<{ topic?: string, description?: string }>({});
     const [reportReason, setReportReason] = useState("");
 
     if (!lawyer) {
         notFound();
     }
 
-    const similarLawyers = lawyers.filter(l => l.sector === lawyer.sector && l.id !== lawyer.id).slice(0, 2);
+    // Normalize sector for comparison (some might be "Criminal Defense" vs "Criminal Defense Attorney")
+    const similarLawyers = lawyers.filter(l => {
+        if (l.id === lawyer.id) return false;
+        // Simple exact match or partial match if needed. Data seems to have "Corporate Law", "Criminal Defense", "Marine Insurance"
+        // Let's assume strict equality for now, but I added more data to match.
+        return l.sector === lawyer.sector;
+    }).slice(0, 2);
 
     return (
         <div className="space-y-8 pb-12">
             <BookingModal lawyer={lawyer} isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+            <BookingModal
+                lawyer={lawyer}
+                isOpen={showBookingModal}
+                onClose={() => setShowBookingModal(false)}
+                initialTopic={bookingParams.topic}
+                initialDescription={bookingParams.description}
+            />
             {/* Breadcrumb / Back Navigation */}
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Link href="/dashboard" className="hover:text-black">Back</Link>
-                <ChevronLeft size={14} />
-                <Link href="/dashboard/discover" className="hover:text-black">Discover</Link>
-                <ChevronLeft size={14} />
-                <span className="font-medium text-black">{lawyer.name}</span>
-            </div>
+            <Breadcrumbs
+                items={[
+                    { label: "Discover", href: "/dashboard/discover" },
+                    { label: lawyer.name }
+                ]}
+            />
 
             {/* Header Profile Card */}
             <div className="rounded-xl border border-gray-100 bg-white p-6 md:flex md:items-start md:justify-between">
@@ -230,7 +244,15 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
 
                     {/* Tab Content */}
                     <div className="min-h-[400px]">
-                        {activeTab === "Overview" && <OverviewTab lawyer={lawyer} similarLawyers={similarLawyers} setActiveTab={setActiveTab} />}
+                        {activeTab === "Overview" && <OverviewTab
+                            lawyer={lawyer}
+                            similarLawyers={similarLawyers}
+                            setActiveTab={setActiveTab}
+                            onBook={(topic, description) => {
+                                setBookingParams({ topic, description });
+                                setShowBookingModal(true);
+                            }}
+                        />}
                         {activeTab === "Reviews" && <ReviewsTab lawyer={lawyer} />}
                         {activeTab === "Achievements" && <AchievementsTab lawyer={lawyer} />}
                     </div>
@@ -240,15 +262,29 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
     );
 }
 
-function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyers: Lawyer[], activeTab?: string, setActiveTab: (tab: string) => void }) {
+function OverviewTab({ lawyer, similarLawyers, onBook }: { lawyer: Lawyer, similarLawyers: Lawyer[], activeTab?: string, setActiveTab: (tab: string) => void, onBook: (topic?: string, description?: string) => void }) {
     // Note: setActiveTab kept in interface for compatibility
     const [showRepInfo, setShowRepInfo] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Truncation logic
+    const MAX_BIO_LENGTH = 150;
+    const shouldTruncate = lawyer.bio.length > MAX_BIO_LENGTH;
+    const displayBio = isExpanded || !shouldTruncate ? lawyer.bio : `${lawyer.bio.slice(0, MAX_BIO_LENGTH)}...`;
+
     return (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-8">
                 <div className="prose prose-sm max-w-none text-gray-600">
-                    <p>{lawyer.bio}</p>
-                    <button className="font-medium text-[#006056] hover:underline">Show more</button>
+                    <p>{displayBio}</p>
+                    {shouldTruncate && (
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="font-medium text-[#006056] hover:underline mt-1"
+                        >
+                            {isExpanded ? "Show less" : "Show more"}
+                        </button>
+                    )}
                 </div>
 
                 {/* Background Section */}
@@ -403,7 +439,12 @@ function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyer
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
-                            <button className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black">Book</button>
+                            <button
+                                onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
+                                className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black"
+                            >
+                                Book
+                            </button>
                         </div>
                     </div>
 
@@ -417,7 +458,12 @@ function OverviewTab({ lawyer, similarLawyers }: { lawyer: Lawyer, similarLawyer
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
-                            <button className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black">Book</button>
+                            <button
+                                onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
+                                className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black"
+                            >
+                                Book
+                            </button>
                         </div>
                     </div>
                 </div>

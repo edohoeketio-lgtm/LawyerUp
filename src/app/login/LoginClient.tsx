@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
+import { auth } from "@/utils/auth";
 
 export default function LoginClient() {
     const [showPassword, setShowPassword] = useState(false);
@@ -11,26 +12,46 @@ export default function LoginClient() {
         email: "",
         password: ""
     });
+    const [error, setError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const searchParams = useSearchParams();
     const success = searchParams.get("success");
     const router = useRouter();
 
-    const isValid = formData.email.trim() !== "" && formData.password.trim() !== "";
+    const validateForm = () => {
+        if (formData.email.trim() === "" || formData.password.trim() === "") {
+            setError("Please fill in all fields.");
+            return false;
+        }
+        setError("");
+        return true;
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        setError(""); // Clear error on input change
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isValid) {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
+        setError("");
 
-            // Redirect to Dashboard
+        if (!validateForm()) return;
+
+        setIsSubmitting(true);
+
+        try {
+            // Validate against local users
+            auth.login(formData.email, formData.password);
+
+            // Redirect based on role (for demo we just assume client dashboard for now or check user role)
             router.push("/dashboard");
+        } catch (err: any) {
+            setError(err.message || "Invalid email or password");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -104,13 +125,19 @@ export default function LoginClient() {
                         </Link>
                     </div>
 
+                    {error && (
+                        <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-100">
+                            {error}
+                        </div>
+                    )}
+
                     <button
                         type="submit"
-                        disabled={!isValid}
-                        className={`w-full rounded-lg py-3 text-sm font-medium text-white transition-colors ${isValid ? "bg-[#013328] hover:bg-[#012a2b]" : "bg-[#9CAFA9] cursor-not-allowed"
+                        disabled={isSubmitting}
+                        className={`w-full rounded-lg py-3 text-sm font-medium text-white transition-colors ${!isSubmitting ? "bg-[#013328] hover:bg-[#012a2b]" : "bg-[#9CAFA9] cursor-not-allowed"
                             }`}
                     >
-                        Login
+                        {isSubmitting ? "Logging in..." : "Login"}
                     </button>
 
                     <p className="text-center text-xs text-gray-500">

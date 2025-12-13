@@ -1,31 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { auth, User } from "@/utils/auth";
+import { allCountries } from "@/data/countries";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronRight, Calendar, Bell, Trash2 } from "lucide-react";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
+import EditProfileModal from "@/components/profile/EditProfileModal";
+
 export default function AccountSettingsPage() {
     const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy">("Personal");
+    const [user, setUser] = useState<User | null>(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
-    // Mock User Data matching screenshot
-    const user = {
-        name: "Nsikan Etukudoh",
-        email: "nsikan@lawyer.up",
-        location: "Lagos, Nigeria",
-        language: "English",
-        timezone: "GMT (Greenwich Mean Time)"
+    useEffect(() => {
+        setUser(auth.getSession());
+    }, []);
+
+    const handleUpdateProfile = (data: any) => {
+        if (!user) return;
+        const updatedUser = { ...user, ...data };
+        auth.setSession(updatedUser);
+        setUser(updatedUser);
+        setShowEditModal(false);
     };
+
+    if (!user) return null; // Or loading state
 
     return (
         <div className="max-w-[700px]">
+            {/* Modal */}
+            <EditProfileModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                onSave={handleUpdateProfile}
+                initialData={user as any}
+            />
+
             {/* Breadcrumb */}
-            <div className="mb-6 flex items-center gap-2 text-sm text-gray-500">
-                <button className="hover:text-black">Back</button>
-                <ChevronRight size={14} />
-                <span>Account</span>
-                <ChevronRight size={14} />
-                <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-black">Settings</span>
-            </div>
+            <Breadcrumbs
+                items={[
+                    { label: "Account", href: "/dashboard/account" },
+                    { label: "Settings" }
+                ]}
+            />
 
             <h1 className="mb-6 font-serif text-2xl font-bold text-black">Settings</h1>
 
@@ -54,7 +73,7 @@ export default function AccountSettingsPage() {
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-400">First and last name</label>
                             <div className="rounded-lg bg-gray-50 px-4 py-3 text-sm font-medium text-black">
-                                {user.name}
+                                {user.firstName} {user.lastName}
                             </div>
                         </div>
 
@@ -71,16 +90,16 @@ export default function AccountSettingsPage() {
 
                         {/* Location */}
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-400">City, Country</label>
+                            <label className="text-sm font-bold text-gray-400">Country</label>
                             <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-4 py-3 text-sm font-medium text-black">
                                 <Image
-                                    src="https://flagcdn.com/ng.svg"
-                                    alt="Nigeria"
+                                    src="https://flagcdn.com/ng.svg" // Could make this dynamic later based on selection
+                                    alt="Flag"
                                     width={16}
                                     height={12}
                                     className="object-contain"
                                 />
-                                {user.location}
+                                {user.location || "Select country"}
                             </div>
                         </div>
 
@@ -88,10 +107,15 @@ export default function AccountSettingsPage() {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <label className="text-sm font-bold text-gray-400">Preferred Language</label>
-                                <button className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2">Change</button>
+                                <button
+                                    onClick={() => setShowEditModal(true)}
+                                    className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2"
+                                >
+                                    Change
+                                </button>
                             </div>
                             <div className="w-fit rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-black">
-                                {user.language}
+                                {(user.languages || ["English"]).join(", ")}
                             </div>
                         </div>
 
@@ -99,10 +123,15 @@ export default function AccountSettingsPage() {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <label className="text-sm font-bold text-gray-400">Timezone</label>
-                                <button className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2">Change</button>
+                                <button
+                                    onClick={() => setShowEditModal(true)}
+                                    className="text-xs font-medium text-[#004d45] underline decoration-1 underline-offset-2"
+                                >
+                                    Change
+                                </button>
                             </div>
                             <div className="w-fit rounded-lg bg-gray-50 px-4 py-2 text-sm font-medium text-black">
-                                {user.timezone}
+                                {user.timezone || "GMT"}
                             </div>
                         </div>
 
@@ -137,11 +166,11 @@ export default function AccountSettingsPage() {
                             <h3 className="mb-4 text-base font-medium text-[#004d45]">Q&A Activity</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Allow others to see the questions I&apos;ve asked</span>
+                                    <span className="text-sm font-bold text-gray-500">Allow others to see the questions I've asked</span>
                                     <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Show my display name on public answers I&apos;ve tipped</span>
+                                    <span className="text-sm font-bold text-gray-500">Show my display name on public answers I've tipped</span>
                                     <input type="checkbox" className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                             </div>
@@ -152,12 +181,18 @@ export default function AccountSettingsPage() {
                             <h3 className="mb-4 text-base font-medium text-[#004d45]">Communication Preferences</h3>
                             <div className="space-y-3">
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Receive updates about session tips & reminders</span>
+                                    <div className="flex items-center gap-3">
+                                        <Bell size={18} className="text-gray-400" />
+                                        <span className="text-sm font-bold text-gray-500">Email notifications for new messages</span>
+                                    </div>
                                     <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                                 <label className="flex items-center justify-between rounded-lg border border-gray-100 p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span className="text-sm font-bold text-gray-500">Receive occasional product news and platform updates</span>
-                                    <input type="checkbox" className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
+                                    <div className="flex items-center gap-3">
+                                        <Calendar size={18} className="text-gray-400" />
+                                        <span className="text-sm font-bold text-gray-500">Reminders for upcoming sessions</span>
+                                    </div>
+                                    <input type="checkbox" defaultChecked className="h-5 w-5 rounded accent-[#004d45] border-gray-300" />
                                 </label>
                             </div>
                         </div>
@@ -165,14 +200,24 @@ export default function AccountSettingsPage() {
                 )}
 
                 {activeTab === "Security" && (
-                    <div className="flex flex-col items-center justify-center py-12 text-center text-gray-500">
-                        <div className="mb-4 rounded-full bg-gray-50 p-4">
-                            <div className="h-6 w-6 border-2 border-gray-300 rounded"></div>
+                    <div className="space-y-8">
+                        <div>
+                            <h3 className="mb-2 text-base font-medium text-black">Password</h3>
+                            <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
+                            <button className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50">
+                                Change password
+                            </button>
                         </div>
-                        <p>Security settings coming soon</p>
+
+                        <div>
+                            <h3 className="mb-2 text-base font-medium text-black">Two-Factor Authentication</h3>
+                            <p className="mb-4 text-sm text-gray-500">Add an extra layer of security to your account</p>
+                            <button className="rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
+                                Enable 2FA
+                            </button>
+                        </div>
                     </div>
                 )}
-
             </div>
         </div>
     );

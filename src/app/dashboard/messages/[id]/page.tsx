@@ -122,7 +122,7 @@ export default function ChatPage() {
                             {msg.type === 'text' ? (
                                 <p className="text-sm">{msg.content}</p>
                             ) : (
-                                <div className="relative h-48 w-64 overflow-hidden rounded-lg">
+                                <div className="relative w-full aspect-square sm:w-64 overflow-hidden rounded-lg">
                                     <Image src={msg.content} alt="Attachment" fill className="object-cover" />
                                 </div>
                             )}

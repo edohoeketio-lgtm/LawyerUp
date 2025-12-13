@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth, User } from "@/utils/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { Settings, Edit2, Briefcase, Calendar, MessageSquare } from "lucide-react";
@@ -54,6 +55,11 @@ import EditProfileModal from "@/components/profile/EditProfileModal";
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Consulted Lawyers");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        setUser(auth.getSession());
+    }, []);
 
     return (
         <div className="space-y-8">
@@ -61,9 +67,19 @@ export default function ProfilePage() {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSave={(data) => {
-                    console.log("Saved profile:", data);
+                    const updatedUser: any = { ...data };
+                    // Map 'legal_help' back to 'client' for auth user
+                    if (updatedUser.role === "legal_help") {
+                        updatedUser.role = "client";
+                    }
+                    auth.updateUser(updatedUser);
+                    setUser(auth.getSession()); // Refresh local state
                     setIsEditModalOpen(false);
                 }}
+                initialData={user ? {
+                    ...user,
+                    role: user.role === "client" ? "legal_help" : user.role
+                } as any : {}} // Cast to avoid index signature issues
             />
             {/* Header */}
             <div className="flex flex-col gap-6 rounded-2xl bg-white p-8 shadow-sm sm:flex-row sm:items-start sm:justify-between">
@@ -78,7 +94,9 @@ export default function ProfilePage() {
                     </div>
                     <div>
                         <div className="mb-1 flex items-center gap-3">
-                            <h1 className="font-serif text-2xl font-bold text-black">Nsikan Etukudoh</h1>
+                            <h1 className="font-serif text-2xl font-bold text-black">
+                                {user ? `${user.firstName} ${user.lastName}` : "Guest User"}
+                            </h1>
                             <Image
                                 src="https://flagcdn.com/ng.svg"
                                 alt="Nigeria"
@@ -134,7 +152,7 @@ export default function ProfilePage() {
 
             {/* Content */}
             {activeTab === "Consulted Lawyers" && (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     {consultedLawyers.map((lawyer) => (
                         <div key={lawyer.id} className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
                             {/* Card Image */}
