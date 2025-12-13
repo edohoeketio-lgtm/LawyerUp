@@ -5,6 +5,7 @@ import { ChevronDown, Map } from "lucide-react";
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { allCountries } from "@/data/countries";
+import { auth } from "@/utils/auth";
 
 export default function ProfileSetupClient() {
     const router = useRouter();
@@ -19,6 +20,20 @@ export default function ProfileSetupClient() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleComplete = () => {
+        if (typeof window !== "undefined") {
+            const currentUser = auth.getSession();
+            if (currentUser) {
+                auth.updateUser({
+                    location: formData.country,
+                    languages: [formData.language],
+                    timezone: formData.timezone
+                });
+            }
+        }
+        router.push("/dashboard");
     };
 
     return (
@@ -117,7 +132,7 @@ export default function ProfileSetupClient() {
 
                     <button
                         type="button"
-                        onClick={() => router.push("/dashboard")}
+                        onClick={handleComplete}
                         className="w-full rounded-lg bg-[#013328] py-3 text-sm font-medium text-white transition-colors hover:bg-[#012a2b]"
                     >
                         Complete profile setup

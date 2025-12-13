@@ -20,6 +20,14 @@ export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "
     const [topic, setTopic] = useState(initialTopic);
     const [description, setDescription] = useState(initialDescription);
 
+    // Sync state with props when modal opens or props change
+    if (isOpen && topic !== initialTopic && initialTopic !== "") {
+        setTopic(initialTopic);
+    }
+    if (isOpen && description !== initialDescription && initialDescription !== "") {
+        setDescription(initialDescription);
+    }
+
     if (!isOpen) return null;
 
     const handleNext = () => {
@@ -108,7 +116,7 @@ export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "
                             <h2 className="font-serif text-2xl font-bold text-gray-900">
                                 {step === 1 && "Choose a Date"}
                                 {step === 2 && "Select a Time"}
-                                {step === 3 && "Session Topic"}
+                                {step === 3 && (initialTopic ? "Confirm Session Details" : "Session Topic")}
                             </h2>
                         </div>
                         {/* Mobile Close Button */}
@@ -203,37 +211,66 @@ export default function BookingModal({ lawyer, isOpen, onClose, initialTopic = "
 
                         {step === 3 && (
                             <div className="mx-auto max-w-md space-y-6">
-                                <div className="rounded-xl bg-orange-50 p-4 border border-orange-100">
-                                    <div className="flex gap-3">
-                                        <div className="mt-0.5"><CheckCircle size={16} className="text-orange-600" /></div>
-                                        <p className="text-sm text-orange-800">
-                                            Please describe your legal issue clearly. The lawyer will review this topic before confirming the session.
-                                        </p>
-                                    </div>
-                                </div>
+                                {initialTopic ? (
+                                    <>
+                                        <div className="rounded-xl bg-green-50 p-4 border border-green-100">
+                                            <div className="flex gap-3">
+                                                <div className="mt-0.5"><CheckCircle size={16} className="text-green-600" /></div>
+                                                <p className="text-sm text-green-800">
+                                                    You are booking a specific session. Please verify the details below.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="mb-1 block text-sm font-medium text-gray-700">Topic</label>
+                                                <div className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-700">
+                                                    {topic}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="mb-1 block text-sm font-medium text-gray-700">Description</label>
+                                                <div className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 text-gray-700 text-sm">
+                                                    {description}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="rounded-xl bg-orange-50 p-4 border border-orange-100">
+                                            <div className="flex gap-3">
+                                                <div className="mt-0.5"><CheckCircle size={16} className="text-orange-600" /></div>
+                                                <p className="text-sm text-orange-800">
+                                                    Please describe your legal issue clearly. The lawyer will review this topic before confirming the session.
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="mb-1 block text-sm font-medium text-gray-700">Topic Summary (e.g. Contract Review)</label>
-                                        <input
-                                            type="text"
-                                            value={topic}
-                                            onChange={(e) => setTopic(e.target.value)}
-                                            className="w-full rounded-xl border border-gray-200 p-3 outline-none focus:border-[#006056] focus:ring-1 focus:ring-[#006056]"
-                                            placeholder="Short title for your session"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="mb-1 block text-sm font-medium text-gray-700">Detailed Description</label>
-                                        <textarea
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                            rows={6}
-                                            className="w-full rounded-xl border border-gray-200 p-3 outline-none focus:border-[#006056] focus:ring-1 focus:ring-[#006056]"
-                                            placeholder="Describe your situation, what outcome you are looking for, and any specific questions you have..."
-                                        ></textarea>
-                                    </div>
-                                </div>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="mb-1 block text-sm font-medium text-gray-700">Topic Summary (e.g. Contract Review)</label>
+                                                <input
+                                                    type="text"
+                                                    value={topic}
+                                                    onChange={(e) => setTopic(e.target.value)}
+                                                    className="w-full rounded-xl border border-gray-200 p-3 outline-none focus:border-[#006056] focus:ring-1 focus:ring-[#006056]"
+                                                    placeholder="Short title for your session"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="mb-1 block text-sm font-medium text-gray-700">Detailed Description</label>
+                                                <textarea
+                                                    value={description}
+                                                    onChange={(e) => setDescription(e.target.value)}
+                                                    rows={6}
+                                                    className="w-full rounded-xl border border-gray-200 p-3 outline-none focus:border-[#006056] focus:ring-1 focus:ring-[#006056]"
+                                                    placeholder="Describe your situation, what outcome you are looking for, and any specific questions you have..."
+                                                ></textarea>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>

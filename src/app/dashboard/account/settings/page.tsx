@@ -20,9 +20,9 @@ export default function AccountSettingsPage() {
 
     const handleUpdateProfile = (data: any) => {
         if (!user) return;
-        const updatedUser = { ...user, ...data };
-        auth.setSession(updatedUser);
-        setUser(updatedUser);
+        auth.updateUser(data);
+        // Local state update for immediate feedback
+        setUser(prev => prev ? ({ ...prev, ...data }) : null);
         setShowEditModal(false);
     };
 

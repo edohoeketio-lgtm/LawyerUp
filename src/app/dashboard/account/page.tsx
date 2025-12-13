@@ -106,7 +106,7 @@ export default function ProfilePage() {
                             />
                         </div>
                         <p className="text-sm font-medium text-gray-500">
-                            Creative at <span className="font-bold text-black">Lawyer Up</span>
+                            {user?.jobTitle || "Member"} at <span className="font-bold text-black">{user?.workplace || "Lawyer Up"}</span>
                         </p>
                         <div className="mt-3">
                             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">

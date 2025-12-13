@@ -42,7 +42,6 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
 
     return (
         <div className="space-y-8 pb-12">
-            <BookingModal lawyer={lawyer} isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
             <BookingModal
                 lawyer={lawyer}
                 isOpen={showBookingModal}
@@ -441,7 +440,7 @@ function OverviewTab({ lawyer, similarLawyers, onBook }: { lawyer: Lawyer, simil
                             <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
                             <button
                                 onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
-                                className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black"
+                                className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
                             >
                                 Book
                             </button>
@@ -459,8 +458,8 @@ function OverviewTab({ lawyer, similarLawyers, onBook }: { lawyer: Lawyer, simil
                         <div className="flex items-center justify-between">
                             <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
                             <button
-                                onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
-                                className="bg-[#003a34] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-black"
+                                onClick={() => onBook("Ethical Dilemmas in Law & How to Handle Them", "Mentorship session with " + lawyer.name + " regarding ethical dilemmas.")}
+                                className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
                             >
                                 Book
                             </button>

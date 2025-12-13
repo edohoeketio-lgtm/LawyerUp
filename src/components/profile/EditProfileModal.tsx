@@ -32,15 +32,15 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
-        role: "legal_help", // or 'lawyer'
-        jobTitle: "Creative",
-        workplace: "Lawyer Up",
-        gender: "Male",
-        location: "Lagos, Nigeria",
-        languages: ["English", "Ibibio", "Igbo"],
-        bio: "Technical difficulties on the therapist's end prevented the session from taking place.",
-        legalInterests: [], // Initialize as array
-        timezone: "GMT",
+        role: "legal_help",
+        jobTitle: "",
+        workplace: "",
+        gender: "Prefer not to say",
+        location: "",
+        languages: [],
+        bio: "",
+        legalInterests: [],
+        timezone: "",
         ...initialData
     });
 
@@ -209,7 +209,7 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                     <ChevronDown className={`text-gray-400 transition-transform ${showSectorDropdown ? "rotate-180" : ""}`} size={16} />
                                 </div>
 
-                                {showSectorDropdown && sectorSearch && (
+                                {showSectorDropdown && (
                                     <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
                                         {filteredSectors.length > 0 ? (
                                             filteredSectors.map(sector => (
@@ -348,7 +348,7 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                     <ChevronDown className={`text-gray-400 transition-transform ${showLanguageDropdown ? "rotate-180" : ""}`} size={16} />
                                 </div>
 
-                                {showLanguageDropdown && languageSearch && (
+                                {showLanguageDropdown && (
                                     <div className="absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg">
                                         {filteredLanguages.length > 0 ? (
                                             filteredLanguages.map(lang => (
