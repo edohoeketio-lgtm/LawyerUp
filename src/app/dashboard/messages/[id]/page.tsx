@@ -5,22 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Send, Paperclip, MoreVertical, Phone, Video, Image as ImageIcon, X, Clock } from "lucide-react";
-import { initialChats, Message } from "@/data/messages";
-import { lawyers } from "@/data/lawyers"; // We might need to ensure this export exists or create it
+import { mockConversations, Message } from "@/data/messages";
+import { lawyers } from "@/data/lawyers";
 import { bookings, getBookingLawyer } from "@/data/bookings";
 
-// Helper to get lawyer details (using bookings data as a proxy if lawyers data isn't fully set up yet)
+// Helper to get lawyer details
 const getLawyerDetails = (id: string) => {
-    // Try to find in bookings first as that's where we have lawyer data structure
-    const booking = bookings.find(b => b.lawyerId === id);
-    if (booking) return getBookingLawyer(booking);
+    // Try to find in lawyers data first
+    const lawyer = lawyers.find(l => l.id === id);
+    if (lawyer) return lawyer;
 
     // Fallback Mock
     return {
         id,
         name: "Lawyer",
         image: "/avatars/lawyer_1.png",
-        title: "Legal Professional"
+        title: "Legal Professional",
+        country: "US"
     };
 };
 
@@ -38,11 +39,20 @@ export default function ChatPage() {
     const lawyer = getLawyerDetails(lawyerId);
 
     useEffect(() => {
-        if (lawyerId && initialChats[lawyerId]) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setMessages(initialChats[lawyerId]);
-        } else {
-            setMessages([]);
+        if (lawyerId) {
+            const conversation = mockConversations.find(c => c.lawyerId === lawyerId);
+            if (conversation) {
+                // Ensure messages have 'type' and 'isMe' for UI compatibility if data doesn't have it
+                // My mock data has senderId: 'me' | lawyerId
+                const formattedMessages: Message[] = conversation.messages.map(m => ({
+                    ...m,
+                    type: "text", // Default to text for compatibility
+                    isMe: m.senderId === "me"
+                } as any));
+                setMessages(formattedMessages);
+            } else {
+                setMessages([]);
+            }
         }
     }, [lawyerId]);
 
@@ -60,7 +70,8 @@ export default function ChatPage() {
             content: newMessage,
             timestamp: new Date().toISOString(),
             type: "text",
-            isMe: true
+            isMe: true,
+            isRead: true
         };
 
         setMessages([...messages, msg]);
@@ -75,7 +86,8 @@ export default function ChatPage() {
             content: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80", // Mock image doc
             timestamp: new Date().toISOString(),
             type: "image",
-            isMe: true
+            isMe: true,
+            isRead: true
         };
         setMessages([...messages, msg]);
         setIsAttaching(false);

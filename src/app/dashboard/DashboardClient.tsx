@@ -240,129 +240,143 @@ export default function DashboardClient() {
                 })()}
             </div>
 
-            {/* Upcoming Sessions (Interactive Calendar) */}
+            {/* Upcoming Sessions */}
             <div>
                 <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-serif text-lg text-black">Upcoming Sessions</h3>
-                    <Link href="/dashboard/bookings" className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
-                        View all bookings <ArrowRight size={14} />
-                    </Link>
+                    <h3 className="font-serif text-lg text-black">Upcoming sessions</h3>
+                    {nextBooking && (
+                        <Link href="/dashboard/bookings" className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
+                            View all bookings <ArrowRight size={14} />
+                        </Link>
+                    )}
                 </div>
 
-                <div className="rounded-xl border border-gray-100 bg-white p-6 transition-all duration-300">
-                    <div className="mb-6 flex items-center justify-between text-black">
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => navigateCalendar('prev')}
-                                className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
-                            >
-                                <ChevronLeft size={16} />
-                            </button>
-                            <span className="font-medium min-w-[140px] text-center">{formatDateRange(currentDate, calendarView)}</span>
-                            <button
-                                onClick={() => navigateCalendar('next')}
-                                className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
-                            >
-                                <ChevronRight size={16} />
-                            </button>
+                {!nextBooking ? (
+                    // Empty State
+                    <div className="flex h-64 flex-col items-center justify-center rounded-xl border border-gray-100 bg-white p-6 text-center">
+                        <div className="relative mb-4 h-24 w-24 opacity-50">
+                            <img
+                                src="/icons/empty-sessions.png"
+                                alt="No sessions"
+                                className="object-contain h-full w-full"
+                            />
                         </div>
-
-                        {/* View Toggle */}
-                        <div className="flex rounded-lg bg-gray-50 p-1">
-                            <button
-                                onClick={() => setCalendarView('week')}
-                                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'week' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'
-                                    }`}
-                            >
-                                Week
-                            </button>
-                            <button
-                                onClick={() => setCalendarView('month')}
-                                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'month' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'
-                                    }`}
-                            >
-                                Month
-                            </button>
-                        </div>
+                        <h4 className="mb-1 text-base font-bold text-black mt-2">No sessions found</h4>
+                        <p className="text-sm text-gray-500">You don&apos;t have any upcoming session.</p>
                     </div>
-
-                    <div className={`grid gap-y-4 ${calendarView === 'week' ? 'grid-cols-7' : 'grid-cols-7'}`}>
-                        {/* Weekday Headers */}
-                        {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
-                            <div key={day} className="text-center text-[10px] font-bold text-gray-400 mb-2">
-                                {day}
-                            </div>
-                        ))}
-
-                        {/* Calendar Days */}
-                        {calendarDays.map((day, i) => {
-                            const isToday = new Date().toDateString() === day.toDateString();
-                            const isCurrentMonth = day.getMonth() === currentDate.getMonth();
-                            const booking = getBookingForDate(day);
-                            const hasBooking = !!booking;
-                            const bookingLawyer = booking ? getBookingLawyer(booking) : null;
-
-                            // Visual fading for dates not in current month (only relevant for month view mostly)
-                            const opacityClass = (calendarView === 'month' && !isCurrentMonth) ? "opacity-30" : "opacity-100";
-
-                            return (
-                                <div key={i} className={`flex flex-col items-center space-y-1 ${opacityClass}`}>
-                                    <div
-                                        className={`group relative flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all cursor-default
-                                            ${isToday
-                                                ? "bg-[#004d45] text-white shadow-md transform scale-105"
-                                                : hasBooking
-                                                    ? "bg-[#E6F0EE] text-[#006056] font-bold border border-[#006056] cursor-help"
-                                                    : "text-gray-600 hover:bg-gray-50"
-                                            }
-                                        `}
-                                    >
-                                        {day.getDate()}
-                                        {hasBooking && !isToday && (
-                                            <div className="absolute -bottom-1 h-1 w-1 rounded-full bg-[#006056]"></div>
-                                        )}
-
-                                        {/* Tooltip */}
-                                        {hasBooking && bookingLawyer && (
-                                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 hidden w-48 flex-col gap-1 rounded-lg bg-black/90 p-3 text-[10px] text-white shadow-xl group-hover:flex">
-                                                <div className="flex items-center gap-1.5 font-bold text-yellow-400">
-                                                    <Clock size={10} /> {booking.time}
-                                                </div>
-                                                <div className="font-semibold truncate">{bookingLawyer.name}</div>
-                                                <div className="text-gray-300 capitalize">{booking.type}</div>
-                                                {/* Arrow */}
-                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-black/90"></div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    <div className="mt-8 text-center border-t border-gray-50 pt-6">
-                        {nextBooking ? (
-                            <div className="inline-flex items-center gap-4 text-left p-3 rounded-xl bg-[#F2FFF2] border border-green-100">
-                                <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-[#006056]">
-                                    <Video size={18} />
-                                </div>
-                                <div>
-                                    <p className="text-xs font-bold text-[#004d45]">Upcoming: {nextBooking.type === 'consultation' ? 'Consultation' : 'Mentorship'}</p>
-                                    <p className="text-[10px] text-gray-500">
-                                        {new Date(nextBooking.date).toLocaleDateString()} • {nextBooking.time} with {nextBookingLawyer?.name}
-                                    </p>
-                                </div>
-                                <button className="ml-2 rounded-lg bg-[#004d45] px-3 py-1.5 text-[10px] font-medium text-white hover:bg-[#003a34]">
-                                    Join
+                ) : (
+                    // Interactive Calendar (Existing)
+                    <div className="rounded-xl border border-gray-100 bg-white p-6 transition-all duration-300">
+                        <div className="mb-6 flex items-center justify-between text-black">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => navigateCalendar('prev')}
+                                    className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
+                                >
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <span className="font-medium min-w-[140px] text-center">{formatDateRange(currentDate, calendarView)}</span>
+                                <button
+                                    onClick={() => navigateCalendar('next')}
+                                    className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"
+                                >
+                                    <ChevronRight size={16} />
                                 </button>
                             </div>
-                        ) : (
-                            <p className="text-xs text-gray-400">
-                                No upcoming sessions this week <Link href="/dashboard/discover" className="font-medium text-[#006056] underline hover:text-[#004d45]">Book a session</Link>
-                            </p>
-                        )}
+
+                            {/* View Toggle */}
+                            <div className="flex rounded-lg bg-gray-50 p-1">
+                                <button
+                                    onClick={() => setCalendarView('week')}
+                                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'week' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'
+                                        }`}
+                                >
+                                    Week
+                                </button>
+                                <button
+                                    onClick={() => setCalendarView('month')}
+                                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'month' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'
+                                        }`}
+                                >
+                                    Month
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className={`grid gap-y-4 ${calendarView === 'week' ? 'grid-cols-7' : 'grid-cols-7'}`}>
+                            {/* Weekday Headers */}
+                            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
+                                <div key={day} className="text-center text-[10px] font-bold text-gray-400 mb-2">
+                                    {day}
+                                </div>
+                            ))}
+
+                            {/* Calendar Days */}
+                            {calendarDays.map((day, i) => {
+                                const isToday = new Date().toDateString() === day.toDateString();
+                                const isCurrentMonth = day.getMonth() === currentDate.getMonth();
+                                const booking = getBookingForDate(day);
+                                const hasBooking = !!booking;
+                                const bookingLawyer = booking ? getBookingLawyer(booking) : null;
+
+                                // Visual fading for dates not in current month (only relevant for month view mostly)
+                                const opacityClass = (calendarView === 'month' && !isCurrentMonth) ? "opacity-30" : "opacity-100";
+
+                                return (
+                                    <div key={i} className={`flex flex-col items-center space-y-1 ${opacityClass}`}>
+                                        <div
+                                            className={`group relative flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all cursor-default
+                                                ${isToday
+                                                    ? "bg-[#004d45] text-white shadow-md transform scale-105"
+                                                    : hasBooking
+                                                        ? "bg-[#E6F0EE] text-[#006056] font-bold border border-[#006056] cursor-help"
+                                                        : "text-gray-600 hover:bg-gray-50"
+                                                }
+                                            `}
+                                        >
+                                            {day.getDate()}
+                                            {hasBooking && !isToday && (
+                                                <div className="absolute -bottom-1 h-1 w-1 rounded-full bg-[#006056]"></div>
+                                            )}
+
+                                            {/* Tooltip */}
+                                            {hasBooking && bookingLawyer && (
+                                                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 hidden w-48 flex-col gap-1 rounded-lg bg-black/90 p-3 text-[10px] text-white shadow-xl group-hover:flex">
+                                                    <div className="flex items-center gap-1.5 font-bold text-yellow-400">
+                                                        <Clock size={10} /> {booking.time}
+                                                    </div>
+                                                    <div className="font-semibold truncate">{bookingLawyer.name}</div>
+                                                    <div className="text-gray-300 capitalize">{booking.type}</div>
+                                                    {/* Arrow */}
+                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-black/90"></div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-8 text-center border-t border-gray-50 pt-6">
+                            {nextBooking && (
+                                <div className="inline-flex items-center gap-4 text-left p-3 rounded-xl bg-[#F2FFF2] border border-green-100">
+                                    <div className="h-10 w-10 flex items-center justify-center rounded-full bg-white text-[#006056]">
+                                        <Video size={18} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-[#004d45]">Upcoming: {nextBooking.type === 'consultation' ? 'Consultation' : 'Mentorship'}</p>
+                                        <p className="text-[10px] text-gray-500">
+                                            {new Date(nextBooking.date).toLocaleDateString()} • {nextBooking.time} with {nextBookingLawyer?.name}
+                                        </p>
+                                    </div>
+                                    <button className="ml-2 rounded-lg bg-[#004d45] px-3 py-1.5 text-[10px] font-medium text-white hover:bg-[#003a34]">
+                                        Join
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Suggested Lawyers */}

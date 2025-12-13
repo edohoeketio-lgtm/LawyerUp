@@ -53,9 +53,10 @@ function isSessionJoinable(dateStr: string, timeStr: string) {
     return diffInMinutes <= 5 && diffInMinutes > -60;
 }
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function ProfilePage() {
+function ProfileContent() {
     const searchParams = useSearchParams();
     const shouldEdit = searchParams.get("edit") === "true";
     const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Overview");
@@ -291,5 +292,13 @@ export default function ProfilePage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function ProfilePage() {
+    return (
+        <Suspense fallback={<div>Loading profile...</div>}>
+            <ProfileContent />
+        </Suspense>
     );
 }

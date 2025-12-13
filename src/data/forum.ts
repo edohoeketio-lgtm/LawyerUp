@@ -12,6 +12,7 @@ export interface ForumThread {
     upvotes: number;
     comments: number;
     isUpvoted?: boolean;
+    isBookmarked?: boolean;
 }
 
 export const forumThreads: ForumThread[] = [

@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Search, Plus, ThumbsUp, MessageSquare, Filter } from "lucide-react";
+import Link from "next/link";
+import { Search, Plus, ThumbsUp, MessageSquare, Bookmark, ShieldCheck } from "lucide-react";
 import { forumThreads, ForumThread } from "@/data/forum";
+import StartDiscussionModal from "@/components/dashboard/StartDiscussionModal";
 
 export default function ForumPage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [threads, setThreads] = useState(forumThreads);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const categories = ["All", "General", "Legal Advice", "Career", "Bar Exam", "News"];
 
@@ -33,12 +36,42 @@ export default function ForumPage() {
         }));
     };
 
+    const handleNewDiscussion = (data: { title: string; category: string; content: string; isAnonymous: boolean }) => {
+        const newThread: ForumThread = {
+            id: Date.now().toString(),
+            title: data.title,
+            excerpt: data.content.substring(0, 150) + (data.content.length > 150 ? "..." : ""),
+            author: {
+                name: data.isAnonymous ? "Anonymous User" : "You", // Mock user
+                avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+                role: "Client"
+            },
+            category: data.category as any,
+            createdAt: new Date().toISOString(),
+            upvotes: 0,
+            comments: 0
+        };
+
+        setThreads([newThread, ...threads]);
+        setIsModalOpen(false);
+        // In a real app, you would also toast here
+    };
+
     return (
         <div className="flex flex-col gap-8 lg:flex-row">
+            <StartDiscussionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleNewDiscussion}
+            />
+
             {/* Left Sidebar: Navigation & Filters */}
             <aside className="w-full space-y-8 lg:w-64 lg:shrink-0">
                 <div>
-                    <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-3 text-sm font-medium text-white hover:bg-[#003a34] shadow-sm">
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-3 text-sm font-medium text-white hover:bg-[#003a34] shadow-sm"
+                    >
                         <Plus size={18} />
                         Start Discussion
                     </button>
@@ -101,18 +134,30 @@ export default function ForumPage() {
                                         <div className="relative h-6 w-6 overflow-hidden rounded-full">
                                             <Image src={thread.author.avatar} alt={thread.author.name} fill className="object-cover" />
                                         </div>
-                                        <span className="text-xs font-medium text-gray-700">{thread.author.name}</span>
+                                        <span className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                                            {thread.author.name}
+                                            {thread.author.role === "Lawyer" && (
+                                                <ShieldCheck size={12} className="text-blue-500" fill="currentColor" fillOpacity={0.2} />
+                                            )}
+                                        </span>
                                         <span className="text-[10px] text-gray-400">•</span>
                                         <span className="text-xs text-gray-500">{new Date(thread.createdAt).toLocaleDateString()}</span>
                                     </div>
-                                    <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-medium text-gray-600">
-                                        {thread.category}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-medium text-gray-600">
+                                            {thread.category}
+                                        </span>
+                                        <button className="text-gray-400 hover:text-[#004d45]">
+                                            <Bookmark size={16} />
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <h3 className="mb-2 font-serif text-lg font-bold text-black hover:text-[#004d45] cursor-pointer">
-                                    {thread.title}
-                                </h3>
+                                <Link href={`/dashboard/forum/${thread.id}`}>
+                                    <h3 className="mb-2 font-serif text-lg font-bold text-black hover:text-[#004d45] cursor-pointer">
+                                        {thread.title}
+                                    </h3>
+                                </Link>
                                 <p className="mb-6 text-sm text-gray-600 leading-relaxed">
                                     {thread.excerpt}
                                 </p>
@@ -128,10 +173,13 @@ export default function ForumPage() {
                                         <ThumbsUp size={14} className={thread.isUpvoted ? "fill-current" : ""} />
                                         {thread.upvotes}
                                     </button>
-                                    <button className="flex items-center gap-1.5 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100">
+                                    <Link
+                                        href={`/dashboard/forum/${thread.id}`}
+                                        className="flex items-center gap-1.5 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100"
+                                    >
                                         <MessageSquare size={14} />
                                         {thread.comments} Comments
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         ))

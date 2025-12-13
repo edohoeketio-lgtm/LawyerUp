@@ -105,7 +105,10 @@ export default function BookingDetailsModal({ isOpen, onClose, booking }: Bookin
                     {/* Footer Actions */}
                     <div className="pt-4 border-t border-gray-100">
                         {booking.status === 'confirmed' ? (
-                            <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#004d45] py-3 text-sm font-medium text-white hover:bg-[#003a34] transition-colors shadow-md shadow-[#004d45]/10">
+                            <button
+                                onClick={() => alert("Connecting to video secure check-in...")}
+                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#004d45] py-3 text-sm font-medium text-white hover:bg-[#003a34] transition-colors shadow-md shadow-[#004d45]/10"
+                            >
                                 <Video size={18} /> Join Call
                             </button>
                         ) : (

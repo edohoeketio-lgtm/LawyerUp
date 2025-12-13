@@ -9,6 +9,7 @@ import ReviewModal from "@/components/ReviewModal";
 
 import BookingDetailsModal from "@/components/dashboard/BookingDetailsModal";
 import BookingModal from "@/components/BookingModal";
+import CancelBookingModal from "@/components/dashboard/CancelBookingModal";
 
 export default function BookingsPage() {
     const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "cancelled" | "rescheduled">("upcoming");
@@ -18,6 +19,8 @@ export default function BookingsPage() {
     const [selectedBookingForDetails, setSelectedBookingForDetails] = useState<Booking | null>(null);
     const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
     const [selectedBookingForReschedule, setSelectedBookingForReschedule] = useState<Booking | null>(null);
+    const [isCancelOpen, setIsCancelOpen] = useState(false);
+    const [selectedBookingForCancel, setSelectedBookingForCancel] = useState<Booking | null>(null);
 
     const filteredBookings = bookings.filter(b => {
         if (activeTab === "upcoming") return b.status === "confirmed" || b.status === "pending";
@@ -56,6 +59,21 @@ export default function BookingsPage() {
 
         setSelectedBookingForReschedule(booking);
         setIsRescheduleOpen(true);
+    };
+
+    const handleOpenCancel = (booking: Booking) => {
+        setSelectedBookingForCancel(booking);
+        setIsCancelOpen(true);
+    };
+
+    const handleCancelConfirm = () => {
+        if (selectedBookingForCancel) {
+            // Mock cancellation
+            alert(`Booking for ${selectedBookingForCancel.topic} has been cancelled.`);
+            // In a real app, you would verify this status update in the UI
+            selectedBookingForCancel.status = 'cancelled';
+            setIsCancelOpen(false);
+        }
     };
 
     const handleSubmitReschedule = (date: Date, time: string, topic: string) => {
@@ -107,6 +125,7 @@ export default function BookingsPage() {
                                 onLeaveReview={() => handleOpenReview(booking)}
                                 onViewDetails={() => handleOpenDetails(booking)}
                                 onReschedule={() => handleOpenReschedule(booking)}
+                                onCancel={() => handleOpenCancel(booking)}
                             />
                         ))}
                     </div>
@@ -162,11 +181,19 @@ export default function BookingsPage() {
                     onSubmitReschedule={handleSubmitReschedule}
                 />
             )}
+
+            {/* Cancel Modal */}
+            <CancelBookingModal
+                isOpen={isCancelOpen}
+                onClose={() => setIsCancelOpen(false)}
+                booking={selectedBookingForCancel}
+                onConfirm={handleCancelConfirm}
+            />
         </div>
     );
 }
 
-function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule }: { booking: Booking, onLeaveReview?: () => void, onViewDetails?: () => void, onReschedule?: () => void }) {
+function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule, onCancel }: { booking: Booking, onLeaveReview?: () => void, onViewDetails?: () => void, onReschedule?: () => void, onCancel?: () => void }) {
     const lawyer = getBookingLawyer(booking);
     const [showMenu, setShowMenu] = useState(false);
 
@@ -291,9 +318,7 @@ function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule }: { 
                                         <button
                                             className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50"
                                             onClick={() => {
-                                                if (confirm("Are you sure you want to cancel this session?")) {
-                                                    alert("Session cancelled");
-                                                }
+                                                if (onCancel) onCancel();
                                                 setShowMenu(false);
                                             }}
                                         >
