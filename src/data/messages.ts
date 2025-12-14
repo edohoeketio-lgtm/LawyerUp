@@ -15,6 +15,7 @@ export interface Conversation {
     lastMessageDate: string;
     unreadCount: number;
     messages: Message[];
+    type: 'consultation' | 'mentorship';
 }
 
 // Helper dates
@@ -32,6 +33,7 @@ export const mockConversations: Conversation[] = [
         lastMessage: "Thank you for the update. I'll review the documents.",
         lastMessageDate: "10:30 AM",
         unreadCount: 1,
+        type: 'consultation',
         messages: [
             {
                 id: "m1",
@@ -78,6 +80,7 @@ export const mockConversations: Conversation[] = [
         lastMessage: "Let's schedule a call for next week.",
         lastMessageDate: "Yesterday",
         unreadCount: 0,
+        type: 'mentorship',
         messages: [
             {
                 id: "m1",
@@ -108,6 +111,7 @@ export const mockConversations: Conversation[] = [
         lastMessage: "The patent filing has been submitted.",
         lastMessageDate: "2 days ago",
         unreadCount: 0,
+        type: 'consultation',
         messages: [
             {
                 id: "m1",
@@ -121,6 +125,78 @@ export const mockConversations: Conversation[] = [
                 senderId: "5",
                 content: "Yes, final checks are done. The patent filing has been submitted.",
                 timestamp: new Date(twoDaysAgo.setHours(9, 0)).toISOString(), // Wed 9:00 AM (Mixed up days in comment but code uses twoDaysAgo which is valid)
+                isRead: true
+            }
+        ]
+    },
+    {
+        id: "4",
+        lawyerId: "2", // David Okon
+        lastMessage: "I've reviewed the contract and have some redlines.",
+        lastMessageDate: "3 days ago",
+        unreadCount: 2,
+        type: 'consultation',
+        messages: [
+            {
+                id: "m1",
+                senderId: "me",
+                content: "Hi David, attaching the contract for your review.",
+                timestamp: new Date(twoDaysAgo.setHours(9, 0)).toISOString(),
+                isRead: true
+            },
+            {
+                id: "m2",
+                senderId: "2",
+                content: "Received. I will get back to you shortly.",
+                timestamp: new Date(twoDaysAgo.setHours(9, 30)).toISOString(),
+                isRead: true
+            },
+            {
+                id: "m3",
+                senderId: "2",
+                content: "I've reviewed the contract and have some redlines. We need to discuss the liability clause.",
+                timestamp: new Date(yesterday.setHours(11, 0)).toISOString(),
+                isRead: false
+            }
+        ]
+    },
+    {
+        id: "5",
+        lawyerId: "16", // Sophia Li
+        lastMessage: "Happy to help you navigate the industry.",
+        lastMessageDate: "1 week ago",
+        unreadCount: 0,
+        type: 'mentorship',
+        messages: [
+            {
+                id: "m1",
+                senderId: "me",
+                content: "Hi Sophia, I'm an aspiring entertainment lawyer. Do you offer mentorship?",
+                timestamp: new Date(twoDaysAgo.setHours(10, 0)).toISOString(),
+                isRead: true
+            },
+            {
+                id: "m2",
+                senderId: "16",
+                content: "Yes, I do! Happy to help you navigate the industry. Let's set up a time.",
+                timestamp: new Date(twoDaysAgo.setHours(14, 0)).toISOString(),
+                isRead: true
+            }
+        ]
+    },
+    {
+        id: "6",
+        lawyerId: "4", // Rabbi Cohen
+        lastMessage: "The trust documents are ready for signing.",
+        lastMessageDate: "2 weeks ago",
+        unreadCount: 0,
+        type: 'consultation',
+        messages: [
+            {
+                id: "m1",
+                senderId: "4",
+                content: "The trust documents are ready for signing. Please come by the office.",
+                timestamp: new Date(twoDaysAgo.setHours(15, 0)).toISOString(),
                 isRead: true
             }
         ]

@@ -11,7 +11,7 @@ export default function VerificationForm({ user }: { user: User }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [barCountry, setBarCountry] = useState("United States");
-    const [barNumber, setBarNumber] = useState("");
+    const [barId, setBarId] = useState("");
     const [barState, setBarState] = useState("");
     const [yearAdmitted, setYearAdmitted] = useState("");
     const [idFile, setIdFile] = useState<File | null>(null);
@@ -44,7 +44,7 @@ export default function VerificationForm({ user }: { user: User }) {
         auth.updateUser({
             verificationStatus: "verified", // Auto-verify for demo
             barCountry,
-            barNumber,
+            barId,
             barState
         });
 
@@ -84,8 +84,8 @@ export default function VerificationForm({ user }: { user: User }) {
                     <input
                         type="text"
                         required
-                        value={barNumber}
-                        onChange={(e) => setBarNumber(e.target.value)}
+                        value={barId}
+                        onChange={(e) => setBarId(e.target.value)}
                         className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all focus:border-[#004d45] focus:ring-1 focus:ring-[#004d45]"
                         placeholder="e.g. 123456"
                     />

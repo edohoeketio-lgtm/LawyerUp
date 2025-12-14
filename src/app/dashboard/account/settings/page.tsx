@@ -14,7 +14,7 @@ import { useToast } from "@/context/ToastContext";
 
 export default function AccountSettingsPage() {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy">("Personal");
+    const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy" | "Support">("Personal");
     const [user, setUser] = useState<User | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [blockedLawyersList, setBlockedLawyersList] = useState<Lawyer[]>([]);
@@ -71,12 +71,12 @@ export default function AccountSettingsPage() {
             <h1 className="mb-6 font-serif text-2xl font-bold text-black">Settings</h1>
 
             {/* Tabs */}
-            <div className="mb-8 flex items-center gap-1 rounded-full border border-gray-100 bg-white p-1 w-fit">
-                {["Personal", "Security", "Privacy"].map((tab) => (
+            <div className="mb-8 flex items-center gap-1 rounded-full border border-gray-100 bg-white p-1 w-fit overflow-x-auto">
+                {["Personal", "Security", "Privacy", "Support"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as typeof activeTab)}
-                        className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${activeTab === tab
+                        className={`rounded-full px-6 py-2 text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab
                             ? "bg-black text-white"
                             : "bg-transparent text-gray-500 hover:text-black"
                             }`}
@@ -91,6 +91,7 @@ export default function AccountSettingsPage() {
 
                 {activeTab === "Personal" && (
                     <div className="space-y-8">
+                        {/* ... (keep Personal tab content) */}
                         {/* Name */}
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-gray-400">First and last name</label>
@@ -168,6 +169,7 @@ export default function AccountSettingsPage() {
 
                 {activeTab === "Privacy" && (
                     <div className="space-y-8">
+                        {/* ... (keep Privacy tab content) */}
                         {/* Profile Visibility */}
                         <div>
                             <h3 className="mb-4 text-base font-medium text-[#004d45]">Profile Visibility</h3>
@@ -218,65 +220,81 @@ export default function AccountSettingsPage() {
                                 </label>
                             </div>
                         </div>
-                    </div>
+
 
                         {/* Blocked Users */}
-                <div>
-                    <h3 className="mb-4 text-base font-medium text-[#004d45]">Blocked Users</h3>
-                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
-                        {blockedLawyersList.length > 0 ? (
-                            <div className="space-y-4">
-                                {blockedLawyersList.map(lawyer => (
-                                    <div key={lawyer.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100">
-                                        <div className="flex items-center gap-3">
-                                            <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                                                <Image src={lawyer.image} alt={lawyer.name} fill className="object-cover" />
+                        <div>
+                            <h3 className="mb-4 text-base font-medium text-[#004d45]">Blocked Users</h3>
+                            <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                                {blockedLawyersList.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {blockedLawyersList.map(lawyer => (
+                                            <div key={lawyer.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="relative h-10 w-10 overflow-hidden rounded-full">
+                                                        <Image src={lawyer.image} alt={lawyer.name} fill className="object-cover" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-gray-900">{lawyer.name}</p>
+                                                        <p className="text-xs text-gray-500">{lawyer.title}</p>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleUnblock(lawyer.id)}
+                                                    className="text-xs font-medium text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors"
+                                                >
+                                                    Unblock
+                                                </button>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-900">{lawyer.name}</p>
-                                                <p className="text-xs text-gray-500">{lawyer.title}</p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => handleUnblock(lawyer.id)}
-                                            className="text-xs font-medium text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors"
-                                        >
-                                            Unblock
-                                        </button>
+                                        ))}
                                     </div>
-                                ))}
+                                ) : (
+                                    <p className="text-sm text-gray-500 text-center py-2">You haven't blocked anyone yet.</p>
+                                )}
                             </div>
-                        ) : (
-                            <p className="text-sm text-gray-500 text-center py-2">You haven't blocked anyone yet.</p>
-                        )}
+                        </div>
                     </div>
-                </div>
-            </div>
                 )}
 
-            {activeTab === "Security" && (
-                <div className="space-y-8">
-                    <div>
-                        <h3 className="mb-2 text-base font-medium text-black">Password</h3>
-                        <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
-                        <button
-                            onClick={() => router.push("/update-password")}
-                            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50"
-                        >
-                            Change password
-                        </button>
-                    </div>
+                {activeTab === "Security" && (
+                    <div className="space-y-8">
+                        {/* ... (keep Security tab content) */}
+                        <div>
+                            <h3 className="mb-2 text-base font-medium text-black">Password</h3>
+                            <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
+                            <button
+                                onClick={() => router.push("/update-password")}
+                                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50"
+                            >
+                                Change password
+                            </button>
+                        </div>
 
-                    <div>
-                        <h3 className="mb-2 text-base font-medium text-black">Two-Factor Authentication</h3>
-                        <p className="mb-4 text-sm text-gray-500">Add an extra layer of security to your account</p>
-                        <button className="rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
-                            Enable 2FA
-                        </button>
+                        <div>
+                            <h3 className="mb-2 text-base font-medium text-black">Two-Factor Authentication</h3>
+                            <p className="mb-4 text-sm text-gray-500">Add an extra layer of security to your account</p>
+                            <button className="rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
+                                Enable 2FA
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+
+                {activeTab === "Support" && (
+                    <div className="space-y-8">
+                        <div>
+                            <h3 className="mb-2 text-base font-medium text-black">Contact Support</h3>
+                            <p className="mb-4 text-sm text-gray-500">Need help with your account? Our support team is here to assist you.</p>
+                            <a
+                                href="mailto:support@lawyerup.com"
+                                className="inline-flex items-center justify-center rounded-lg bg-[#004d45] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#003a34] transition-colors"
+                            >
+                                Send us an email
+                            </a>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div >
     );
 }

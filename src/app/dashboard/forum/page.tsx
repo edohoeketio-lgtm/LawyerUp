@@ -36,6 +36,18 @@ export default function ForumPage() {
         }));
     };
 
+    const handleBookmark = (id: string) => {
+        setThreads(threads.map(t => {
+            if (t.id === id) {
+                return {
+                    ...t,
+                    isBookmarked: !t.isBookmarked
+                };
+            }
+            return t;
+        }));
+    };
+
     const handleNewDiscussion = (data: { title: string; category: string; content: string; isAnonymous: boolean }) => {
         const newThread: ForumThread = {
             id: Date.now().toString(),
@@ -147,8 +159,11 @@ export default function ForumPage() {
                                         <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-medium text-gray-600">
                                             {thread.category}
                                         </span>
-                                        <button className="text-gray-400 hover:text-[#004d45]">
-                                            <Bookmark size={16} />
+                                        <button
+                                            onClick={() => handleBookmark(thread.id)}
+                                            className={`transition-colors ${thread.isBookmarked ? "text-[#004d45] fill-[#004d45]" : "text-gray-400 hover:text-[#004d45]"}`}
+                                        >
+                                            <Bookmark size={16} className={thread.isBookmarked ? "fill-current" : ""} />
                                         </button>
                                     </div>
                                 </div>

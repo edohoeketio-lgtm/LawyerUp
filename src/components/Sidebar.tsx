@@ -20,6 +20,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const searchParams = useSearchParams();
     const currentView = searchParams.get("view");
     const [user, setUser] = useState<User | null>(null);
+    const [showWelcomeCard, setShowWelcomeCard] = useState(true);
 
     useEffect(() => {
         // Initial load
@@ -99,32 +100,37 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </nav>
 
                 {/* Bottom Card */}
-                <div className="p-4">
-                    <div className="relative overflow-hidden rounded-2xl bg-[#022c22] p-5 shadow-lg">
-                        {/* Background Element */}
-                        <div className="absolute right-0 top-0 h-24 w-24 opacity-40 mix-blend-multiply relative">
-                            <Image src="/icons/sidebar-card-bg.png" alt="" fill className="object-contain object-top-right" />
-                        </div>
+                {showWelcomeCard && (
+                    <div className="p-4">
+                        <div className="relative overflow-hidden rounded-2xl bg-[#022c22] p-5 shadow-lg">
+                            {/* Background Element */}
+                            <div className="absolute right-0 top-0 h-24 w-24 opacity-40 mix-blend-multiply relative">
+                                <Image src="/icons/sidebar-card-bg.png" alt="" fill className="object-contain object-top-right" />
+                            </div>
 
-                        <div className="relative z-10 mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                            <Image src="/icons/welcome_card.png" alt="" width={40} height={40} className="h-10 w-10 object-contain" />
-                        </div>
+                            <div className="relative z-10 mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                                <Image src="/icons/welcome_card.png" alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+                            </div>
 
-                        <h3 className="relative z-10 mb-2 font-serif text-lg font-medium text-white">Welcome</h3>
-                        <p className="relative z-10 mb-6 text-sm leading-relaxed text-gray-300">
-                            Get to know your Lawyer Up Dashboard with our short walkthrough course.
-                        </p>
+                            <h3 className="relative z-10 mb-2 font-serif text-lg font-medium text-white">Welcome</h3>
+                            <p className="relative z-10 mb-6 text-sm leading-relaxed text-gray-300">
+                                Get to know your Lawyer Up Dashboard with our short walkthrough course.
+                            </p>
 
-                        <div className="relative z-10 flex items-center gap-6">
-                            <button className="text-sm font-bold text-[#9FFF6F] hover:text-[#b4ff8f] hover:underline">
-                                Start Tutorial
-                            </button>
-                            <button className="text-sm font-medium text-gray-400 hover:text-white">
-                                Close
-                            </button>
+                            <div className="relative z-10 flex items-center gap-6">
+                                <button className="text-sm font-bold text-[#9FFF6F] hover:text-[#b4ff8f] hover:underline">
+                                    Start Tutorial
+                                </button>
+                                <button
+                                    onClick={() => setShowWelcomeCard(false)}
+                                    className="text-sm font-medium text-gray-400 hover:text-white"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 {/* User Profile Snippet (Bottom) */}
                 <div className="mt-auto border-t border-white/10 p-4">

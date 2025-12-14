@@ -21,8 +21,9 @@ export interface User {
     };
     verificationStatus?: "unverified" | "pending" | "verified";
     barCountry?: string;
-    barNumber?: string;
+    // barNumber?: string; // Removed in favor of barId (Step Id: 200)
     barState?: string;
+    barId?: string;
     bookmarkedLawyerIds?: string[];
 }
 

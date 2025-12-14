@@ -5,10 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Send, Paperclip, MoreVertical, Phone, Video, Image as ImageIcon, X, Clock } from "lucide-react";
+import { ArrowLeft, Send, Paperclip, MoreVertical, Phone, Video, Image as ImageIcon, X as XIcon, Clock } from "lucide-react";
 import { mockConversations, Message } from "@/data/messages";
 import { lawyers } from "@/data/lawyers";
 import { bookings, getBookingLawyer } from "@/data/bookings";
+import ReportModal from "@/components/ReportModal";
 
 // Helper to get lawyer details
 const getLawyerDetails = (id: string) => {
@@ -36,6 +37,7 @@ export default function ChatPage() {
     const [newMessage, setNewMessage] = useState("");
     const [showMenu, setShowMenu] = useState(false);
     const [isBlocked, setIsBlocked] = useState(false);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
     // We removed 'isAttaching' state in favor of direct file input trigger
     // but we can keep it if we wanted the "mock menu", but simpler is better as per user request
@@ -120,6 +122,12 @@ export default function ChatPage() {
             className="flex h-[calc(100vh-120px)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
             onClick={() => setShowMenu(false)}
         >
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                lawyerName={lawyer.name}
+            />
+
             {/* Chat Header */}
             <div className="flex items-center justify-between border-b border-gray-100 p-4">
                 <div className="flex items-center gap-4">
@@ -156,7 +164,13 @@ export default function ChatPage() {
                             <Link href={`/dashboard/lawyer/${lawyer.id}`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                 View Profile
                             </Link>
-                            <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            <button
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                onClick={() => {
+                                    setIsReportModalOpen(true);
+                                    setShowMenu(false);
+                                }}
+                            >
                                 Report Issue
                             </button>
                             <div className="h-px bg-gray-100 my-1"></div>
@@ -212,7 +226,7 @@ export default function ChatPage() {
                         return (
                             <div className="flex flex-col items-center justify-center gap-3 rounded-xl bg-red-50 py-6 text-center">
                                 <div className="rounded-full bg-red-100 p-2 text-red-500">
-                                    <X size={20} />
+                                    <XIcon size={20} />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-bold text-red-900">You have blocked this user</h3>

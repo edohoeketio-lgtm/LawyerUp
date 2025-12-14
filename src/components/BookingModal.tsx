@@ -4,6 +4,8 @@ import { useState } from "react";
 import { X, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { Lawyer } from "@/data/lawyers";
+import { bookingManager } from "@/utils/bookingUtils";
+import { Booking } from "@/data/bookings";
 
 interface BookingModalProps {
     lawyer: Lawyer;
@@ -60,7 +62,22 @@ export default function BookingModal({
                 onSubmitReschedule(selectedDate, selectedTime, topic);
                 onClose();
             } else {
-                // Submit logic would go here
+                // Create new booking
+                if (selectedDate && selectedTime) {
+                    const newBooking: Booking = {
+                        id: Date.now().toString(),
+                        lawyerId: lawyer.id,
+                        date: selectedDate.toISOString().split('T')[0],
+                        time: selectedTime,
+                        duration: 60,
+                        type: 'consultation', // Defaulting to consultation for now, could be dynamic
+                        topic: topic,
+                        price: lawyer.consultationPrice,
+                        status: 'pending',
+                        rescheduleCount: 0
+                    };
+                    bookingManager.addBooking(newBooking);
+                }
                 setStep(4);
             }
         }

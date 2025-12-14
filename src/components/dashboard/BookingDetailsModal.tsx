@@ -109,7 +109,7 @@ export default function BookingDetailsModal({ isOpen, onClose, booking }: Bookin
                         {booking.status === 'confirmed' ? (
                             <button
                                 onClick={() => info("Connecting to video secure check-in...")}
-                                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#004d45] py-3 font-medium text-white hover:bg-[#003a34] shadow-md shadow-[#004d45]/10"
+                                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#013328] py-3 text-sm font-bold text-white hover:bg-[#012a2b] transition-colors"
                             >
                                 <Video size={18} /> Join Call
                             </button>

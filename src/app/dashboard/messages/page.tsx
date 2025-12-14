@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export default function MessagesIndexPage() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [filterType, setFilterType] = useState<"all" | "consultation" | "mentorship">("all");
 
     const filteredConversations = mockConversations.filter(conversation => {
         const lawyer = lawyers.find(l => l.id === conversation.lawyerId);
@@ -16,20 +17,52 @@ export default function MessagesIndexPage() {
 
         const matchesName = lawyer.name.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesMessage = conversation.lastMessage.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesType = filterType === "all" || conversation.type === filterType;
 
-        return matchesName || matchesMessage;
+        return (matchesName || matchesMessage) && matchesType;
     });
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="font-serif text-3xl font-medium text-black">Messages</h1>
                     <p className="text-sm text-gray-500">Your conversations with lawyers.</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    {/* Filter Tabs */}
+                    <div className="flex rounded-lg bg-gray-100 p-1">
+                        <button
+                            onClick={() => setFilterType("all")}
+                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${filterType === "all"
+                                ? "bg-white text-black shadow-sm"
+                                : "text-gray-500 hover:text-black"
+                                }`}
+                        >
+                            All
+                        </button>
+                        <button
+                            onClick={() => setFilterType("consultation")}
+                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${filterType === "consultation"
+                                ? "bg-white text-black shadow-sm"
+                                : "text-gray-500 hover:text-black"
+                                }`}
+                        >
+                            Legal Advice
+                        </button>
+                        <button
+                            onClick={() => setFilterType("mentorship")}
+                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${filterType === "mentorship"
+                                ? "bg-white text-black shadow-sm"
+                                : "text-gray-500 hover:text-black"
+                                }`}
+                        >
+                            Mentorship
+                        </button>
+                    </div>
+
                     {/* Search */}
-                    <div className="relative hidden sm:block w-64">
+                    <div className="relative w-full sm:w-64">
                         <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
@@ -67,9 +100,17 @@ export default function MessagesIndexPage() {
                                         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500"></span>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-black group-hover:text-[#004d45]">
-                                            {lawyer.name}
-                                        </h3>
+                                        <div className="flex items-center gap-2 mb-0.5">
+                                            <h3 className="font-bold text-black group-hover:text-[#004d45]">
+                                                {lawyer.name}
+                                            </h3>
+                                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${conversation.type === 'mentorship'
+                                                ? 'bg-purple-50 text-purple-700'
+                                                : 'bg-blue-50 text-blue-700'
+                                                }`}>
+                                                {conversation.type === 'mentorship' ? 'Mentorship' : 'Legal Advice'}
+                                            </span>
+                                        </div>
                                         <p className={`line-clamp-1 text-sm ${conversation.unreadCount > 0 ? "font-semibold text-gray-900" : "text-gray-500"}`}>
                                             {conversation.unreadCount > 0 && <span className="mr-2 inline-block h-2 w-2 rounded-full bg-red-500"></span>}
                                             {conversation.lastMessage}
@@ -89,7 +130,7 @@ export default function MessagesIndexPage() {
                     })
                 ) : (
                     <div className="py-10 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
-                        No messages found matching "{searchQuery}"
+                        No messages found matching criteria
                     </div>
                 )}
             </div>

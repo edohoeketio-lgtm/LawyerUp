@@ -18,6 +18,7 @@ interface ProfileData {
     lastName?: string;
     legalInterests?: string[];
     timezone?: string;
+    barId?: string;
     availability?: {
         days: string[];
         startTime: string;
@@ -46,6 +47,7 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
         bio: "",
         legalInterests: [],
         timezone: "",
+        barId: "",
         availability: {
             days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
             startTime: "09:00",
@@ -311,17 +313,17 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                 <div className="relative">
                                     <input
                                         type="text"
-                                        value={(formData as any).barId || ""}
+                                        value={formData.barId || ""}
                                         onChange={(e) => setFormData({ ...formData, barId: e.target.value })}
-                                        disabled={!!(initialData as any)?.barId}
+                                        disabled={!!initialData?.barId}
                                         className={`w-full rounded-lg border px-4 py-2.5 text-sm font-medium focus:outline-none transition-colors
-                                            ${!!(initialData as any)?.barId
+                                            ${!!initialData?.barId
                                                 ? "bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed"
                                                 : "bg-white text-black border-gray-200 focus:border-[#004d45]"
                                             }`}
                                         placeholder="Enter your Bar ID"
                                     />
-                                    {!!(initialData as any)?.barId && (
+                                    {!!initialData?.barId && (
                                         <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -330,7 +332,7 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                         </div>
                                     )}
                                 </div>
-                                {!!(initialData as any)?.barId ? (
+                                {!!initialData?.barId ? (
                                     <p className="text-[10px] text-gray-400 flex items-center gap-1">
                                         <span className="h-1 w-1 rounded-full bg-gray-400"></span>
                                         This ID cannot be changed. Contact support to update.

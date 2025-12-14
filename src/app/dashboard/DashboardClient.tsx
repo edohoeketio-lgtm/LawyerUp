@@ -6,7 +6,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { auth, User } from "@/utils/auth";
-import { Check, ArrowRight, ChevronRight, ChevronLeft, Calendar as CalendarIcon, Clock, Video } from "lucide-react";
+import { Check, ArrowRight, ChevronRight, ChevronLeft, Calendar as CalendarIcon, Clock, Video, X } from "lucide-react";
 import { lawyers } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
 import { bookings, getBookingLawyer } from "@/data/bookings";

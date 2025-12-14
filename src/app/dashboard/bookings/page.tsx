@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { bookings, Booking, getBookingLawyer, BookingStatus } from "@/data/bookings";
+import { Booking, getBookingLawyer, BookingStatus } from "@/data/bookings";
+import { bookingManager } from "@/utils/bookingUtils";
 import { Calendar, Clock, Video, MoreHorizontal, FileText, AlertCircle, MessageSquare } from "lucide-react";
 import ReviewModal from "@/components/ReviewModal";
-
 import BookingDetailsModal from "@/components/dashboard/BookingDetailsModal";
 import BookingModal from "@/components/BookingModal";
 import CancelBookingModal from "@/components/dashboard/CancelBookingModal";
@@ -15,6 +15,16 @@ import { useToast } from "@/context/ToastContext";
 export default function BookingsPage() {
     const { success, error } = useToast();
     const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "cancelled" | "rescheduled">("upcoming");
+    const [bookings, setBookings] = useState<Booking[]>([]);
+
+    // Load bookings on mount and subscribe to changes
+    useEffect(() => {
+        setBookings(bookingManager.getBookings());
+        const unsubscribe = bookingManager.subscribe(() => {
+            setBookings(bookingManager.getBookings());
+        });
+        return unsubscribe;
+    }, []);
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedBookingForReview, setSelectedBookingForReview] = useState<Booking | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);

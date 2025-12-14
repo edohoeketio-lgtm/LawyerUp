@@ -13,7 +13,9 @@ export default function DashboardLayout({
 
     return (
         <div className="min-h-screen bg-[#FAFAFA]">
-            <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+            <Suspense>
+                <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+            </Suspense>
             <div className="flex min-h-screen flex-col md:ml-64">
                 <Suspense>
                     <TopBar onMenuClick={() => setIsMobileMenuOpen(true)} />
