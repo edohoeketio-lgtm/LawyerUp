@@ -138,6 +138,9 @@ export default function BookingsPage() {
                                 onViewDetails={() => handleOpenDetails(booking)}
                                 onReschedule={() => handleOpenReschedule(booking)}
                                 onCancel={() => handleOpenCancel(booking)}
+                                onJoinCall={() => {
+                                    success("Connecting to video secure check-in...");
+                                }}
                             />
                         ))}
                     </div>
@@ -205,7 +208,14 @@ export default function BookingsPage() {
     );
 }
 
-function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule, onCancel }: { booking: Booking, onLeaveReview?: () => void, onViewDetails?: () => void, onReschedule?: () => void, onCancel?: () => void }) {
+function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule, onCancel, onJoinCall }: {
+    booking: Booking,
+    onLeaveReview?: () => void,
+    onViewDetails?: () => void,
+    onReschedule?: () => void,
+    onCancel?: () => void,
+    onJoinCall?: () => void
+}) {
     const lawyer = getBookingLawyer(booking);
     const [showMenu, setShowMenu] = useState(false);
 
@@ -277,7 +287,10 @@ function BookingCard({ booking, onLeaveReview, onViewDetails, onReschedule, onCa
                             >
                                 <MessageSquare size={16} />
                             </Link>
-                            <button className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
+                            <button
+                                onClick={onJoinCall}
+                                className="flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]"
+                            >
                                 <Video size={16} /> Join Call
                             </button>
                         </>

@@ -8,6 +8,7 @@ import { auth, User } from "@/utils/auth";
 import { X } from "lucide-react";
 
 import { NAV_ITEMS } from "@/data/navigation";
+import { useMessages } from "@/context/MessageContext";
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -21,6 +22,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const currentView = searchParams.get("view");
     const [user, setUser] = useState<User | null>(null);
     const [showWelcomeCard, setShowWelcomeCard] = useState(true);
+    const { unreadTotal } = useMessages();
 
     useEffect(() => {
         // Initial load
@@ -93,7 +95,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     height={20}
                                     className={`h-5 w-5 object-contain ${item.label === "Inbox" ? "brightness-0 invert" : ""}`}
                                 />
-                                {item.label}
+                                <span className="flex-1">{item.label}</span>
+                                {item.label === "Inbox" && unreadTotal > 0 && (
+                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                                        {unreadTotal}
+                                    </span>
+                                )}
                             </Link>
                         );
                     })}

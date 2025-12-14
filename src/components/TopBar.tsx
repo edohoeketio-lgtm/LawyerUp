@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { auth, User } from "@/utils/auth";
 import { getLawyerById } from "@/data/lawyers";
+import { useNotifications } from "@/context/NotificationContext";
 
 interface TopBarProps {
     onMenuClick?: () => void;
@@ -21,40 +22,9 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
 
     // Notification State
     const [showNotifications, setShowNotifications] = useState(false);
-
-    // Mock Notifications - Curated for high importance
-    const notifications = [
-        {
-            id: 1,
-            type: 'booking',
-            text: "Upcoming Session: 'Landlord Dispute' starts in 1 hour",
-            time: "Just now",
-            unread: true
-        },
-        {
-            id: 2,
-            type: 'message',
-            text: "New message from Barr. Sarah James regarding your case",
-            time: "25 mins ago",
-            unread: true
-        },
-        {
-            id: 3,
-            type: 'system',
-            text: "Payment successful for session with Adv. Michael",
-            time: "2 hours ago",
-            unread: false
-        },
-        {
-            id: 4,
-            type: 'system',
-            text: "Action Required: Verify your email to enable video calls",
-            time: "1 day ago",
-            unread: false
-        },
-    ];
-
-    const unreadCount = notifications.filter(n => n.unread).length;
+    const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+    // Use first 4 notifications for the dropdown
+    const recentNotifications = notifications.slice(0, 4);
 
     const [user, setUser] = useState<User | null>(null);
 
@@ -167,13 +137,20 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                             <div className="absolute right-0 top-full mt-2 z-50 w-80 rounded-xl border border-gray-100 bg-white shadow-xl ring-1 ring-black/5 animate-in fade-in zoom-in-95 duration-200">
                                 <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                                     <h3 className="font-serif text-sm font-bold text-black">Notifications</h3>
-                                    <button className="text-xs text-[#004d45] hover:underline">Mark all as read</button>
+                                    <button onClick={markAllAsRead} className="text-xs text-[#004d45] hover:underline">Mark all as read</button>
                                 </div>
                                 <div className="max-h-[320px] overflow-y-auto py-2">
-                                    {notifications.map((notification) => (
+                                    {recentNotifications.map((notification) => (
                                         <div
                                             key={notification.id}
                                             className="relative flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer group"
+                                            onClick={() => {
+                                                if (notification.link) {
+                                                    markAsRead(notification.id);
+                                                    router.push(notification.link);
+                                                    setShowNotifications(false);
+                                                }
+                                            }}
                                         >
                                             <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${notification.type === 'booking' ? 'bg-green-50 text-green-600' :
                                                 notification.type === 'message' ? 'bg-blue-50 text-blue-600' :
@@ -195,6 +172,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                                         </div>
                                     ))}
                                 </div>
+
                                 <div className="border-t border-gray-100 px-4 py-2 text-center">
                                     <Link
                                         href="/dashboard/notifications"

@@ -1,17 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, Plus, ThumbsUp, MessageSquare, Bookmark, ShieldCheck } from "lucide-react";
 import { forumThreads, ForumThread } from "@/data/forum";
 import StartDiscussionModal from "@/components/dashboard/StartDiscussionModal";
+import { auth, User } from "@/utils/auth";
 
 export default function ForumPage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [threads, setThreads] = useState(forumThreads);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        setUser(auth.getSession());
+        const handleAuthChange = () => setUser(auth.getSession());
+        window.addEventListener("auth-change", handleAuthChange);
+        return () => window.removeEventListener("auth-change", handleAuthChange);
+    }, []);
+
+    // Sync threads with user bookmarks
+    useEffect(() => {
+        if (user) {
+            const bookmarkedIds = user.bookmarkedThreadIds || [];
+            setThreads(prev => prev.map(t => ({
+                ...t,
+                isBookmarked: bookmarkedIds.includes(t.id)
+            })));
+        }
+    }, [user]);
 
     const categories = ["All", "General", "Legal Advice", "Career", "Bar Exam", "News"];
 
@@ -37,15 +57,25 @@ export default function ForumPage() {
     };
 
     const handleBookmark = (id: string) => {
-        setThreads(threads.map(t => {
-            if (t.id === id) {
-                return {
-                    ...t,
-                    isBookmarked: !t.isBookmarked
-                };
-            }
-            return t;
-        }));
+        if (!user) return;
+
+        const currentBookmarks = user.bookmarkedThreadIds || [];
+        const isBookmarked = currentBookmarks.includes(id);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(bookmarkId => bookmarkId !== id);
+        } else {
+            newBookmarks = [...currentBookmarks, id];
+        }
+
+        // Optimistic UI update
+        setThreads(threads.map(t =>
+            t.id === id ? { ...t, isBookmarked: !isBookmarked } : t
+        ));
+
+        // Persist
+        auth.updateUser({ bookmarkedThreadIds: newBookmarks });
     };
 
     const handleNewDiscussion = (data: { title: string; category: string; content: string; isAnonymous: boolean }) => {

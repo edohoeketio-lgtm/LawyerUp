@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { mockConversations } from "@/data/messages";
 import { lawyers } from "@/data/lawyers";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
+import { useMessages } from "@/context/MessageContext";
 
 export default function MessagesIndexPage() {
+    const { conversations } = useMessages();
     const [searchQuery, setSearchQuery] = useState("");
     const [filterType, setFilterType] = useState<"all" | "consultation" | "mentorship">("all");
 
-    const filteredConversations = mockConversations.filter(conversation => {
+    const filteredConversations = conversations.filter(conversation => {
         const lawyer = lawyers.find(l => l.id === conversation.lawyerId);
         if (!lawyer) return false;
 
@@ -97,6 +98,7 @@ export default function MessagesIndexPage() {
                                                 className="object-cover"
                                             />
                                         </div>
+                                        {/* Status Dot */}
                                         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500"></span>
                                     </div>
                                     <div>
@@ -135,7 +137,7 @@ export default function MessagesIndexPage() {
                 )}
             </div>
 
-            {mockConversations.length === 0 && (
+            {conversations.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 text-center rounded-xl bg-gray-50">
                     <h3 className="text-lg font-bold text-black">No messages yet</h3>
                     <p className="text-gray-500">Book a session to start chatting with a lawyer.</p>

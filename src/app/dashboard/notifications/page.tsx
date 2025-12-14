@@ -3,59 +3,12 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Bell, Calendar, Lock, Info, CheckCircle2, MessageSquare } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useNotifications } from "@/context/NotificationContext";
 
 export default function NotificationsPage() {
-    // Mock Notifications - Expanded List
-    const notifications = [
-        {
-            id: 1,
-            type: 'booking',
-            text: "Upcoming Session: 'Landlord Dispute' starts in 1 hour",
-            time: "Just now",
-            unread: true,
-            detail: "Prepare your documents for the session with Barr. Sarah Jenkins."
-        },
-        {
-            id: 2,
-            type: 'message',
-            text: "New message from Barr. Sarah James regarding your case",
-            time: "25 mins ago",
-            unread: true,
-            detail: "Sarah: 'Please review the attached contract draft when you have a moment.'"
-        },
-        {
-            id: 3,
-            type: 'system',
-            text: "Payment successful for session with Adv. Michael",
-            time: "2 hours ago",
-            unread: false,
-            detail: "Transaction ID: #TXN-8842-221. Amount: $120.00"
-        },
-        {
-            id: 4,
-            type: 'system',
-            text: "Action Required: Verify your email to enable video calls",
-            time: "1 day ago",
-            unread: false,
-            detail: "We need to verify your email address (john@example.com) to ensure secure communications."
-        },
-        {
-            id: 5,
-            type: 'security',
-            text: "New login attempt detected",
-            time: "2 days ago",
-            unread: false,
-            detail: "We detected a login from a new device (MacBook Pro) in London, UK."
-        },
-        {
-            id: 6,
-            type: 'system',
-            text: "Your profile is 80% complete",
-            time: "3 days ago",
-            unread: false,
-            detail: "Add your legal interests to get better recommendations."
-        }
-    ];
+    const router = useRouter();
+    const { notifications, markAsRead, markAllAsRead } = useNotifications();
 
     const getIcon = (type: string) => {
         switch (type) {
@@ -86,7 +39,10 @@ export default function NotificationsPage() {
 
             <div className="mb-6 flex items-center justify-between">
                 <h1 className="font-serif text-2xl font-bold text-black">Notifications</h1>
-                <button className="text-sm font-medium text-[#004d45] hover:underline">
+                <button
+                    onClick={markAllAsRead}
+                    className="text-sm font-medium text-[#004d45] hover:underline"
+                >
                     Mark all as read
                 </button>
             </div>
@@ -97,6 +53,12 @@ export default function NotificationsPage() {
                         key={notification.id}
                         className={`group relative flex gap-4 rounded-xl border p-4 transition-all hover:bg-gray-50 ${notification.unread ? "border-[#004d45]/20 bg-[#F0FDF4]/50" : "border-gray-100 bg-white"
                             }`}
+                        onClick={() => {
+                            if (notification.link) {
+                                markAsRead(notification.id);
+                                router.push(notification.link);
+                            }
+                        }}
                     >
                         <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${getBgColor(notification.type)}`}>
                             {getIcon(notification.type)}
@@ -116,7 +78,12 @@ export default function NotificationsPage() {
 
                         {notification.unread && (
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="rounded-full p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-600" title="Mark as read">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        markAsRead(notification.id);
+                                    }}
+                                    className="rounded-full p-2 text-gray-400 hover:bg-gray-200 hover:text-gray-600" title="Mark as read">
                                     <CheckCircle2 size={18} />
                                 </button>
                             </div>

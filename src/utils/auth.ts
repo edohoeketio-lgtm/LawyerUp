@@ -25,6 +25,11 @@ export interface User {
     barState?: string;
     barId?: string;
     bookmarkedLawyerIds?: string[];
+    bookmarkedThreadIds?: string[];
+
+    // Lawyer specific fields
+    mentorshipPrice?: number;
+    consultationPrice?: number;
 }
 
 const USERS_KEY = "lawyerup_users";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/utils/auth";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -11,10 +11,13 @@ import { useToast } from "@/context/ToastContext";
 
 export default function SignupPage() {
     const { error: showError } = useToast();
-    const [role, setRole] = useState<"client" | "lawyer">("client");
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const initialRole = searchParams.get("role") as "client" | "lawyer" | null;
+
+    const [role, setRole] = useState<"client" | "lawyer">(initialRole || "client");
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const router = useRouter();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -100,7 +103,7 @@ export default function SignupPage() {
 
                 // Redirect based on role
                 if (role === "client") {
-                    router.push("/profile-setup?name=" + encodeURIComponent(formData.name.split(' ')[0] || ''));
+                    router.push("/otp?name=" + encodeURIComponent(formData.name.split(' ')[0] || ''));
                 } else {
                     router.push("/lawyer/verification"); // Or wherever lawyers go
                 }
@@ -133,40 +136,47 @@ export default function SignupPage() {
             <div className={`w-full max-w-lg space-y-8 transition-opacity duration-500 ${isSubmitting ? "opacity-50" : "opacity-100"}`}>
                 {/* Header */}
                 <div className="space-y-2">
-                    <h1 className="font-serif text-4xl text-black">Create an account</h1>
+                    <h1 className="font-serif text-4xl text-black">
+                        {initialRole === 'lawyer' ? "Create lawyer account" : "Create an account"}
+                    </h1>
                     <p className="font-sans text-sm text-gray-500">
-                        Let&apos;s get started on your journey towards well-being.
+                        {initialRole === 'lawyer'
+                            ? "Join our network of legal professionals."
+                            : "Let's get started on your journey towards well-being."
+                        }
                     </p>
                 </div>
 
-                {/* Role Selection */}
-                <div className="space-y-2">
-                    <label className="text-xs font-medium text-gray-500">
-                        What would you like to do on Lawyer Up?
-                    </label>
-                    <div className="flex gap-4">
-                        <button
-                            type="button"
-                            onClick={() => setRole("client")}
-                            className={`flex-1 rounded-lg border px-4 py-3 text-sm transition-all ${role === "client"
-                                ? "border-green-800 bg-green-50 text-green-900"
-                                : "border-gray-200 text-gray-600 hover:border-gray-300"
-                                }`}
-                        >
-                            I need legal help
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setRole("lawyer")}
-                            className={`flex-1 rounded-lg border px-4 py-3 text-sm transition-all ${role === "lawyer"
-                                ? "border-green-800 bg-green-50 text-green-900"
-                                : "border-gray-200 text-gray-600 hover:border-gray-300"
-                                }`}
-                        >
-                            I&apos;m new to practice
-                        </button>
+                {/* Role Selection (Only show if role not pre-selected) */}
+                {!initialRole && (
+                    <div className="space-y-2">
+                        <label className="text-xs font-medium text-gray-500">
+                            What would you like to do on Lawyer Up?
+                        </label>
+                        <div className="flex gap-4">
+                            <button
+                                type="button"
+                                onClick={() => setRole("client")}
+                                className={`flex-1 rounded-lg border px-4 py-3 text-sm transition-all ${role === "client"
+                                    ? "border-green-800 bg-green-50 text-green-900"
+                                    : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                    }`}
+                            >
+                                I need legal help
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRole("lawyer")}
+                                className={`flex-1 rounded-lg border px-4 py-3 text-sm transition-all ${role === "lawyer"
+                                    ? "border-green-800 bg-green-50 text-green-900"
+                                    : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                    }`}
+                            >
+                                I am a Legal Professional
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Form Inputs */}
                 <form onSubmit={handleSubmit} className="space-y-6">

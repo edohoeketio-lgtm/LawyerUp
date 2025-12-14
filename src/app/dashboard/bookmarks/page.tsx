@@ -10,7 +10,6 @@ import LawyerCard from "@/components/LawyerCard";
 import { auth, User } from "@/utils/auth"; // Import auth
 
 // Mock saved IDs for threads (keeping demo logic for threads for now as requested task was about lawyers)
-const initialSavedThreadIds = ["1", "4"];
 
 export default function BookmarksPage() {
     const [activeTab, setActiveTab] = useState<"discussions" | "lawyers">("discussions");
@@ -45,8 +44,10 @@ export default function BookmarksPage() {
         // State update via event listener is usually enough, but we can optimistically update for responsiveness if needed
     };
 
-    // Filter threads
-    const savedThreads = forumThreads.filter((t) => initialSavedThreadIds.includes(t.id));
+    // Filter threads based on REAL user bookmarks
+    const savedThreadIds = user?.bookmarkedThreadIds || [];
+    const savedThreads = forumThreads.filter((t) => savedThreadIds.includes(t.id));
+
     const filteredThreads = savedThreads.filter(t =>
         t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
@@ -60,6 +61,9 @@ export default function BookmarksPage() {
         l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         l.sector.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    // Initial load sync - if mock data is used in auth, ensure consistency?
+    // Not strictly needed as we pull from auth
 
     return (
         <div className="space-y-8">
@@ -138,7 +142,17 @@ export default function BookmarksPage() {
                                             <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-medium text-gray-600">
                                                 {thread.category}
                                             </span>
-                                            <button className="text-[#004d45]">
+                                            <button
+                                                onClick={() => {
+                                                    // Quick unbookmark handler logic
+                                                    if (!user) return;
+                                                    const currentBookmarks = user.bookmarkedThreadIds || [];
+                                                    const newBookmarks = currentBookmarks.filter(id => id !== thread.id);
+                                                    auth.updateUser({ bookmarkedThreadIds: newBookmarks });
+                                                }}
+                                                className="text-[#004d45] hover:text-red-500 transition-colors"
+                                                title="Remove Bookmark"
+                                            >
                                                 <Bookmark size={16} fill="currentColor" />
                                             </button>
                                         </div>

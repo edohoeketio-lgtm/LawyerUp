@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useToast } from "@/context/ToastContext";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Send, Paperclip, MoreVertical, Phone, Video, Image as ImageIcon, X as XIcon, Clock } from "lucide-react";
-import { mockConversations, Message } from "@/data/messages";
+import { ArrowLeft, Send, Paperclip, MoreVertical, X as XIcon, Clock } from "lucide-react";
+
+import { useToast } from "@/context/ToastContext";
+import { useMessages } from "@/context/MessageContext";
 import { lawyers } from "@/data/lawyers";
-import { bookings, getBookingLawyer } from "@/data/bookings";
+import { bookings } from "@/data/bookings";
+import { Message } from "@/data/messages";
 import ReportModal from "@/components/ReportModal";
 
 // Helper to get lawyer details
@@ -31,6 +33,7 @@ export default function ChatPage() {
     const params = useParams();
     const router = useRouter();
     const { success } = useToast();
+    const { conversations, markAsRead, addMessage } = useMessages();
     const lawyerId = params?.id as string;
 
     const [messages, setMessages] = useState<Message[]>([]);
@@ -39,8 +42,6 @@ export default function ChatPage() {
     const [isBlocked, setIsBlocked] = useState(false);
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
-    // We removed 'isAttaching' state in favor of direct file input trigger
-    // but we can keep it if we wanted the "mock menu", but simpler is better as per user request
     const fileInputRef = useRef<HTMLInputElement>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -48,12 +49,18 @@ export default function ChatPage() {
 
     useEffect(() => {
         if (lawyerId) {
-            const conversation = mockConversations.find(c => c.lawyerId === lawyerId);
+            const conversation = conversations.find(c => c.lawyerId === lawyerId);
+
+            // Only mark as read if there are unread messages to avoid infinite loop
+            if (conversation && conversation.unreadCount > 0) {
+                markAsRead(lawyerId);
+            }
+
             if (conversation) {
                 // Ensure messages have 'type' and 'isMe' for UI compatibility if data doesn't have it
                 const formattedMessages: Message[] = conversation.messages.map(m => ({
                     ...m,
-                    type: "text", // Default to text for compatibility
+                    type: m.type || "text",
                     isMe: m.senderId === "me"
                 } as any));
                 setMessages(formattedMessages);
@@ -61,7 +68,7 @@ export default function ChatPage() {
                 setMessages([]);
             }
         }
-    }, [lawyerId]);
+    }, [lawyerId, conversations, markAsRead]);
 
     useEffect(() => {
         // Check if user is blocked (client-side only to avoid hydration mismatch)
@@ -81,17 +88,7 @@ export default function ChatPage() {
         e?.preventDefault();
         if (!newMessage.trim()) return;
 
-        const msg: Message = {
-            id: Date.now().toString(),
-            senderId: "me",
-            content: newMessage,
-            timestamp: new Date().toISOString(),
-            type: "text",
-            isMe: true,
-            isRead: true
-        };
-
-        setMessages([...messages, msg]);
+        addMessage(lawyerId, newMessage);
         setNewMessage("");
     };
 
@@ -99,16 +96,10 @@ export default function ChatPage() {
         if (e.target.files && e.target.files[0]) {
             // Simulate upload delay
             setTimeout(() => {
-                const msg: Message = {
-                    id: Date.now().toString(),
-                    senderId: "me",
-                    content: "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80", // Mock image doc
-                    timestamp: new Date().toISOString(),
-                    type: "image",
-                    isMe: true,
-                    isRead: true
-                };
-                setMessages(prev => [...prev, msg]);
+                // In a real app we would upload the file here
+                // For now we just add a mock image message to the context if we wanted to support it fully
+                // defaulting to just adding a text message saying "Sent a file" for simplicity of context
+                addMessage(lawyerId, "[Simulated File Attachment]");
             }, 500);
         }
     };
