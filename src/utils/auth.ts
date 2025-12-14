@@ -20,6 +20,7 @@ export interface User {
         endTime: string;
     };
     verificationStatus?: "unverified" | "pending" | "verified";
+    barCountry?: string;
     barNumber?: string;
     barState?: string;
 }

@@ -123,7 +123,7 @@ function ProfileContent() {
                         </p>
                         <div className="mt-3">
                             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                                I need Legal help
+                                {user?.role === 'lawyer' ? "Aspiring Lawyer" : "I need Legal help"}
                             </span>
                         </div>
                         {user?.bio && (
@@ -248,7 +248,9 @@ function ProfileContent() {
                         <div>
                             <div className="mb-4 flex items-center justify-between">
                                 <h3 className="font-serif text-lg font-bold text-[#004d45]">Upcoming sessions</h3>
-                                <span className="text-xs text-gray-500">You have 3 upcoming sessions.</span>
+                                <span className="text-xs text-gray-500">
+                                    You have {upcomingSessions.length} upcoming session{upcomingSessions.length !== 1 ? 's' : ''}.
+                                </span>
                             </div>
 
                             <div className="space-y-4">

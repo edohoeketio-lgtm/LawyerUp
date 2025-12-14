@@ -149,14 +149,16 @@ export default function DashboardClient() {
                     const hasLanguageAndTimezone = user?.languages && user?.languages.length > 0 && user?.timezone;
                     const hasLegalInterests = user?.legalInterests && user?.legalInterests.length > 0;
                     const hasBookedSession = relevantBookings.some(b => b.status === "confirmed" || b.status === "completed");
+                    const isVerified = user?.verificationStatus === "verified";
 
                     const completedCount = [
                         hasLanguageAndTimezone,
                         hasLegalInterests,
-                        hasBookedSession
+                        hasBookedSession,
+                        (isLawyerView ? isVerified : false) // Only count verification for lawyers
                     ].filter(Boolean).length;
 
-                    const totalSteps = isLawyerView ? 4 : 3; // Lawyers have bar membership step
+                    const totalSteps = isLawyerView ? 4 : 3;
                     const percentComplete = Math.round((completedCount / totalSteps) * 100);
 
                     return (
@@ -195,8 +197,21 @@ export default function DashboardClient() {
                                 {/* Step 2: Bar Membership (Conditional for Lawyers) */}
                                 {isLawyerView && (
                                     <div className="relative flex items-center gap-3 pt-6">
-                                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                                        <span className="font-medium text-[#4A3B18]">Bar membership No.</span>
+                                        {isVerified ? (
+                                            <>
+                                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                                    <Check size={12} strokeWidth={3} />
+                                                </div>
+                                                <span className="font-medium text-[#8F6B20] line-through decoration-2">Bar membership verified</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                                <Link href="/lawyer/verification" className="font-medium text-[#4A3B18] underline hover:text-[#004d45]">
+                                                    Verify Bar membership
+                                                </Link>
+                                            </>
+                                        )}
                                     </div>
                                 )}
 
@@ -371,18 +386,22 @@ export default function DashboardClient() {
                 </div>
             </div>
 
-            {/* Suggested Lawyers */}
+            {/* Suggested Lawyers / Mentors */}
             <div>
                 <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-serif text-lg text-black">Suggested Lawyers</h3>
+                    <h3 className="font-serif text-lg text-black">
+                        {isLawyerView ? "Suggested Mentors" : "Suggested Lawyers"}
+                    </h3>
                     <Link href="/dashboard/discover" className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
-                        Explore Lawyers <ArrowRight size={14} />
+                        {isLawyerView ? "Explore Mentors" : "Explore Lawyers"} <ArrowRight size={14} />
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-5">
                     {lawyers
                         .filter(l => !blockedIds.includes(l.id))
+                        .filter(l => isLawyerView ? (l.mentorshipPrice > 0 && l.stats.sessions > 0) : true) // Filter for mentors if in lawyer view
+                        .sort((a, b) => isLawyerView ? (b.stats.mentoringMinutes || 0) - (a.stats.mentoringMinutes || 0) : 0) // Sort mentors by minutes
                         .slice(0, 5)
                         .map((lawyer) => (
                             <LawyerCard key={lawyer.id} lawyer={lawyer} />
