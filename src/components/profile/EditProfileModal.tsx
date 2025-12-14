@@ -24,6 +24,8 @@ interface ProfileData {
         startTime: string;
         endTime: string;
     };
+    consultationPrice?: number;
+    mentorshipPrice?: number;
     [key: string]: unknown;
 }
 
@@ -48,10 +50,12 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
         legalInterests: [],
         timezone: "",
         barId: "",
+        consultationPrice: 0,
+        mentorshipPrice: 0,
         availability: {
-            days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-            startTime: "09:00",
-            endTime: "17:00"
+            days: [],
+            startTime: "",
+            endTime: ""
         },
         ...initialData
     });
@@ -152,35 +156,24 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                         </div>
 
 
-                        {/* Role Selection */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-gray-500">What best describes you?</label>
-                            <div className="flex gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setFormData({ ...formData, role: "legal_help" })}
-                                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${formData.role === "legal_help"
-                                        ? "border-[#004d45] bg-[#F0FDF4] text-[#004d45]"
-                                        : "border-gray-200 text-gray-500 hover:border-gray-300"
-                                        }`}
-                                >
-                                    I need legal help
-                                </button>
-                                {/* Only show Aspiring Lawyer option if they are ALREADY a lawyer/aspiring lawyer */}
-                                {initialData?.role === "lawyer" && (
+                        {/* Role Selection - Hide for lawyers */}
+                        {initialData?.role !== "lawyer" && (
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-gray-500">What best describes you?</label>
+                                <div className="flex gap-3">
                                     <button
                                         type="button"
-                                        onClick={() => setFormData({ ...formData, role: "lawyer" })}
-                                        className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${formData.role === "lawyer"
+                                        onClick={() => setFormData({ ...formData, role: "legal_help" })}
+                                        className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${formData.role === "legal_help"
                                             ? "border-[#004d45] bg-[#F0FDF4] text-[#004d45]"
                                             : "border-gray-200 text-gray-500 hover:border-gray-300"
                                             }`}
                                     >
-                                        Aspiring / young lawyer
+                                        I need legal help
                                     </button>
-                                )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Legal Interests (Multi-select) */}
                         <div className="space-y-2">
@@ -305,6 +298,36 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
                             </div>
                         </div>
+
+                        {/* Professional Rates (Lawyers Only) */}
+                        {formData.role === "lawyer" && (
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500">Consultation Price ($)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                                        <input
+                                            type="number"
+                                            value={formData.consultationPrice as number || 0}
+                                            onChange={(e) => setFormData({ ...formData, consultationPrice: Number(e.target.value) })}
+                                            className="w-full rounded-lg border border-gray-200 pl-8 pr-4 py-2.5 text-sm font-medium text-black focus:border-[#004d45] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500">Mentorship Price ($)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                                        <input
+                                            type="number"
+                                            value={formData.mentorshipPrice as number || 0}
+                                            onChange={(e) => setFormData({ ...formData, mentorshipPrice: Number(e.target.value) })}
+                                            className="w-full rounded-lg border border-gray-200 pl-8 pr-4 py-2.5 text-sm font-medium text-black focus:border-[#004d45] focus:outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Bar ID (Locked if Set) */}
                         {formData.role === "lawyer" && (

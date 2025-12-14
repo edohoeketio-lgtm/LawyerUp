@@ -10,6 +10,7 @@ import { bookings } from "@/data/bookings";
 import LawyerCard from "@/components/LawyerCard";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import { useSearchParams } from "next/navigation";
+import ServiceManager from "@/components/profile/ServiceManager";
 
 // Helper for Bio expansion
 function ContentExpander({ text }: { text: string }) {
@@ -57,7 +58,7 @@ function isSessionJoinable(dateStr: string, timeStr: string) {
 export default function ProfileContent() {
     const searchParams = useSearchParams();
     const shouldEdit = searchParams.get("edit") === "true";
-    const [activeTab, setActiveTab] = useState<"Overview" | "Achievements" | "Consulted Lawyers">("Overview");
+    const [activeTab, setActiveTab] = useState<"Overview" | "Services" | "Achievements" | "Consulted Lawyers">("Overview");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
 
@@ -138,7 +139,7 @@ export default function ProfileContent() {
                         </p>
                         <div className="mt-3">
                             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
-                                {user?.role === 'lawyer' ? "Aspiring Lawyer" : "I need Legal help"}
+                                {user?.role === 'lawyer' ? "Legal Professional" : "I need Legal help"}
                             </span>
                         </div>
                         {user?.bio && (
@@ -169,7 +170,7 @@ export default function ProfileContent() {
 
             {/* Tabs */}
             <div className="flex gap-1 rounded-full border border-gray-100 bg-white p-1 w-fit">
-                {["Overview", "Achievements", "Consulted Lawyers"].map((tab) => (
+                {["Overview", "Services", "Achievements", "Consulted Lawyers"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -195,6 +196,10 @@ export default function ProfileContent() {
                         />
                     ))}
                 </div>
+            )}
+
+            {activeTab === "Services" && user && (
+                <ServiceManager user={user} onUpdate={setUser} />
             )}
 
             {activeTab === "Overview" && (

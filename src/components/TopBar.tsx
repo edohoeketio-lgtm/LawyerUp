@@ -73,46 +73,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                 </h1>
             </div>
 
-            {user?.role === "lawyer" && (
-                <div className="hidden items-center gap-4 rounded-lg bg-gray-50 p-1 md:flex">
-                    {(() => {
-                        // Logic to disable the toggle on specific pages
-                        const shouldDisableToggle = pathname?.startsWith("/dashboard/forum") ||
-                            pathname?.startsWith("/dashboard/account") ||
-                            pathname === "/dashboard/bookings" ||
-                            pathname?.startsWith("/dashboard/messages") ||
-                            pathname?.startsWith("/dashboard/notifications");
-
-                        // Cleaned up logic
-                        const isLawyerDetail = pathname?.startsWith("/dashboard/lawyer/");
-
-                        return (
-                            <>
-                                <button
-                                    onClick={() => setView("client")}
-                                    disabled={shouldDisableToggle}
-                                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${currentView === "client"
-                                        ? "bg-white text-[#013328] shadow-sm ring-1 ring-gray-200"
-                                        : "text-gray-500 hover:text-gray-900"
-                                        } ${shouldDisableToggle ? "opacity-50 cursor-not-allowed" : ""}`}
-                                >
-                                    Legal advice
-                                </button>
-                                <button
-                                    onClick={() => setView("lawyer")}
-                                    disabled={shouldDisableToggle}
-                                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${currentView === "lawyer"
-                                        ? "bg-white text-[#013328] shadow-sm ring-1 ring-gray-200"
-                                        : "text-gray-500 hover:text-gray-900"
-                                        } ${shouldDisableToggle ? "opacity-50 cursor-not-allowed" : ""}`}
-                                >
-                                    Mentorship
-                                </button>
-                            </>
-                        );
-                    })()}
-                </div>
-            )}
+            {/* Toggle removed as per user request */}
 
             <div className="flex items-center gap-4">
                 <div className="relative">

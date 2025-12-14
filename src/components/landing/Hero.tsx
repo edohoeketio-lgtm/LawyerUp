@@ -39,13 +39,13 @@ export default function Hero() {
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
                         <Link
-                            href="/signup"
+                            href="/signup?role=client"
                             className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#9FFF6F] text-[#013328] font-bold text-lg hover:bg-[#8AFE5A] transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 flex items-center justify-center gap-2"
                         >
                             Find a Lawyer <ArrowRight size={20} />
                         </Link>
                         <Link
-                            href="/lawyer"
+                            href="/signup?role=lawyer"
                             className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-all backdrop-blur-sm border border-white/10"
                         >
                             I'm a Lawyer

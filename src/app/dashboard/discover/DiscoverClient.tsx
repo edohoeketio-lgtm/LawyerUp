@@ -77,27 +77,82 @@ export default function DiscoverClient() {
     // Filter the pills displayed in the dropdown
     const visibleSectors = availableSectors.filter(s => s.toLowerCase().includes(filterSearch.toLowerCase()));
 
-    const filteredLawyers = lawyers.filter(lawyer => {
-        const matchesSearch = lawyer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            lawyer.sector.toLowerCase().includes(searchQuery.toLowerCase());
+    // Pagination Logic
+    const [allLawyers, setAllLawyers] = useState<any[]>(lawyers);
+
+    useEffect(() => {
+        // Fetch ALL local users to mix in with dummy data
+        // This ensures any account created locally is immediately visible for testing
+        const allLocalUsers = auth.getUsers();
+
+        const mappedLawyers = allLocalUsers.map(u => ({
+            id: u.id,
+            name: `${u.firstName} ${u.lastName}`, // Clean name, no debug suffixes
+            sector: u.legalInterests?.[0] || u.jobTitle || "General Practice",
+            title: u.jobTitle || "Legal Professional",
+            country: u.location || "Unknown",
+            image: "/avatars/user_dp.png", // Use default avatar for local users
+            stats: {
+                sessions: 0,
+                reviews: 0,
+                rating: 5.0
+            },
+            tags: u.legalInterests || [],
+            bio: u.bio || "No bio available",
+            consultationPrice: u.consultationPrice || 0,
+            mentorshipPrice: u.mentorshipPrice || 0,
+            languages: u.languages || ["English"],
+            services: u.services || [] // Include dynamic services
+        }));
+
+        // Merge with static lawyers
+        // Local users first for visibility
+        setAllLawyers([...mappedLawyers, ...lawyers]);
+    }, []);
+
+    const filteredLawyers = allLawyers.filter(lawyer => {
+        // Trim search query to avoid "Michael Anyi " failing to match "Michael Anyi"
+        const cleanQuery = searchQuery.toLowerCase().trim();
+        const matchesSearch = lawyer.name.toLowerCase().includes(cleanQuery) ||
+            lawyer.sector.toLowerCase().includes(cleanQuery);
         const matchesSector = selectedSector === "All" || lawyer.sector === selectedSector;
         const isBlocked = blockedIds.includes(lawyer.id);
 
         // Tab/View Filter based on Global URL Param
-        // view='client' -> Legal Advice (consultationPrice > 0)
-        // view='lawyer' -> Mentorship (mentorshipPrice > 0)
-        const hasService = currentView === "client" ? (lawyer.consultationPrice > 0) : (lawyer.mentorshipPrice > 0);
+        // view='client' -> Legal Advice
+        // view='lawyer' -> Mentorship
 
-        return matchesSearch && matchesSector && !isBlocked && hasService;
-    }).sort((a, b) => { // smart sort based on user interest
+        // Dynamic visibility logic:
+        // 1. Static lawyers check price/services
+        // 2. Local lawyers (id > 10 chars) get a "Free Pass" to always show up
+        const isLocal = typeof lawyer.id === 'string' && lawyer.id.length > 10;
+
+        const hasServices = lawyer.services && lawyer.services.length > 0;
+        let hasService = false;
+        if (currentView === "client") {
+            hasService = (lawyer.consultationPrice > 0) || hasServices;
+        } else {
+            hasService = (lawyer.mentorshipPrice > 0);
+        }
+
+        // The "Free Pass": isLocal users show up regardless of price/service configuration
+        return matchesSearch && matchesSector && !isBlocked && (hasService || isLocal);
+    }).sort((a, b) => {
+        // 1. Priority: Local Users first (so you can find your test accounts easily)
+        const aIsLocal = typeof a.id === 'string' && a.id.length > 10;
+        const bIsLocal = typeof b.id === 'string' && b.id.length > 10;
+        if (aIsLocal && !bIsLocal) return -1;
+        if (!aIsLocal && bIsLocal) return 1;
+
+        // 2. Priority: Smart Match based on User Interest
         const userInterests = user?.legalInterests || [];
-        if (userInterests.length === 0) return 0;
+        if (userInterests.length > 0) {
+            const aMatches = userInterests.includes(a.sector);
+            const bMatches = userInterests.includes(b.sector);
+            if (aMatches && !bMatches) return -1;
+            if (!aMatches && bMatches) return 1;
+        }
 
-        const aMatches = userInterests.includes(a.sector);
-        const bMatches = userInterests.includes(b.sector);
-
-        if (aMatches && !bMatches) return -1;
-        if (!aMatches && bMatches) return 1;
         return 0;
     });
 
@@ -114,14 +169,22 @@ export default function DiscoverClient() {
     }, [searchQuery, selectedSector, itemsPerPage, currentView]);
 
     return (
-        <div className="space-y-6" onClick={() => setShowFilter(false)}>
+        <div className="space-y-8" onClick={() => setShowFilter(false)}>
             {/* Header */}
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-black">Discover {currentView === 'lawyer' ? 'Mentors' : 'Lawyers'}</h1>
-                    <p className="text-gray-500">Find the perfect {currentView === 'lawyer' ? 'mentor' : 'legal expert'} for your needs</p>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-bold text-black">
+                            {user?.role === 'lawyer' ? 'Legal Network' : `Discover ${currentView === 'lawyer' ? 'Mentors' : 'Lawyers'}`}
+                        </h1>
+                    </div>
+                    <p className="text-gray-500">
+                        {user?.role === 'lawyer'
+                            ? "Connect with peers, find mentors, and grow your professional circle"
+                            : `Find the perfect ${currentView === 'lawyer' ? 'mentor' : 'legal expert'} for your needs`
+                        }
+                    </p>
                 </div>
-                {/* No local toggle here - controlled by TopBar */}
             </div>
 
             {/* Search and Filter Bar */}

@@ -84,9 +84,9 @@ export default function ForumPage() {
             title: data.title,
             excerpt: data.content.substring(0, 150) + (data.content.length > 150 ? "..." : ""),
             author: {
-                name: data.isAnonymous ? "Anonymous User" : "You", // Mock user
+                name: data.isAnonymous ? "Anonymous User" : (user ? `${user.firstName} ${user.lastName}` : "You"),
                 avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-                role: "Client"
+                role: user ? (user.role.charAt(0).toUpperCase() + user.role.slice(1)) as any : "Client"
             },
             category: data.category as any,
             createdAt: new Date().toISOString(),

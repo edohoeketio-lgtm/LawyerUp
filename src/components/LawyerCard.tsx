@@ -25,13 +25,22 @@ export default function LawyerCard({ lawyer, isBookmarked = false, onToggleBookm
     return (
         <Link href={`/dashboard/lawyer/${lawyer.id}${currentView ? `?view=${currentView}` : ""}`}>
             <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-100 transition-all hover:shadow-md hover:ring-2 hover:ring-gray-200">
-                <div className="aspect-[4/5] relative">
+                <div className="aspect-[4/5] relative group">
                     <Image
                         src={lawyer.image}
                         alt={lawyer.name}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+
+                    {/* Hover Action */}
+                    <div className="absolute bottom-3 left-3 right-3 opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                        <button className="w-full rounded-lg bg-white/95 py-2 text-xs font-bold text-[#006056] shadow-sm hover:bg-[#006056] hover:text-white backdrop-blur-sm">
+                            View Profile
+                        </button>
+                    </div>
+
                     <button
                         onClick={handleBookmark}
                         className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-sm transition-colors z-10 

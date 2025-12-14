@@ -37,7 +37,7 @@ export default function Navbar() {
                 <div className={`hidden md:flex items-center gap-8 text-sm font-medium ${isScrolled ? "text-gray-600" : "text-white/90"}`}>
                     <Link href="#features" className="hover:text-[#004d45] transition-colors">Features</Link>
                     <Link href="#how-it-works" className="hover:text-[#004d45] transition-colors">How it works</Link>
-                    <Link href="#for-lawyers" className="hover:text-[#004d45] transition-colors">For Lawyers</Link>
+                    <Link href="/signup?role=lawyer" className="hover:text-[#004d45] transition-colors">For Lawyers</Link>
                 </div>
 
                 <div className="hidden md:flex items-center gap-4">

@@ -72,6 +72,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <nav className="flex-1 space-y-1 px-3 py-6">
                     {NAV_ITEMS.map((item) => {
                         let isActive = pathname === item.href;
+                        let label = item.label;
+
+                        // Rename items for Lawyers
+                        if (user?.role === 'lawyer') {
+                            if (label === "Discover") label = "Network";
+                            if (label === "Bookings") label = "Schedule";
+                        }
 
                         // Special case: Keep "Discover" active when viewing a lawyer profile
                         if (item.label === "Discover" && pathname?.startsWith("/dashboard/lawyer/")) {
@@ -90,12 +97,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                             >
                                 <Image
                                     src={item.iconSrc}
-                                    alt={item.label}
+                                    alt={label}
                                     width={20}
                                     height={20}
                                     className={`h-5 w-5 object-contain ${item.label === "Inbox" ? "brightness-0 invert" : ""}`}
                                 />
-                                <span className="flex-1">{item.label}</span>
+                                <span className="flex-1">{label}</span>
                                 {item.label === "Inbox" && unreadTotal > 0 && (
                                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                                         {unreadTotal}
@@ -161,7 +168,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 {user ? `${user.firstName.toLowerCase()}@lawyer.up` : "guest@lawyer.up"}
                             </p>
                         </div>
-                        <Link href="/login" onClick={() => auth.logout()} className="text-gray-400 hover:text-white">
+                        <Link href="/" onClick={() => auth.logout()} className="text-gray-400 hover:text-white">
                             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>

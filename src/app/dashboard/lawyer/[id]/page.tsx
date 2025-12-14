@@ -8,7 +8,7 @@ import {
     ChevronLeft, MoreHorizontal, Globe, Linkedin,
     ArrowLeft, ArrowRight, Star, ChevronDown, Clock,
     Medal, ExternalLink, Info, Award, MessageSquare, Heart,
-    MapPin, Shield, ChevronRight, Share2, Flag, CheckCircle, Calendar
+    MapPin, Shield, ChevronRight, Share2, Flag, CheckCircle, Calendar, Edit
 } from "lucide-react";
 import { auth, User } from "@/utils/auth";
 import { getLawyerById, Lawyer } from "@/data/lawyers";
@@ -22,7 +22,34 @@ import { lawyers } from "@/data/lawyers";
 export default function LawyerDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const { success } = useToast();
-    const lawyer = getLawyerById(id);
+
+    // Try to find in static data first, then local storage
+    let lawyer: any = getLawyerById(id);
+    if (!lawyer && typeof window !== 'undefined') {
+        const localUser = auth.getUsers().find(u => u.id === id);
+        if (localUser) {
+            lawyer = {
+                id: localUser.id,
+                name: `${localUser.firstName} ${localUser.lastName}`,
+                image: "/avatars/user_dp.png",
+                sector: localUser.jobTitle || "General Practice",
+                title: localUser.jobTitle || "Lawyer",
+                country: localUser.barState || "US",
+                countryName: "United States",
+                stats: { sessions: 0, reviews: 0, consultationMinutes: 0, mentoringMinutes: 0 },
+                tags: localUser.legalInterests || [],
+                bio: localUser.bio || "No bio available.",
+                consultationPrice: localUser.consultationPrice || 0,
+                mentorshipPrice: localUser.mentorshipPrice || 0,
+                languages: localUser.languages || ["English"],
+                experience: [],
+                education: [],
+                reviews: [],
+                achievements: [],
+                services: localUser.services || []
+            };
+        }
+    }
     const searchParams = useSearchParams();
     const source = searchParams.get("source");
 
@@ -125,7 +152,26 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                         <span className="block text-xs font-medium text-gray-500">Mentorship</span>
                         <span className="block text-sm font-bold text-[#006056]">${lawyer.mentorshipPrice}</span>
                     </div>
-                    {source === "chat" ? (
+                    {/* CTA Button Logic */}
+                    {user?.id === lawyer.id ? (
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(`${window.location.origin}/dashboard/lawyer/${user?.id}`);
+                                    success("Profile link copied to clipboard!");
+                                }}
+                                className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                <Share2 size={18} /> Share
+                            </button>
+                            <button
+                                onClick={() => document.getElementById("edit-profile-trigger")?.click() || window.dispatchEvent(new CustomEvent('open-edit-profile'))}
+                                className="flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-6 py-2 font-medium text-white hover:bg-gray-800"
+                            >
+                                <Edit size={18} /> Edit Profile
+                            </button>
+                        </div>
+                    ) : source === "chat" ? (
                         <Link
                             href={`/dashboard/messages/${lawyer.id}`}
                             className="flex items-center justify-center gap-2 rounded-lg bg-[#004d45] px-6 py-2 font-medium text-white hover:bg-[#003a34]"
@@ -467,10 +513,36 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                     <h3 className="font-serif text-lg text-black">Available sessions</h3>
                     <p className="text-xs text-gray-500">Book 1:1 sessions from the options based on your needs</p>
 
-                    {lawyer.consultationPrice > 0 && (
+                    {/* Dynamic Services */}
+                    {lawyer.services?.map((service: any) => (
+                        <div key={service.id} className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-sm text-black">{service.title}</h4>
+                            </div>
+                            <div className="flex items-center gap-2 mb-4 text-xs">
+                                <span className={`px-2 py-0.5 rounded ${service.type === 'mentorship' ? 'bg-pink-100 text-pink-800' : 'bg-[#FFEBC8] text-[#523300]'}`}>
+                                    {service.type === 'mentorship' ? 'Mentorship' : 'Legal advice'}
+                                </span>
+                                <span className="flex items-center text-gray-500"><Clock size={12} className="mr-1" /> {service.duration} mins</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="font-bold text-[#006056] text-lg">${service.price}</span>
+                                <button
+                                    onClick={() => onBook(service.title, service.description)}
+                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                >
+                                    Book
+                                </button>
+                            </div>
+                            <p className="mt-2 text-xs text-gray-500 line-clamp-2">{service.description}</p>
+                        </div>
+                    ))}
+
+                    {/* Fallback Legacy Services (Generic) */}
+                    {(!lawyer.services || lawyer.services.length === 0) && lawyer.consultationPrice > 0 && (
                         <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
                             <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-bold text-sm text-black">Landlord vs. Tenant: Know Your Legal Rights</h4>
+                                <h4 className="font-bold text-sm text-black">General Consultation</h4>
                             </div>
                             <div className="flex items-center gap-2 mb-4 text-xs">
                                 <span className="bg-[#FFEBC8] text-[#523300] px-2 py-0.5 rounded">Legal advice</span>
@@ -479,7 +551,7 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
                                 <button
-                                    onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
+                                    onClick={() => onBook("General Consultation", "Standard consultation session with " + lawyer.name)}
                                     className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
                                 >
                                     Book
@@ -488,10 +560,10 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                         </div>
                     )}
 
-                    {lawyer.mentorshipPrice > 0 && (
+                    {(!lawyer.services || lawyer.services.length === 0) && lawyer.mentorshipPrice > 0 && (
                         <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
                             <div className="flex justify-between items-start mb-2">
-                                <h4 className="font-bold text-sm text-black">Ethical Dilemmas in Law & How to Handle Them</h4>
+                                <h4 className="font-bold text-sm text-black">Mentorship Session</h4>
                             </div>
                             <div className="flex items-center gap-2 mb-4 text-xs">
                                 <span className="bg-pink-100 text-pink-800 px-2 py-0.5 rounded">Mentorship</span>
@@ -500,7 +572,7 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
                                 <button
-                                    onClick={() => onBook("Ethical Dilemmas in Law & How to Handle Them", "Mentorship session with " + lawyer.name + " regarding ethical dilemmas.")}
+                                    onClick={() => onBook("Mentorship Session", "Mentorship session with " + lawyer.name)}
                                     className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
                                 >
                                     Book

@@ -48,6 +48,7 @@ export interface Lawyer {
     }[];
     reviews?: Review[];
     achievements?: Achievement[];
+    services?: any[];
 }
 
 // 20 Unique Lawyers

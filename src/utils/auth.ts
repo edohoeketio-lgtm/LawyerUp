@@ -30,6 +30,16 @@ export interface User {
     // Lawyer specific fields
     mentorshipPrice?: number;
     consultationPrice?: number;
+    services?: Service[];
+}
+
+export interface Service {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    duration: number; // in minutes
+    type: 'consultation' | 'mentorship';
 }
 
 const USERS_KEY = "lawyerup_users";
