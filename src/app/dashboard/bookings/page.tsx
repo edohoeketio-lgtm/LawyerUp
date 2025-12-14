@@ -10,8 +10,10 @@ import ReviewModal from "@/components/ReviewModal";
 import BookingDetailsModal from "@/components/dashboard/BookingDetailsModal";
 import BookingModal from "@/components/BookingModal";
 import CancelBookingModal from "@/components/dashboard/CancelBookingModal";
+import { useToast } from "@/context/ToastContext";
 
 export default function BookingsPage() {
+    const { success, error } = useToast();
     const [activeTab, setActiveTab] = useState<"upcoming" | "past" | "cancelled" | "rescheduled">("upcoming");
     const [isReviewOpen, setIsReviewOpen] = useState(false);
     const [selectedBookingForReview, setSelectedBookingForReview] = useState<Booking | null>(null);
@@ -37,7 +39,7 @@ export default function BookingsPage() {
 
     const handleSubmitReview = (rating: number, review: string) => {
         console.log("Submitting review for:", selectedBookingForReview?.id, { rating, review });
-        alert("Thanks for your review! It has been submitted.");
+        success("Thanks for your review! It has been submitted.");
         setIsReviewOpen(false);
         setSelectedBookingForReview(null);
     };
@@ -53,7 +55,7 @@ export default function BookingsPage() {
         const diffInHours = (bookingDate.getTime() - now.getTime()) / 1000 / 60 / 60;
 
         if (diffInHours < 1) {
-            alert("You cannot reschedule less than 1 hour before the session.");
+            error("You cannot reschedule less than 1 hour before the session.");
             return;
         }
 
@@ -69,7 +71,7 @@ export default function BookingsPage() {
     const handleCancelConfirm = () => {
         if (selectedBookingForCancel) {
             // Mock cancellation
-            alert(`Booking for ${selectedBookingForCancel.topic} has been cancelled.`);
+            success(`Booking for ${selectedBookingForCancel.topic} has been cancelled.`);
             // In a real app, you would verify this status update in the UI
             selectedBookingForCancel.status = 'cancelled';
             setIsCancelOpen(false);
@@ -80,7 +82,7 @@ export default function BookingsPage() {
         // In a real app, this would be an API call
         if (selectedBookingForReschedule) {
             // Mock update locally for demo (in reality, state management needed or refetch)
-            alert(`Reschedule request sent for ${date.toDateString()} at ${time}. Status updated to Pending.`);
+            success(`Reschedule request sent for ${date.toDateString()} at ${time}. Status updated to Pending.`);
             setIsRescheduleOpen(false);
             // Force refresh or update local list logic would be here
         }

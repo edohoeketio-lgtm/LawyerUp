@@ -1,15 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FileText, Clock } from "lucide-react";
 import { Lawyer } from "@/data/lawyers";
+import { Star, Clock, Video, FileText } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 interface LawyerCardProps {
     lawyer: Lawyer;
+    isBookmarked?: boolean;
+    onToggleBookmark?: (id: string) => void;
 }
 
-export default function LawyerCard({ lawyer }: LawyerCardProps) {
+export default function LawyerCard({ lawyer, isBookmarked = false, onToggleBookmark }: LawyerCardProps) {
+    const searchParams = useSearchParams();
+    const currentView = searchParams.get("view");
+
+    const handleBookmark = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onToggleBookmark?.(lawyer.id);
+    };
+
     return (
-        <Link href={`/dashboard/lawyer/${lawyer.id}`}>
+        <Link href={`/dashboard/lawyer/${lawyer.id}${currentView ? `?view=${currentView}` : ""}`}>
             <div className="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-100 transition-all hover:shadow-md hover:ring-2 hover:ring-gray-200">
                 <div className="aspect-[4/5] relative">
                     <Image
@@ -18,8 +30,25 @@ export default function LawyerCard({ lawyer }: LawyerCardProps) {
                         fill
                         className="object-cover"
                     />
-                    <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors z-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
+                    <button
+                        onClick={handleBookmark}
+                        className={`absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-sm transition-colors z-10 
+                            ${isBookmarked ? "bg-red-50 text-red-500" : "bg-white/10 text-white hover:bg-white/20"}`}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill={isBookmarked ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-heart"
+                        >
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
                     </button>
                 </div>
                 <div className="p-3">

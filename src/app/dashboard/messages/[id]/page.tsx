@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useToast } from "@/context/ToastContext";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Send, Paperclip, MoreVertical, Phone, Video, Image as ImageIcon, X, Clock } from "lucide-react";
 import { mockConversations, Message } from "@/data/messages";
@@ -28,11 +29,13 @@ const getLawyerDetails = (id: string) => {
 export default function ChatPage() {
     const params = useParams();
     const router = useRouter();
+    const { success } = useToast();
     const lawyerId = params?.id as string;
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [showMenu, setShowMenu] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
 
     // We removed 'isAttaching' state in favor of direct file input trigger
     // but we can keep it if we wanted the "mock menu", but simpler is better as per user request
@@ -55,6 +58,16 @@ export default function ChatPage() {
             } else {
                 setMessages([]);
             }
+        }
+    }, [lawyerId]);
+
+    useEffect(() => {
+        // Check if user is blocked (client-side only to avoid hydration mismatch)
+        const blockedIds = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+        if (blockedIds.includes(lawyerId)) {
+            setIsBlocked(true);
+        } else {
+            setIsBlocked(false);
         }
     }, [lawyerId]);
 
@@ -149,7 +162,16 @@ export default function ChatPage() {
                             <div className="h-px bg-gray-100 my-1"></div>
                             <button
                                 className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                                onClick={() => alert("User blocked (Mock Action)")}
+                                onClick={() => {
+                                    const blocked = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+                                    if (!blocked.includes(lawyer.id)) {
+                                        blocked.push(lawyer.id);
+                                        localStorage.setItem("blockedLawyers", JSON.stringify(blocked));
+                                        setIsBlocked(true);
+                                        success("User blocked successfully");
+                                    }
+                                    setShowMenu(false);
+                                }}
                             >
                                 Block User
                             </button>
@@ -185,6 +207,33 @@ export default function ChatPage() {
             {/* Input Area */}
             <div className="border-t border-gray-100 bg-white p-4">
                 {(() => {
+                    // Check if blocked
+                    if (isBlocked) {
+                        return (
+                            <div className="flex flex-col items-center justify-center gap-3 rounded-xl bg-red-50 py-6 text-center">
+                                <div className="rounded-full bg-red-100 p-2 text-red-500">
+                                    <X size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold text-red-900">You have blocked this user</h3>
+                                    <p className="text-xs text-red-600">You cannot send messages to blocked users.</p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        const blockedIds = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+                                        const newBlocked = blockedIds.filter((id: string) => id !== lawyer.id);
+                                        localStorage.setItem("blockedLawyers", JSON.stringify(newBlocked));
+                                        success("User unblocked");
+                                        setIsBlocked(false);
+                                    }}
+                                    className="mt-1 rounded-lg bg-white border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                    Unblock User
+                                </button>
+                            </div>
+                        );
+                    }
+
                     // Check booking status
                     const lawyerBookings = bookings
                         .filter(b => b.lawyerId === lawyer.id)
@@ -244,8 +293,8 @@ export default function ChatPage() {
                                     aria-label="Send message"
                                     disabled={!newMessage.trim()}
                                     className={`rounded-full p-2.5 shadow-sm transition-colors ${newMessage.trim()
-                                            ? "bg-[#004d45] text-white hover:bg-[#003a34]"
-                                            : "bg-gray-100 text-gray-300 cursor-not-allowed"
+                                        ? "bg-[#004d45] text-white hover:bg-[#003a34]"
+                                        : "bg-gray-100 text-gray-300 cursor-not-allowed"
                                         }`}
                                 >
                                     <Send size={18} />

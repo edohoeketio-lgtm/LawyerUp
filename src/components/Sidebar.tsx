@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { auth, User } from "@/utils/auth";
 import { X } from "lucide-react";
 
@@ -17,6 +17,8 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const currentView = searchParams.get("view");
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -76,7 +78,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         return (
                             <Link
                                 key={item.href}
-                                href={item.href}
+                                href={currentView ? `${item.href}?view=${currentView}` : item.href}
                                 onClick={() => handleNavigation(item.href)}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive
                                     ? "bg-white/10 text-white"

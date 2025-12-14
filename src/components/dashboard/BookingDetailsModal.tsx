@@ -1,6 +1,7 @@
 import { Booking, getBookingLawyer } from "@/data/bookings";
 import { X, Calendar, Clock, Video, FileText, User, DollarSign, MapPin } from "lucide-react";
 import Image from "next/image";
+import { useToast } from "@/context/ToastContext";
 
 interface BookingDetailsModalProps {
     isOpen: boolean;
@@ -9,6 +10,7 @@ interface BookingDetailsModalProps {
 }
 
 export default function BookingDetailsModal({ isOpen, onClose, booking }: BookingDetailsModalProps) {
+    const { info } = useToast();
     if (!isOpen || !booking) return null;
 
     const lawyer = getBookingLawyer(booking);
@@ -45,13 +47,13 @@ export default function BookingDetailsModal({ isOpen, onClose, booking }: Bookin
                 <div className="p-6 space-y-6">
                     {/* Status Badge */}
                     <div className="flex justify-center">
-                        <span className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide
+                        <span className={`rounded - full px - 4 py - 1.5 text - xs font - bold uppercase tracking - wide
                             ${booking.status === 'confirmed' ? "bg-green-100 text-green-800" :
                                 booking.status === 'pending' ? "bg-yellow-100 text-yellow-800" :
                                     booking.status === 'completed' ? "bg-gray-100 text-gray-800" :
                                         booking.status === 'cancelled' ? "bg-red-50 text-red-600" :
                                             "bg-orange-100 text-orange-800"
-                            }`}>
+                            } `}>
                             {booking.status}
                         </span>
                     </div>
@@ -106,8 +108,8 @@ export default function BookingDetailsModal({ isOpen, onClose, booking }: Bookin
                     <div className="pt-4 border-t border-gray-100">
                         {booking.status === 'confirmed' ? (
                             <button
-                                onClick={() => alert("Connecting to video secure check-in...")}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#004d45] py-3 text-sm font-medium text-white hover:bg-[#003a34] transition-colors shadow-md shadow-[#004d45]/10"
+                                onClick={() => info("Connecting to video secure check-in...")}
+                                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#004d45] py-3 font-medium text-white hover:bg-[#003a34] shadow-md shadow-[#004d45]/10"
                             >
                                 <Video size={18} /> Join Call
                             </button>

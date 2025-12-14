@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { auth, User } from "@/utils/auth";
 import Image from "next/image";
 import Link from "next/link";
-import { Settings, Edit2, Briefcase, Calendar, MessageSquare, Clock, Check, Video } from "lucide-react";
+import { Settings, Edit2, Briefcase, Calendar, MessageSquare, Clock, Check, Video, Scale } from "lucide-react";
 import { lawyers } from "@/data/lawyers";
 import { bookings } from "@/data/bookings";
 import LawyerCard from "@/components/LawyerCard";
@@ -72,6 +72,21 @@ function ProfileContent() {
 
     // Get mock/real sessions
     const upcomingSessions = bookings.filter(b => b.status === 'confirmed').slice(0, 3);
+
+    const toggleBookmark = (lawyerId: string) => {
+        if (!user) return;
+        const currentBookmarks = user.bookmarkedLawyerIds || [];
+        const isBookmarked = currentBookmarks.includes(lawyerId);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(id => id !== lawyerId);
+        } else {
+            newBookmarks = [...currentBookmarks, lawyerId];
+        }
+
+        auth.updateUser({ bookmarkedLawyerIds: newBookmarks });
+    };
 
     return (
         <div className="space-y-8">
@@ -172,7 +187,12 @@ function ProfileContent() {
             {activeTab === "Consulted Lawyers" && (
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                     {lawyers.slice(0, 4).map((lawyer) => (
-                        <LawyerCard key={lawyer.id} lawyer={lawyer} />
+                        <LawyerCard
+                            key={lawyer.id}
+                            lawyer={lawyer}
+                            isBookmarked={user?.bookmarkedLawyerIds?.includes(lawyer.id)}
+                            onToggleBookmark={toggleBookmark}
+                        />
                     ))}
                 </div>
             )}
@@ -184,6 +204,47 @@ function ProfileContent() {
                         {/* Background */}
                         <div>
                             <h3 className="mb-4 font-serif text-lg font-bold text-[#004d45]">Background</h3>
+
+                            {/* Bar Membership (Lawyers Only) */}
+                            {user?.role === 'lawyer' && (
+                                <div className={`rounded-xl border border-gray-100 bg-white p-6 shadow-sm mb-6 ${user?.verificationStatus !== 'verified' ? 'opacity-50 grayscale' : ''}`}>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h4 className="text-sm font-bold text-gray-500">Bar membership</h4>
+                                        {user?.verificationStatus === 'verified' && (
+                                            <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                                                <Check size={10} strokeWidth={3} /> Verified
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400">
+                                            <Scale size={20} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="font-bold text-black text-sm">
+                                                {user?.verificationStatus === 'verified' ? 'Active Membership' : 'Membership Pending'}
+                                            </div>
+                                            <p className="text-xs text-gray-500 mb-2">
+                                                {user?.verificationStatus === 'verified'
+                                                    ? 'Verified and authorized to practice law.'
+                                                    : 'Complete verification to activate.'}
+                                            </p>
+
+                                            {/* Bar ID Display */}
+                                            <div className="mt-2 flex items-center gap-3">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-2 w-2 rounded-full bg-[#00D26A] shadow-[0_0_8px_2px_rgba(0,210,106,0.6)] animate-pulse"></div>
+                                                    <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Bar Membership No:</span>
+                                                </div>
+                                                <span className="font-mono text-sm font-bold text-[#00D26A] tracking-wider">
+                                                    {(user as any)?.barId || "Not set"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Legal Interests */}
                             <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm mb-6">

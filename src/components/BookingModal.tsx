@@ -61,8 +61,7 @@ export default function BookingModal({
                 onClose();
             } else {
                 // Submit logic would go here
-                alert("Booking Request Sent! The lawyer will review your topic.");
-                onClose();
+                setStep(4);
             }
         }
     };
@@ -139,11 +138,14 @@ export default function BookingModal({
                     {/* Header: Steps */}
                     <div className="mb-8 flex items-center justify-between">
                         <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Step {step} of 3</p>
+                            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                                {step === 4 ? "Confirmed" : `Step ${step} of 3`}
+                            </p>
                             <h2 className="font-serif text-2xl font-bold text-gray-900">
                                 {step === 1 && "Choose a Date"}
                                 {step === 2 && "Select a Time"}
                                 {step === 3 && (initialTopic ? "Confirm Session Details" : "Session Topic")}
+                                {step === 4 && "Booking Request Sent"}
                             </h2>
                             {mode === 'reschedule' && step === 1 && (
                                 <div className="mt-2 rounded-lg bg-orange-50 p-3 text-xs text-orange-800 border border-orange-100">
@@ -314,32 +316,64 @@ export default function BookingModal({
                                 )}
                             </div>
                         )}
+
+                        {step === 4 && (
+                            <div className="flex flex-col items-center justify-center h-full text-center space-y-6 animate-in zoom-in-95 duration-300">
+                                <div className="h-24 w-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center shadow-sm">
+                                    <CheckCircle size={48} strokeWidth={3} />
+                                </div>
+                                <div className="space-y-2 max-w-sm">
+                                    <h3 className="text-xl font-bold text-gray-900">Request Sent Successfully!</h3>
+                                    <p className="text-gray-500">
+                                        Your request has been sent to <span className="font-bold text-gray-900">{lawyer.name}</span>.
+                                        You will be notified once they accept your session.
+                                    </p>
+                                </div>
+
+                                <div className="w-full max-w-xs space-y-3 pt-4">
+                                    <button
+                                        onClick={onClose}
+                                        className="w-full rounded-xl bg-[#004d45] py-3 font-bold text-white shadow-lg hover:bg-[#003a34] hover:shadow-xl transition-all"
+                                    >
+                                        Done
+                                    </button>
+                                    <a
+                                        href="/dashboard/bookings"
+                                        className="block w-full rounded-xl border border-gray-200 py-3 font-medium text-gray-600 hover:bg-gray-50 transition-all"
+                                    >
+                                        View My Bookings
+                                    </a>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer: Actions */}
-                    <div className="border-t border-gray-100 pt-6 flex justify-between items-center mt-auto">
-                        {step > 1 ? (
-                            <button
-                                onClick={handleBack}
-                                className="flex items-center gap-2 rounded-xl border border-gray-200 px-6 py-3 font-medium text-gray-600 hover:bg-gray-50"
-                            >
-                                <ChevronLeft size={18} /> Back
-                            </button>
-                        ) : <div></div>}
+                    {step < 4 && (
+                        <div className="border-t border-gray-100 pt-6 flex justify-between items-center mt-auto">
+                            {step > 1 ? (
+                                <button
+                                    onClick={handleBack}
+                                    className="flex items-center gap-2 rounded-xl border border-gray-200 px-6 py-3 font-medium text-gray-600 hover:bg-gray-50"
+                                >
+                                    <ChevronLeft size={18} /> Back
+                                </button>
+                            ) : <div></div>}
 
-                        <button
-                            onClick={handleNext}
-                            disabled={(step === 1 && !selectedDate) || (step === 2 && !selectedTime)}
-                            className={`flex items-center gap-2 rounded-xl px-8 py-3 font-medium text-white transition-all
+                            <button
+                                onClick={handleNext}
+                                disabled={(step === 1 && !selectedDate) || (step === 2 && !selectedTime)}
+                                className={`flex items-center gap-2 rounded-xl px-8 py-3 font-medium text-white transition-all
                                 ${((step === 1 && !selectedDate) || (step === 2 && !selectedTime))
-                                    ? "bg-gray-300 cursor-not-allowed"
-                                    : "bg-[#002f2a] hover:bg-black shadow-lg hover:shadow-xl"
-                                }
+                                        ? "bg-gray-300 cursor-not-allowed"
+                                        : "bg-[#002f2a] hover:bg-black shadow-lg hover:shadow-xl"
+                                    }
                             `}
-                        >
-                            {step === 3 ? "Send Request" : "Next"}
-                        </button>
-                    </div>
+                            >
+                                {step === 3 ? "Send Request" : "Next"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

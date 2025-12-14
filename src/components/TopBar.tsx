@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { auth, User } from "@/utils/auth";
+import { getLawyerById } from "@/data/lawyers";
 
 interface TopBarProps {
     onMenuClick?: () => void;
@@ -106,19 +107,21 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                 <div className="hidden items-center gap-4 rounded-lg bg-gray-50 p-1 md:flex">
                     <button
                         onClick={() => setView("client")}
+                        disabled={pathname === "/dashboard/bookings" || (pathname?.startsWith("/dashboard/lawyer/") && getLawyerById(pathname.split("/").pop() || "")?.consultationPrice === 0)}
                         className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${currentView === "client"
                             ? "bg-white text-[#013328] shadow-sm ring-1 ring-gray-200"
                             : "text-gray-500 hover:text-gray-900"
-                            }`}
+                            } ${(pathname === "/dashboard/bookings" || (pathname?.startsWith("/dashboard/lawyer/") && getLawyerById(pathname.split("/").pop() || "")?.consultationPrice === 0)) ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         Legal advice
                     </button>
                     <button
                         onClick={() => setView("lawyer")}
+                        disabled={pathname === "/dashboard/bookings" || (pathname?.startsWith("/dashboard/lawyer/") && getLawyerById(pathname.split("/").pop() || "")?.mentorshipPrice === 0)}
                         className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${currentView === "lawyer"
                             ? "bg-white text-[#013328] shadow-sm ring-1 ring-gray-200"
                             : "text-gray-500 hover:text-gray-900"
-                            }`}
+                            } ${(pathname === "/dashboard/bookings" || (pathname?.startsWith("/dashboard/lawyer/") && getLawyerById(pathname.split("/").pop() || "")?.mentorshipPrice === 0)) ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         Mentorship
                     </button>
@@ -192,7 +195,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
 
                 {!pathname?.startsWith("/dashboard/lawyer/") && pathname !== "/dashboard/discover" && (
                     <Link
-                        href="/dashboard/discover"
+                        href={`/dashboard/discover?view=${currentView}`}
                         className="hidden items-center gap-2 rounded-lg bg-[#013328] px-4 py-2 text-sm font-medium text-white hover:bg-[#012a2b] md:flex"
                     >
                         <Calendar size={18} />

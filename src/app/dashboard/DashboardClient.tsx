@@ -41,6 +41,7 @@ export default function DashboardClient() {
     // Calendar State
     const [currentDate, setCurrentDate] = useState(new Date());
     const [calendarView, setCalendarView] = useState<'week' | 'month'>('week');
+    const [showProfileCard, setShowProfileCard] = useState(true);
 
     // Filter Bookings based on Role/View
     // Clients only see Consultations. Lawyers (Mentees) see Mentorships.
@@ -118,6 +119,23 @@ export default function DashboardClient() {
         return relevantBookings.find(b => b.date === dateString && (b.status === 'confirmed' || b.status === 'pending'));
     };
 
+    const toggleBookmark = (lawyerId: string) => {
+        if (!user) return;
+        const currentBookmarks = user.bookmarkedLawyerIds || [];
+        const isBookmarked = currentBookmarks.includes(lawyerId);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(id => id !== lawyerId);
+        } else {
+            newBookmarks = [...currentBookmarks, lawyerId];
+        }
+
+        auth.updateUser({ bookmarkedLawyerIds: newBookmarks });
+        // Update local state to reflect changes immediately
+        setUser({ ...user, bookmarkedLawyerIds: newBookmarks });
+    };
+
     return (
         <div className="space-y-8">
             {/* Greeting */}
@@ -138,129 +156,135 @@ export default function DashboardClient() {
             </div>
 
             {/* Profile Completion Card */}
-            <div className="rounded-xl border border-[#FFEBC8] bg-[#FFF8EB] p-6 text-black">
-                <div className="mb-4">
-                    <h3 className="font-serif text-lg font-medium">Complete your profile</h3>
-                    <p className="text-xs text-gray-600">Get more by setting up a profile that portrays you</p>
-                </div>
+            {showProfileCard && (() => {
+                // Determine completion status
+                const hasLanguageAndTimezone = user?.languages && user?.languages.length > 0 && user?.timezone;
+                const hasLegalInterests = user?.legalInterests && user?.legalInterests.length > 0;
+                const hasBookedSession = relevantBookings.some(b => b.status === "confirmed" || b.status === "completed");
+                const isVerified = user?.verificationStatus === "verified";
 
-                {(() => {
-                    // Determine completion status
-                    const hasLanguageAndTimezone = user?.languages && user?.languages.length > 0 && user?.timezone;
-                    const hasLegalInterests = user?.legalInterests && user?.legalInterests.length > 0;
-                    const hasBookedSession = relevantBookings.some(b => b.status === "confirmed" || b.status === "completed");
-                    const isVerified = user?.verificationStatus === "verified";
+                const completedCount = [
+                    hasLanguageAndTimezone,
+                    hasLegalInterests,
+                    hasBookedSession,
+                    (isLawyerView ? isVerified : false) // Only count verification for lawyers
+                ].filter(Boolean).length;
 
-                    const completedCount = [
-                        hasLanguageAndTimezone,
-                        hasLegalInterests,
-                        hasBookedSession,
-                        (isLawyerView ? isVerified : false) // Only count verification for lawyers
-                    ].filter(Boolean).length;
+                const totalSteps = isLawyerView ? 4 : 3;
+                const percentComplete = Math.round((completedCount / totalSteps) * 100);
 
-                    const totalSteps = isLawyerView ? 4 : 3;
-                    const percentComplete = Math.round((completedCount / totalSteps) * 100);
+                return (
+                    <div className="relative rounded-xl border border-[#FFEBC8] bg-[#FFF8EB] p-6 text-black">
+                        {percentComplete === 100 && (
+                            <button
+                                onClick={() => setShowProfileCard(false)}
+                                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+                            >
+                                <X size={18} />
+                            </button>
+                        )}
+                        <div className="mb-4">
+                            <h3 className="font-serif text-lg font-medium">Complete your profile</h3>
+                            <p className="text-xs text-gray-600">Get more by setting up a profile that portrays you</p>
+                        </div>
 
-                    return (
-                        <>
-                            <div className="mb-6 flex items-center gap-4">
-                                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
-                                    <div
-                                        className="h-full rounded-full bg-[#523300] transition-all duration-300"
-                                        style={{ width: `${percentComplete}%` }}
-                                    ></div>
-                                </div>
-                                <span className="text-xs font-medium">{percentComplete}% complete</span>
+                        <div className="mb-6 flex items-center gap-4">
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
+                                <div
+                                    className="h-full rounded-full bg-[#523300] transition-all duration-300"
+                                    style={{ width: `${percentComplete}%` }}
+                                ></div>
                             </div>
+                            <span className="text-xs font-medium">{percentComplete}% complete</span>
+                        </div>
 
-                            <div className="relative space-y-0 text-sm">
-                                {/* Vertical Line */}
-                                <div className="absolute left-[9px] top-2 h-[calc(100%-16px)] w-0.5 bg-[#8F6B20]"></div>
+                        <div className="relative space-y-0 text-sm">
+                            {/* Vertical Line */}
+                            <div className="absolute left-[9px] top-2 h-[calc(100%-16px)] w-0.5 bg-[#8F6B20]"></div>
 
-                                {/* Step 1: Language & Timezone */}
-                                <div className="relative flex items-center gap-3">
-                                    {hasLanguageAndTimezone ? (
-                                        <>
-                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
-                                                <Check size={12} strokeWidth={3} />
-                                            </div>
-                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">Set preferred language & timezone</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                                            <span className="font-medium text-[#4A3B18]">Set preferred language & timezone</span>
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* Step 2: Bar Membership (Conditional for Lawyers) */}
-                                {isLawyerView && (
-                                    <div className="relative flex items-center gap-3 pt-6">
-                                        {isVerified ? (
-                                            <>
-                                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
-                                                    <Check size={12} strokeWidth={3} />
-                                                </div>
-                                                <span className="font-medium text-[#8F6B20] line-through decoration-2">Bar membership verified</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                                                <Link href="/lawyer/verification" className="font-medium text-[#4A3B18] underline hover:text-[#004d45]">
-                                                    Verify Bar membership
-                                                </Link>
-                                            </>
-                                        )}
-                                    </div>
+                            {/* Step 1: Language & Timezone */}
+                            <div className="relative flex items-center gap-3">
+                                {hasLanguageAndTimezone ? (
+                                    <>
+                                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                            <Check size={12} strokeWidth={3} />
+                                        </div>
+                                        <span className="font-medium text-[#8F6B20] line-through decoration-2">Set preferred language & timezone</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                        <span className="font-medium text-[#4A3B18]">Set preferred language & timezone</span>
+                                    </>
                                 )}
-
-                                {/* Step 3: Legal Interests */}
-                                <div className="relative flex items-center gap-3 pt-6">
-                                    {hasLegalInterests ? (
-                                        <>
-                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
-                                                <Check size={12} strokeWidth={3} />
-                                            </div>
-                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">
-                                                {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                                            <span className="font-medium text-[#4A3B18]">
-                                                {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* Step 4: First Session */}
-                                <div className="relative flex items-center gap-3 pt-6">
-                                    {hasBookedSession ? (
-                                        <>
-                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
-                                                <Check size={12} strokeWidth={3} />
-                                            </div>
-                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">
-                                                Book your first session - <span className="font-normal">Speak to an expert</span>
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
-                                            <span className="font-medium text-[#4A3B18]">
-                                                Book your first session - <span className="font-normal text-gray-600">Speak to an expert</span>
-                                            </span>
-                                        </>
-                                    )}
-                                </div>
                             </div>
-                        </>
-                    );
-                })()}
-            </div>
+
+                            {/* Step 2: Bar Membership (Conditional for Lawyers) */}
+                            {isLawyerView && (
+                                <div className="relative flex items-center gap-3 pt-6">
+                                    {isVerified ? (
+                                        <>
+                                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                                <Check size={12} strokeWidth={3} />
+                                            </div>
+                                            <span className="font-medium text-[#8F6B20] line-through decoration-2">Bar membership verified</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                            <Link href="/lawyer/verification" className="font-medium text-[#4A3B18] underline hover:text-[#004d45]">
+                                                Verify Bar membership
+                                            </Link>
+                                        </>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Step 3: Legal Interests */}
+                            <div className="relative flex items-center gap-3 pt-6">
+                                {hasLegalInterests ? (
+                                    <>
+                                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                            <Check size={12} strokeWidth={3} />
+                                        </div>
+                                        <span className="font-medium text-[#8F6B20] line-through decoration-2">
+                                            {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                        <span className="font-medium text-[#4A3B18]">
+                                            {isLawyerView ? "Set your preferred mentorship topics" : "Set your preferred legal topics"}
+                                        </span>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Step 4: First Session */}
+                            <div className="relative flex items-center gap-3 pt-6">
+                                {hasBookedSession ? (
+                                    <>
+                                        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#8F6B20] text-white z-10">
+                                            <Check size={12} strokeWidth={3} />
+                                        </div>
+                                        <span className="font-medium text-[#8F6B20] line-through decoration-2">
+                                            Book your first session - <span className="font-normal">Speak to an expert</span>
+                                        </span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="h-5 w-5 rounded-full border-2 border-[#8F6B20] bg-[#FFF8EB] z-10"></div>
+                                        <span className="font-medium text-[#4A3B18]">
+                                            Book your first session - <span className="font-normal text-gray-600">Speak to an expert</span>
+                                        </span>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
 
             {/* Upcoming Sessions */}
             <div>
@@ -392,7 +416,7 @@ export default function DashboardClient() {
                     <h3 className="font-serif text-lg text-black">
                         {isLawyerView ? "Suggested Mentors" : "Suggested Lawyers"}
                     </h3>
-                    <Link href="/dashboard/discover" className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
+                    <Link href={`/dashboard/discover?view=${isLawyerView ? "lawyer" : "client"}`} className="flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-black">
                         {isLawyerView ? "Explore Mentors" : "Explore Lawyers"} <ArrowRight size={14} />
                     </Link>
                 </div>
@@ -404,7 +428,12 @@ export default function DashboardClient() {
                         .sort((a, b) => isLawyerView ? (b.stats.mentoringMinutes || 0) - (a.stats.mentoringMinutes || 0) : 0) // Sort mentors by minutes
                         .slice(0, 5)
                         .map((lawyer) => (
-                            <LawyerCard key={lawyer.id} lawyer={lawyer} />
+                            <LawyerCard
+                                key={lawyer.id}
+                                lawyer={lawyer}
+                                isBookmarked={user?.bookmarkedLawyerIds?.includes(lawyer.id)}
+                                onToggleBookmark={toggleBookmark}
+                            />
                         ))}
                 </div>
             </div>

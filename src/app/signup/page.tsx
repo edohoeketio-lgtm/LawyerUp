@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/utils/auth";
 import { Eye, EyeOff } from "lucide-react";
 
+import { useToast } from "@/context/ToastContext";
+
 export default function SignupPage() {
+    const { error: showError } = useToast();
     const [role, setRole] = useState<"client" | "lawyer">("client");
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -102,7 +105,7 @@ export default function SignupPage() {
                     router.push("/lawyer/verification"); // Or wherever lawyers go
                 }
             } catch (error: any) {
-                alert(error.message); // Simple error handling for now
+                showError(error.message); // Simple error handling for now
             } finally {
                 setIsSubmitting(false); // Ensure submitting state is reset
             }

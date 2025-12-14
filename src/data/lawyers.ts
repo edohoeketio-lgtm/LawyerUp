@@ -63,7 +63,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 4, reviews: 4, consultationMinutes: 180, mentoringMinutes: 60 },
         tags: ["Business", "Corporate"],
         consultationPrice: 100,
-        mentorshipPrice: 150,
+        mentorshipPrice: 0,
         bio: "With over a decade of experience in criminal defense, I specialize in helping individuals navigate complex legal situations. My approach is client-centered, ensuring that you understand every step of the legal process. I have successfully defended hundreds of clients facing charges ranging from white-collar crimes to major felonies. I believe in fighting tirelessly for justice and upholding the presumption of innocence. Whether you need immediate legal representation or long-term defense strategy, I am here to protect your rights and future.",
         languages: ["English", "Spanish", "French"],
         experience: [
@@ -97,7 +97,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 2, reviews: 2, consultationMinutes: 90, mentoringMinutes: 30 },
         tags: ["Finance", "Startups"],
         consultationPrice: 120,
-        mentorshipPrice: 90,
+        mentorshipPrice: 0,
         bio: "Specializing in corporate law and finance within African markets. Ready to help startups scale. I provide strategic legal counsel to emerging companies, venture capital firms, and multinational corporations looking to do business in Nigeria and West Africa. My expertise covers regulatory compliance, mergers and acquisitions, and corporate governance. I am passionate about empowering African entrepreneurs and ensuring their businesses are built on solid legal foundations to attract global investment.",
         languages: ["English", "French"],
         experience: [{ role: "Partner", company: "Lagos Legal", period: "2019 - Present" }],
@@ -147,7 +147,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 4, reviews: 4, consultationMinutes: 200, mentoringMinutes: 40 },
         tags: ["Wills", "Trusts"],
         consultationPrice: 150,
-        mentorshipPrice: 120,
+        mentorshipPrice: 0,
         bio: "Securing your legacy for future generations with comprehensive estate planning.",
         languages: ["English", "Hebrew"],
         experience: [{ role: "Independent Advisor", company: "Cohen Estates", period: "2020 - Present" }],
@@ -194,7 +194,7 @@ export const lawyers: Lawyer[] = [
     {
         id: "6",
         name: "Anita Singh",
-        image: "/avatars/lawyer_1.jpg",
+        image: "/avatars/lawyer_6.jpg",
         sector: "Immigration Law",
         title: "Immigration Specialist",
         country: "IN",
@@ -202,7 +202,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 3, reviews: 3, consultationMinutes: 140, mentoringMinutes: 40 },
         tags: ["Visa", "Residency"],
         consultationPrice: 80,
-        mentorshipPrice: 60,
+        mentorshipPrice: 0,
         bio: "Navigating complex immigration pathways to help you build a new life.",
         languages: ["English", "Hindi", "Punjabi"],
         experience: [{ role: "Senior Consultant", company: "Global Access", period: "2015 - Present" }],
@@ -220,7 +220,7 @@ export const lawyers: Lawyer[] = [
     {
         id: "7",
         name: "Michael Chang",
-        image: "/avatars/lawyer_2.jpg",
+        image: "/avatars/lawyer_7.jpg",
         sector: "Real Estate Law",
         title: "Real Estate Attorney",
         country: "SG",
@@ -244,7 +244,7 @@ export const lawyers: Lawyer[] = [
     {
         id: "8",
         name: "Olivia Dunham",
-        image: "/avatars/lawyer_3.jpg",
+        image: "/avatars/lawyer_8.jpg",
         sector: "Civil Rights",
         title: "Civil Rights Activist",
         country: "US",
@@ -267,7 +267,7 @@ export const lawyers: Lawyer[] = [
     {
         id: "9",
         name: "Marcus Thorne",
-        image: "/avatars/lawyer_4.png",
+        image: "/avatars/lawyer_9.jpg",
         sector: "Employment Law",
         title: "Labor Law Expert",
         country: "AU",
@@ -291,7 +291,7 @@ export const lawyers: Lawyer[] = [
     {
         id: "10",
         name: "Elena Popov",
-        image: "/avatars/lawyer_5.png",
+        image: "/avatars/lawyer_10.jpg",
         sector: "Tax Law",
         title: "Tax Consultant",
         country: "RU",
@@ -299,7 +299,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 2, reviews: 2, consultationMinutes: 100, mentoringMinutes: 20 },
         tags: ["International Tax", "Audit"],
         consultationPrice: 160,
-        mentorshipPrice: 120,
+        mentorshipPrice: 0,
         bio: "Navigating complex international tax regulations for expats.",
         languages: ["Russian", "English", "German"],
         experience: [{ role: "Senior Consultant", company: "Global Tax Solutions", period: "2017 - Present" }],
@@ -346,7 +346,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 3, reviews: 3, consultationMinutes: 150, mentoringMinutes: 30 },
         tags: ["Trade", "Arbitration"],
         consultationPrice: 220,
-        mentorshipPrice: 180,
+        mentorshipPrice: 0,
         bio: "Expert in cross-border disputes and international trade regulations.",
         languages: ["Italian", "English", "French"],
         experience: [{ role: "Partner", company: "Rossi Global", period: "2015 - Present" }],
@@ -492,7 +492,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 2, reviews: 2, consultationMinutes: 100, mentoringMinutes: 20 },
         tags: ["Refugee Rights", "Labor"],
         consultationPrice: 100,
-        mentorshipPrice: 50,
+        mentorshipPrice: 0,
         bio: "Dedicated to protecting the vulnerable and ensuring fair labor practices.",
         languages: ["Arabic", "English"],
         experience: [{ role: "Legal Officer", company: "Rights Watch", period: "2019 - Present" }],
@@ -556,7 +556,7 @@ export const lawyers: Lawyer[] = [
     },
     // Adding more mock lawyers to populate "Similar Lawyers"
     {
-        id: "7",
+        id: "21",
         name: "Sarah Jenkins",
         image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         sector: "Criminal Defense",
@@ -566,7 +566,7 @@ export const lawyers: Lawyer[] = [
         stats: { sessions: 45, reviews: 32 },
         tags: ["Criminal Law", "Defense"],
         consultationPrice: 180,
-        mentorshipPrice: 130,
+        mentorshipPrice: 0,
         bio: "Experienced defense attorney.",
         languages: ["English"],
         experience: [],
@@ -575,7 +575,7 @@ export const lawyers: Lawyer[] = [
         achievements: []
     },
     {
-        id: "8",
+        id: "22",
         name: "Michael Chen",
         image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         sector: "Corporate Law",
@@ -594,7 +594,7 @@ export const lawyers: Lawyer[] = [
         achievements: []
     },
     {
-        id: "9",
+        id: "23",
         name: "Amara Okeke",
         image: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         sector: "Criminal Defense",

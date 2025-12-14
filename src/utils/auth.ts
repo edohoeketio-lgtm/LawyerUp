@@ -23,6 +23,7 @@ export interface User {
     barCountry?: string;
     barNumber?: string;
     barState?: string;
+    bookmarkedLawyerIds?: string[];
 }
 
 const USERS_KEY = "lawyerup_users";

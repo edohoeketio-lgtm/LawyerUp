@@ -9,12 +9,23 @@ import { ChevronRight, Calendar, Bell, Trash2 } from "lucide-react";
 
 import Breadcrumbs from "@/components/Breadcrumbs";
 import EditProfileModal from "@/components/profile/EditProfileModal";
+import { lawyers, Lawyer } from "@/data/lawyers";
+import { useToast } from "@/context/ToastContext";
 
 export default function AccountSettingsPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<"Personal" | "Security" | "Privacy">("Personal");
     const [user, setUser] = useState<User | null>(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [blockedLawyersList, setBlockedLawyersList] = useState<Lawyer[]>([]);
+    const { success } = useToast();
+
+    useEffect(() => {
+        // Load blocked lawyers
+        const blockedIds = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+        const blockedUsers = lawyers.filter(l => blockedIds.includes(l.id));
+        setBlockedLawyersList(blockedUsers);
+    }, [activeTab]); // Reload when tab changes just in case
 
     useEffect(() => {
         setUser(auth.getSession());
@@ -26,6 +37,15 @@ export default function AccountSettingsPage() {
         // Local state update for immediate feedback
         setUser(prev => prev ? ({ ...prev, ...data }) : null);
         setShowEditModal(false);
+    };
+
+    const handleUnblock = (lawyerId: string) => {
+        const currentBlocked = JSON.parse(localStorage.getItem("blockedLawyers") || "[]");
+        const newBlocked = currentBlocked.filter((id: string) => id !== lawyerId);
+        localStorage.setItem("blockedLawyers", JSON.stringify(newBlocked));
+
+        setBlockedLawyersList(prev => prev.filter(l => l.id !== lawyerId));
+        success("User unblocked successfully");
     };
 
     if (!user) return null; // Or loading state
@@ -199,31 +219,64 @@ export default function AccountSettingsPage() {
                             </div>
                         </div>
                     </div>
-                )}
 
-                {activeTab === "Security" && (
-                    <div className="space-y-8">
-                        <div>
-                            <h3 className="mb-2 text-base font-medium text-black">Password</h3>
-                            <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
-                            <button
-                                onClick={() => router.push("/update-password")}
-                                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50"
-                            >
-                                Change password
-                            </button>
-                        </div>
-
-                        <div>
-                            <h3 className="mb-2 text-base font-medium text-black">Two-Factor Authentication</h3>
-                            <p className="mb-4 text-sm text-gray-500">Add an extra layer of security to your account</p>
-                            <button className="rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
-                                Enable 2FA
-                            </button>
-                        </div>
+                        {/* Blocked Users */}
+                <div>
+                    <h3 className="mb-4 text-base font-medium text-[#004d45]">Blocked Users</h3>
+                    <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                        {blockedLawyersList.length > 0 ? (
+                            <div className="space-y-4">
+                                {blockedLawyersList.map(lawyer => (
+                                    <div key={lawyer.id} className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100">
+                                        <div className="flex items-center gap-3">
+                                            <div className="relative h-10 w-10 overflow-hidden rounded-full">
+                                                <Image src={lawyer.image} alt={lawyer.name} fill className="object-cover" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-gray-900">{lawyer.name}</p>
+                                                <p className="text-xs text-gray-500">{lawyer.title}</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleUnblock(lawyer.id)}
+                                            className="text-xs font-medium text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-md transition-colors"
+                                        >
+                                            Unblock
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-sm text-gray-500 text-center py-2">You haven't blocked anyone yet.</p>
+                        )}
                     </div>
-                )}
+                </div>
             </div>
+                )}
+
+            {activeTab === "Security" && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="mb-2 text-base font-medium text-black">Password</h3>
+                        <p className="mb-4 text-sm text-gray-500">Last changed 3 months ago</p>
+                        <button
+                            onClick={() => router.push("/update-password")}
+                            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black hover:bg-gray-50"
+                        >
+                            Change password
+                        </button>
+                    </div>
+
+                    <div>
+                        <h3 className="mb-2 text-base font-medium text-black">Two-Factor Authentication</h3>
+                        <p className="mb-4 text-sm text-gray-500">Add an extra layer of security to your account</p>
+                        <button className="rounded-lg bg-[#004d45] px-4 py-2 text-sm font-medium text-white hover:bg-[#003a34]">
+                            Enable 2FA
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
+        </div >
     );
 }

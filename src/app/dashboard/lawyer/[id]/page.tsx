@@ -1,25 +1,32 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound, useSearchParams } from "next/navigation";
 import {
     ChevronLeft, MoreHorizontal, Globe, Linkedin,
     ArrowLeft, ArrowRight, Star, ChevronDown, Clock,
-    Medal, ExternalLink, Info, Award, MessageSquare
+    Medal, ExternalLink, Info, Award, MessageSquare, Heart,
+    MapPin, Shield, ChevronRight, Share2, Flag, CheckCircle, Calendar
 } from "lucide-react";
+import { auth, User } from "@/utils/auth";
 import { getLawyerById, Lawyer } from "@/data/lawyers";
+import { useToast } from "@/context/ToastContext";
 import LawyerCard from "@/components/LawyerCard";
 import BookingModal from "@/components/BookingModal";
+import ReportModal from "../../../../components/ReportModal";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { lawyers } from "@/data/lawyers";
 
 export default function LawyerDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
+    const { success } = useToast();
     const lawyer = getLawyerById(id);
     const searchParams = useSearchParams();
     const source = searchParams.get("source");
+
+    const [user, setUser] = useState<User | null>(null);
 
     const [activeTab, setActiveTab] = useState("Overview");
     const [showMoreMenu, setShowMoreMenu] = useState(false);
@@ -27,16 +34,44 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [bookingParams, setBookingParams] = useState<{ topic?: string, description?: string }>({});
     const [reportReason, setReportReason] = useState("");
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+
+    useEffect(() => {
+        setUser(auth.getSession());
+        const handleAuthChange = () => {
+            setUser(auth.getSession());
+        };
+        window.addEventListener("auth-change", handleAuthChange);
+        return () => window.removeEventListener("auth-change", handleAuthChange);
+    }, []);
+
+    const toggleBookmark = (lawyerId: string) => {
+        if (!user) return;
+        const currentBookmarks = user.bookmarkedLawyerIds || [];
+        const isBookmarked = currentBookmarks.includes(lawyerId);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(id => id !== lawyerId);
+        } else {
+            newBookmarks = [...currentBookmarks, lawyerId];
+        }
+
+        auth.updateUser({ bookmarkedLawyerIds: newBookmarks });
+        setUser({ ...user, bookmarkedLawyerIds: newBookmarks });
+    };
+
+    const isBookmarked = user?.bookmarkedLawyerIds?.includes(lawyer?.id || "");
 
     if (!lawyer) {
         notFound();
     }
 
     // Normalize sector for comparison (some might be "Criminal Defense" vs "Criminal Defense Attorney")
+    // Normalize sector for comparison
     const similarLawyers = lawyers.filter(l => {
         if (l.id === lawyer.id) return false;
-        // Simple exact match or partial match if needed. Data seems to have "Corporate Law", "Criminal Defense", "Marine Insurance"
-        // Let's assume strict equality for now, but I added more data to match.
         return l.sector === lawyer.sector;
     }).slice(0, 2);
 
@@ -52,7 +87,7 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
             {/* Breadcrumb / Back Navigation */}
             <Breadcrumbs
                 items={[
-                    { label: "Discover", href: "/dashboard/discover" },
+                    { label: "Discover", href: "/dashboard/discover" + (searchParams.get("view") ? "?view=" + searchParams.get("view") : "") },
                     { label: lawyer.name }
                 ]}
             />
@@ -105,6 +140,17 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                             <Image src="/icons/bookings.svg" alt="Book" width={18} height={18} className="h-[18px] w-[18px] object-contain" /> Book a session
                         </button>
                     )}
+
+                    {/* Bookmark Button */}
+                    <button
+                        onClick={() => toggleBookmark(lawyer.id)}
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 bg-white transition-colors
+                            ${isBookmarked ? "text-red-500 border-red-100 bg-red-50 hover:bg-red-100" : "text-gray-500"}
+                        `}
+                    >
+                        <Heart size={20} fill={isBookmarked ? "currentColor" : "none"} />
+                    </button>
+
                     <div className="relative">
                         <button
                             onClick={() => setShowMoreMenu(!showMoreMenu)}
@@ -209,6 +255,7 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                                     }
 
                                     alert("Report submitted. You will no longer see this profile.");
+                                    success("Report submitted. You will no longer see this profile.");
                                     window.location.href = "/dashboard"; // Force reload/redirect to clear state
                                 }}
                                 className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
@@ -243,15 +290,7 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
 
                     {/* Tab Content */}
                     <div className="min-h-[400px]">
-                        {activeTab === "Overview" && <OverviewTab
-                            lawyer={lawyer}
-                            similarLawyers={similarLawyers}
-                            setActiveTab={setActiveTab}
-                            onBook={(topic, description) => {
-                                setBookingParams({ topic, description });
-                                setShowBookingModal(true);
-                            }}
-                        />}
+                        {activeTab === "Overview" && <OverviewTab lawyer={lawyer} similarLawyers={similarLawyers} setActiveTab={setActiveTab} onBook={(t, d) => { setBookingParams({ topic: t, description: d }); setShowBookingModal(true); }} user={user} toggleBookmark={toggleBookmark} />}
                         {activeTab === "Reviews" && <ReviewsTab lawyer={lawyer} />}
                         {activeTab === "Achievements" && <AchievementsTab lawyer={lawyer} />}
                     </div>
@@ -261,7 +300,7 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
     );
 }
 
-function OverviewTab({ lawyer, similarLawyers, onBook }: { lawyer: Lawyer, similarLawyers: Lawyer[], activeTab?: string, setActiveTab: (tab: string) => void, onBook: (topic?: string, description?: string) => void }) {
+function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: { lawyer: Lawyer, similarLawyers: Lawyer[], activeTab?: string, setActiveTab: (tab: string) => void, onBook: (topic?: string, description?: string) => void, user: User | null, toggleBookmark: (id: string) => void }) {
     // Note: setActiveTab kept in interface for compatibility
     const [showRepInfo, setShowRepInfo] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -428,60 +467,71 @@ function OverviewTab({ lawyer, similarLawyers, onBook }: { lawyer: Lawyer, simil
                     <h3 className="font-serif text-lg text-black">Available sessions</h3>
                     <p className="text-xs text-gray-500">Book 1:1 sessions from the options based on your needs</p>
 
-                    <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
-                        <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-bold text-sm text-black">Landlord vs. Tenant: Know Your Legal Rights</h4>
+                    {lawyer.consultationPrice > 0 && (
+                        <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-sm text-black">Landlord vs. Tenant: Know Your Legal Rights</h4>
+                            </div>
+                            <div className="flex items-center gap-2 mb-4 text-xs">
+                                <span className="bg-[#FFEBC8] text-[#523300] px-2 py-0.5 rounded">Legal advice</span>
+                                <span className="flex items-center text-gray-500"><Clock size={12} className="mr-1" /> 60 mins</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
+                                <button
+                                    onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
+                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                >
+                                    Book
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 mb-4 text-xs">
-                            <span className="bg-[#FFEBC8] text-[#523300] px-2 py-0.5 rounded">Legal advice</span>
-                            <span className="flex items-center text-gray-500"><Clock size={12} className="mr-1" /> 60 mins</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
-                            <button
-                                onClick={() => onBook("Landlord vs. Tenant: Know Your Legal Rights", "Session with " + lawyer.name + " regarding Landlord vs. Tenant rights.")}
-                                className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
-                            >
-                                Book
-                            </button>
-                        </div>
-                    </div>
+                    )}
 
-                    <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
-                        <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-bold text-sm text-black">Ethical Dilemmas in Law & How to Handle Them</h4>
+                    {lawyer.mentorshipPrice > 0 && (
+                        <div className="rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
+                                <h4 className="font-bold text-sm text-black">Ethical Dilemmas in Law & How to Handle Them</h4>
+                            </div>
+                            <div className="flex items-center gap-2 mb-4 text-xs">
+                                <span className="bg-pink-100 text-pink-800 px-2 py-0.5 rounded">Mentorship</span>
+                                <span className="flex items-center text-gray-500"><Clock size={12} className="mr-1" /> 60 mins</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
+                                <button
+                                    onClick={() => onBook("Ethical Dilemmas in Law & How to Handle Them", "Mentorship session with " + lawyer.name + " regarding ethical dilemmas.")}
+                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                >
+                                    Book
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 mb-4 text-xs">
-                            <span className="bg-pink-100 text-pink-800 px-2 py-0.5 rounded">Mentorship</span>
-                            <span className="flex items-center text-gray-500"><Clock size={12} className="mr-1" /> 60 mins</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
-                            <button
-                                onClick={() => onBook("Ethical Dilemmas in Law & How to Handle Them", "Mentorship session with " + lawyer.name + " regarding ethical dilemmas.")}
-                                className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
-                            >
-                                Book
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Similar Lawyers */}
-                <div>
-                    <div className="mb-4 flex items-center justify-between">
-                        <h3 className="font-serif text-lg text-black">Similar Lawyer profiles</h3>
-                        <div className="flex gap-2">
-                            <button className="rounded-full border border-gray-200 p-1.5 hover:bg-gray-50"><ArrowLeft size={16} /></button>
-                            <button className="rounded-full border border-gray-200 p-1.5 hover:bg-gray-50"><ArrowRight size={16} /></button>
+                {similarLawyers.length > 0 && (
+                    <div>
+                        <div className="mb-4 flex items-center justify-between">
+                            <h3 className="font-serif text-lg text-black">Similar Lawyer profiles</h3>
+                            <div className="flex gap-2">
+                                <button className="rounded-full border border-gray-200 p-1.5 hover:bg-gray-50"><ArrowLeft size={16} /></button>
+                                <button className="rounded-full border border-gray-200 p-1.5 hover:bg-gray-50"><ArrowRight size={16} /></button>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            {similarLawyers.map(l => (
+                                <LawyerCard
+                                    key={l.id}
+                                    lawyer={l}
+                                    isBookmarked={user?.bookmarkedLawyerIds?.includes(l.id)}
+                                    onToggleBookmark={toggleBookmark}
+                                />
+                            ))}
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        {similarLawyers.map(l => (
-                            <LawyerCard key={l.id} lawyer={l} />
-                        ))}
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     );

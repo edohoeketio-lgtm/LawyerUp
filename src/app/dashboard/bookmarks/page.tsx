@@ -1,20 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search, MessageSquare, ThumbsUp, ArrowRight, Bookmark } from "lucide-react";
 import { forumThreads } from "@/data/forum";
 import { lawyers } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
+import { auth, User } from "@/utils/auth"; // Import auth
 
-// Mock saved IDs (Pre-populated for demo)
+// Mock saved IDs for threads (keeping demo logic for threads for now as requested task was about lawyers)
 const initialSavedThreadIds = ["1", "4"];
-const initialSavedLawyerIds = ["1", "3", "5"];
 
 export default function BookmarksPage() {
     const [activeTab, setActiveTab] = useState<"discussions" | "lawyers">("discussions");
     const [searchQuery, setSearchQuery] = useState("");
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        setUser(auth.getSession());
+
+        const handleAuthChange = () => {
+            setUser(auth.getSession());
+        };
+
+        window.addEventListener("auth-change", handleAuthChange);
+        return () => window.removeEventListener("auth-change", handleAuthChange);
+    }, []);
+
+    // Toggle Bookmark Handler for Bookmarks Page
+    const toggleBookmark = (lawyerId: string) => {
+        if (!user) return;
+        const currentBookmarks = user.bookmarkedLawyerIds || [];
+        const isBookmarked = currentBookmarks.includes(lawyerId);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(id => id !== lawyerId);
+        } else {
+            newBookmarks = [...currentBookmarks, lawyerId];
+        }
+
+        auth.updateUser({ bookmarkedLawyerIds: newBookmarks });
+        // State update via event listener is usually enough, but we can optimistically update for responsiveness if needed
+    };
 
     // Filter threads
     const savedThreads = forumThreads.filter((t) => initialSavedThreadIds.includes(t.id));
@@ -23,8 +52,10 @@ export default function BookmarksPage() {
         t.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // Filter lawyers
-    const savedLawyers = lawyers.filter((l) => initialSavedLawyerIds.includes(l.id));
+    // Filter lawyers based on REAL user bookmarks
+    const savedLawyerIds = user?.bookmarkedLawyerIds || [];
+    const savedLawyers = lawyers.filter((l) => savedLawyerIds.includes(l.id));
+
     const filteredLawyers = savedLawyers.filter(l =>
         l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         l.sector.toLowerCase().includes(searchQuery.toLowerCase())
@@ -150,12 +181,11 @@ export default function BookmarksPage() {
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                             {filteredLawyers.map((lawyer) => (
                                 <div key={lawyer.id} className="relative group">
-                                    <LawyerCard lawyer={lawyer} />
-                                    {/* Override the heart to be filled since it is saved */}
-                                    {/* Note: The mock functionality in LawyerCard doesn't support "filled" state via props yet, so this visual indicator on the card itself depends on LawyerCard implementation.
-                                         For now, we know the button is there. Ideally we pass `isSaved` prop to LawyerCard.
-                                         Let's just leave it as is, the user can click the heart to unsave (mock). 
-                                     */}
+                                    <LawyerCard
+                                        lawyer={lawyer}
+                                        isBookmarked={true}
+                                        onToggleBookmark={toggleBookmark}
+                                    />
                                 </div>
                             ))}
                         </div>

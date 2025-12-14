@@ -1,26 +1,59 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, MapPin } from "lucide-react";
 import { lawyers } from "@/data/lawyers";
 import LawyerCard from "@/components/LawyerCard";
 import { allSectors } from "@/data/sectors";
-import { auth } from "@/utils/auth";
+import { auth, User } from "@/utils/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function DiscoverClient() {
+    const searchParams = useSearchParams();
+    const currentView = searchParams.get("view") || "client"; // 'client' = Legal Advice, 'lawyer' = Mentorship
+
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedSector, setSelectedSector] = useState("All");
     const [showFilter, setShowFilter] = useState(false);
     const [filterSearch, setFilterSearch] = useState("");
     const [blockedIds, setBlockedIds] = useState<string[]>([]);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
+        // Set User
+        setUser(auth.getSession());
+
         const stored = localStorage.getItem("blockedLawyers");
         if (stored) {
             // eslint-disable-next-line
             setBlockedIds(JSON.parse(stored));
         }
+
+        const handleAuthChange = () => {
+            setUser(auth.getSession());
+        };
+
+        window.addEventListener("auth-change", handleAuthChange);
+        return () => window.removeEventListener("auth-change", handleAuthChange);
     }, []);
+
+    // Toggle Bookmark Handler
+    const toggleBookmark = (lawyerId: string) => {
+        if (!user) return;
+        const currentBookmarks = user.bookmarkedLawyerIds || [];
+        const isBookmarked = currentBookmarks.includes(lawyerId);
+
+        let newBookmarks;
+        if (isBookmarked) {
+            newBookmarks = currentBookmarks.filter(id => id !== lawyerId);
+        } else {
+            newBookmarks = [...currentBookmarks, lawyerId];
+        }
+
+        auth.updateUser({ bookmarkedLawyerIds: newBookmarks });
+        // Update local state
+        setUser({ ...user, bookmarkedLawyerIds: newBookmarks });
+    };
 
     // State for pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -50,9 +83,14 @@ export default function DiscoverClient() {
         const matchesSector = selectedSector === "All" || lawyer.sector === selectedSector;
         const isBlocked = blockedIds.includes(lawyer.id);
 
-        return matchesSearch && matchesSector && !isBlocked;
+        // Tab/View Filter based on Global URL Param
+        // view='client' -> Legal Advice (consultationPrice > 0)
+        // view='lawyer' -> Mentorship (mentorshipPrice > 0)
+        const hasService = currentView === "client" ? (lawyer.consultationPrice > 0) : (lawyer.mentorshipPrice > 0);
+
+        return matchesSearch && matchesSector && !isBlocked && hasService;
     }).sort((a, b) => { // smart sort based on user interest
-        const userInterests = auth.getSession()?.legalInterests || [];
+        const userInterests = user?.legalInterests || [];
         if (userInterests.length === 0) return 0;
 
         const aMatches = userInterests.includes(a.sector);
@@ -73,17 +111,26 @@ export default function DiscoverClient() {
     // Reset page when filter changes
     useEffect(() => {
         setCurrentPage(1);
-    }, [searchQuery, selectedSector, itemsPerPage]);
+    }, [searchQuery, selectedSector, itemsPerPage, currentView]);
 
     return (
         <div className="space-y-6" onClick={() => setShowFilter(false)}>
+            {/* Header */}
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-black">Discover {currentView === 'lawyer' ? 'Mentors' : 'Lawyers'}</h1>
+                    <p className="text-gray-500">Find the perfect {currentView === 'lawyer' ? 'mentor' : 'legal expert'} for your needs</p>
+                </div>
+                {/* No local toggle here - controlled by TopBar */}
+            </div>
+
             {/* Search and Filter Bar */}
             <div className="flex flex-col gap-4 sm:flex-row relative">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                     <input
                         type="text"
-                        placeholder="Search lawyers by name..."
+                        placeholder="Search by name, expertise, or keywords..."
                         className="w-full rounded-lg border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm text-black outline-none focus:border-[#006056] focus:ring-1 focus:ring-[#006056]"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -161,7 +208,12 @@ export default function DiscoverClient() {
             {/* Grid */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                 {paginatedLawyers.map((lawyer) => (
-                    <LawyerCard key={lawyer.id} lawyer={lawyer} />
+                    <LawyerCard
+                        key={lawyer.id}
+                        lawyer={lawyer}
+                        isBookmarked={user?.bookmarkedLawyerIds?.includes(lawyer.id)}
+                        onToggleBookmark={toggleBookmark}
+                    />
                 ))}
             </div>
 
