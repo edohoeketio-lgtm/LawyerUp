@@ -27,7 +27,7 @@ export const bookings: Booking[] = [
     {
         id: "1",
         lawyerId: "1", // Sarah Jenkins
-        date: "2025-04-15",
+        date: nextWeek.toISOString().split('T')[0], // Next week
         time: "10:00 AM",
         duration: 60,
         type: "consultation",
@@ -39,7 +39,7 @@ export const bookings: Booking[] = [
     {
         id: "2",
         lawyerId: "3", // David Chen
-        date: "2025-04-18",
+        date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3).toISOString().split('T')[0], // 3 days from now
         time: "2:00 PM",
         duration: 45,
         type: "mentorship",
@@ -51,7 +51,7 @@ export const bookings: Booking[] = [
     {
         id: "3",
         lawyerId: "2", // MichaelRoss
-        date: "2025-03-10",
+        date: lastMonth.toISOString().split('T')[0], // Past
         time: "11:00 AM",
         duration: 60,
         type: "consultation",
@@ -63,7 +63,7 @@ export const bookings: Booking[] = [
     {
         id: "4",
         lawyerId: "4", // Rabbi Cohen
-        date: "2025-04-20",
+        date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 20).toISOString().split('T')[0], // 20 days from now
         time: "4:00 PM",
         duration: 30,
         type: "consultation",
