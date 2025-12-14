@@ -19,6 +19,9 @@ export interface User {
         startTime: string;
         endTime: string;
     };
+    verificationStatus?: "unverified" | "pending" | "verified";
+    barNumber?: string;
+    barState?: string;
 }
 
 const USERS_KEY = "lawyerup_users";
