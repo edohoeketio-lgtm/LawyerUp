@@ -88,7 +88,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     alt={item.label}
                                     width={20}
                                     height={20}
-                                    className="h-5 w-5 object-contain"
+                                    className={`h-5 w-5 object-contain ${item.label === "Inbox" ? "brightness-0 invert" : ""}`}
                                 />
                                 {item.label}
                             </Link>

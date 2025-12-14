@@ -42,8 +42,15 @@ export default function DashboardClient() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [calendarView, setCalendarView] = useState<'week' | 'month'>('week');
 
+    // Filter Bookings based on Role/View
+    // Clients only see Consultations. Lawyers (Mentees) see Mentorships.
+    const relevantBookings = bookings.filter(b => {
+        if (isLawyerView) return true; // Lawyers might see all (or specifically mentorships)
+        return b.type === "consultation"; // Clients only see consultations
+    });
+
     // Get Next Upcoming Booking
-    const nextBooking = bookings
+    const nextBooking = relevantBookings
         .filter(b => new Date(b.date) >= new Date() && b.status === "confirmed")
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
@@ -103,12 +110,12 @@ export default function DashboardClient() {
 
     const hasBookingOnDate = (date: Date) => {
         const dateString = date.toISOString().split('T')[0];
-        return bookings.some(b => b.date === dateString && (b.status === 'confirmed' || b.status === 'pending'));
+        return relevantBookings.some(b => b.date === dateString && (b.status === 'confirmed' || b.status === 'pending'));
     };
 
     const getBookingForDate = (date: Date) => {
         const dateString = date.toISOString().split('T')[0];
-        return bookings.find(b => b.date === dateString && (b.status === 'confirmed' || b.status === 'pending'));
+        return relevantBookings.find(b => b.date === dateString && (b.status === 'confirmed' || b.status === 'pending'));
     };
 
     return (
@@ -141,7 +148,7 @@ export default function DashboardClient() {
                     // Determine completion status
                     const hasLanguageAndTimezone = user?.languages && user?.languages.length > 0 && user?.timezone;
                     const hasLegalInterests = user?.legalInterests && user?.legalInterests.length > 0;
-                    const hasBookedSession = bookings.some(b => b.status === "confirmed" || b.status === "completed");
+                    const hasBookedSession = relevantBookings.some(b => b.status === "confirmed" || b.status === "completed");
 
                     const completedCount = [
                         hasLanguageAndTimezone,
