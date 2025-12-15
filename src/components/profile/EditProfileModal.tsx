@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { X, ChevronDown, Map, Search } from "lucide-react";
+import { X, ChevronDown, Map, Search, Clock, Check, Smile } from "lucide-react";
 import { allSectors } from "@/data/sectors";
 import { allLanguages } from "@/data/languages";
 import { allCountries } from "@/data/countries";
 import { allTimezones } from "@/data/timezones";
+import StatusModal from "./StatusModal";
 
 interface ProfileData {
     role: string;
@@ -94,14 +95,31 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
         setFormData({ ...formData, legalInterests: currentInterests.filter(i => i !== sector) });
     };
 
+    // ... (existing helper functions)
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSave(formData);
         onClose();
     };
 
+    const [showStatusModal, setShowStatusModal] = useState(false);
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+            {/* Nested Status Modal */}
+            <StatusModal
+                isOpen={showStatusModal}
+                onClose={() => setShowStatusModal(false)}
+                onSave={(data) => {
+                    // Update the local formData with the new status
+                    // We need to cast or ensure data.customStatus matches ProfileData structure
+                    if (data.customStatus !== undefined) {
+                        setFormData(prev => ({ ...prev, customStatus: data.customStatus }));
+                    }
+                }}
+            />
+
             <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 max-h-[90vh] flex flex-col">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-gray-100 p-6">
@@ -326,6 +344,43 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                         />
                                     </div>
                                 </div>
+                            </div>
+                        )}
+
+                        {/* Availability Status (Lawyers Only) */}
+                        {formData.role === "lawyer" && (
+                            <div className="space-y-3 pt-2 border-t border-gray-100">
+                                <h3 className="text-sm font-bold text-gray-900">Current Status</h3>
+
+                                {formData.customStatus ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowStatusModal(true)}
+                                        className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-gray-50 p-4 transition-all hover:bg-gray-100"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-2xl">{formData.customStatus.emoji}</span>
+                                            <div className="text-left">
+                                                <p className="text-sm font-bold text-gray-900">{formData.customStatus.text}</p>
+                                                <p className="text-xs text-gray-500">
+                                                    Clears: {formData.customStatus.clearAfter === 'never' ? 'Manual' : formData.customStatus.clearAfter}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <span className="text-xs font-bold text-[#004d45]">Change</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowStatusModal(true)}
+                                        className="flex w-full items-center gap-3 rounded-xl border border-dashed border-gray-300 p-4 text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                                    >
+                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
+                                            <Smile size={18} />
+                                        </div>
+                                        <span className="text-sm font-medium">Set a status</span>
+                                    </button>
+                                )}
                             </div>
                         )}
 

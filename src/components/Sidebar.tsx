@@ -78,6 +78,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         if (user?.role === 'lawyer') {
                             if (label === "Discover") label = "Network";
                             if (label === "Bookings") label = "Schedule";
+                        } else {
+                            // Hide Earnings/Transactions for non-lawyers
+                            if (label === "Transactions") return null;
                         }
 
                         // Special case: Keep "Discover" active when viewing a lawyer profile

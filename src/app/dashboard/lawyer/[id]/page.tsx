@@ -171,6 +171,11 @@ export default function LawyerDetailPage({ params }: { params: Promise<{ id: str
                                 <Edit size={18} /> Edit Profile
                             </button>
                         </div>
+                    ) : user?.role === "lawyer" ? (
+                        /* Read-Only View for Competitor Analysis */
+                        <div className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-6 py-2 font-medium text-gray-500 cursor-default">
+                            <span className="text-xs">Competitor View (Read Only)</span>
+                        </div>
                     ) : source === "chat" ? (
                         <Link
                             href={`/dashboard/messages/${lawyer.id}`}
@@ -527,12 +532,14 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-[#006056] text-lg">${service.price}</span>
-                                <button
-                                    onClick={() => onBook(service.title, service.description)}
-                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
-                                >
-                                    Book
-                                </button>
+                                {user?.role !== "lawyer" && (
+                                    <button
+                                        onClick={() => onBook(service.title, service.description)}
+                                        className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                    >
+                                        Book
+                                    </button>
+                                )}
                             </div>
                             <p className="mt-2 text-xs text-gray-500 line-clamp-2">{service.description}</p>
                         </div>
@@ -550,12 +557,14 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-[#006056] text-lg">${lawyer.consultationPrice}</span>
-                                <button
-                                    onClick={() => onBook("General Consultation", "Standard consultation session with " + lawyer.name)}
-                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
-                                >
-                                    Book
-                                </button>
+                                {user?.role !== "lawyer" && (
+                                    <button
+                                        onClick={() => onBook("General Consultation", "Standard consultation session with " + lawyer.name)}
+                                        className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                    >
+                                        Book
+                                    </button>
+                                )}
                             </div>
                         </div>
                     )}
@@ -571,12 +580,14 @@ function OverviewTab({ lawyer, similarLawyers, onBook, user, toggleBookmark }: {
                             </div>
                             <div className="flex items-center justify-between">
                                 <span className="font-bold text-[#006056] text-lg">${lawyer.mentorshipPrice}</span>
-                                <button
-                                    onClick={() => onBook("Mentorship Session", "Mentorship session with " + lawyer.name)}
-                                    className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
-                                >
-                                    Book
-                                </button>
+                                {user?.role !== "lawyer" && (
+                                    <button
+                                        onClick={() => onBook("Mentorship Session", "Mentorship session with " + lawyer.name)}
+                                        className="bg-[#004d45] text-white text-xs font-medium px-4 py-2 rounded-lg hover:bg-[#003a34]"
+                                    >
+                                        Book
+                                    </button>
+                                )}
                             </div>
                         </div>
                     )}

@@ -19,6 +19,12 @@ export interface User {
         startTime: string;
         endTime: string;
     };
+    availabilityStatus?: "online" | "unavailable" | "vacation";
+    customStatus?: {
+        emoji: string;
+        text: string;
+        clearAfter: string;
+    };
     verificationStatus?: "unverified" | "pending" | "verified";
     barCountry?: string;
     // barNumber?: string; // Removed in favor of barId (Step Id: 200)

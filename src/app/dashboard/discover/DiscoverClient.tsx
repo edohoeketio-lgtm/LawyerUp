@@ -102,7 +102,8 @@ export default function DiscoverClient() {
             consultationPrice: u.consultationPrice || 0,
             mentorshipPrice: u.mentorshipPrice || 0,
             languages: u.languages || ["English"],
-            services: u.services || [] // Include dynamic services
+            services: u.services || [], // Include dynamic services
+            verificationStatus: u.verificationStatus // Pass verification status
         }));
 
         // Merge with static lawyers
@@ -124,8 +125,14 @@ export default function DiscoverClient() {
 
         // Dynamic visibility logic:
         // 1. Static lawyers check price/services
-        // 2. Local lawyers (id > 10 chars) get a "Free Pass" to always show up
+        // 2. Local lawyers (id > 10 chars) from auth.ts
         const isLocal = typeof lawyer.id === 'string' && lawyer.id.length > 10;
+
+        // VERIFICATION GATE:
+        // Only show lawyers who are explicitly 'verified'.
+        // For static data (which lacks verificationStatus), we assume they are verified (or you can add a field).
+        // For local users, we check the actual status.
+        const isVerified = isLocal ? (lawyer as any).verificationStatus === 'verified' : true;
 
         const hasServices = lawyer.services && lawyer.services.length > 0;
         let hasService = false;
@@ -135,8 +142,8 @@ export default function DiscoverClient() {
             hasService = (lawyer.mentorshipPrice > 0);
         }
 
-        // The "Free Pass": isLocal users show up regardless of price/service configuration
-        return matchesSearch && matchesSector && !isBlocked && (hasService || isLocal);
+        // The "Free Pass": isLocal users show up regardless of price/service configuration IF VERIFIED
+        return matchesSearch && matchesSector && !isBlocked && isVerified && (hasService || isLocal);
     }).sort((a, b) => {
         // 1. Priority: Local Users first (so you can find your test accounts easily)
         const aIsLocal = typeof a.id === 'string' && a.id.length > 10;

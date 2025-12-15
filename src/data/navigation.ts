@@ -11,5 +11,6 @@ export const NAV_ITEMS: NavItem[] = [
     { label: "Inbox", href: "/dashboard/messages", iconSrc: "/icons/messages-new.png" },
     { label: "Bookings", href: "/dashboard/bookings", iconSrc: "/icons/bookings.svg" },
     { label: "Bookmarks", href: "/dashboard/bookmarks", iconSrc: "/icons/bookmarks.svg" },
+    { label: "Transactions", href: "/dashboard/transactions", iconSrc: "/icons/bookings.svg" },
     { label: "Account", href: "/dashboard/account", iconSrc: "/icons/account.svg" },
 ];
