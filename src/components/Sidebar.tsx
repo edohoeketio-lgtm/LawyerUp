@@ -24,9 +24,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const [showWelcomeCard, setShowWelcomeCard] = useState(true);
     const { unreadTotal } = useMessages();
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         // Initial load
         setUser(auth.getSession());
+        // ...
 
         // Listen for updates
         const handleAuthChange = () => {
@@ -106,7 +110,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     className={`h-5 w-5 object-contain ${item.label === "Inbox" ? "brightness-0 invert" : ""}`}
                                 />
                                 <span className="flex-1">{label}</span>
-                                {item.label === "Inbox" && unreadTotal > 0 && (
+                                {item.label === "Inbox" && mounted && unreadTotal > 0 && (
                                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
                                         {unreadTotal}
                                     </span>

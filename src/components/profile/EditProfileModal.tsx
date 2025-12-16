@@ -25,6 +25,11 @@ interface ProfileData {
         startTime: string;
         endTime: string;
     };
+    customStatus?: {
+        emoji: string;
+        text: string;
+        clearAfter: string;
+    };
     consultationPrice?: number;
     mentorshipPrice?: number;
     [key: string]: unknown;
@@ -361,10 +366,10 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
                                         <div className="flex items-center gap-3">
                                             <span className="text-2xl">{formData.customStatus.emoji}</span>
                                             <div className="text-left">
-                                                <p className="text-sm font-bold text-gray-900">{formData.customStatus.text}</p>
-                                                <p className="text-xs text-gray-500">
+                                                <div className="text-sm font-bold text-gray-900">{formData.customStatus.text}</div>
+                                                <div className="text-xs text-gray-500">
                                                     Clears: {formData.customStatus.clearAfter === 'never' ? 'Manual' : formData.customStatus.clearAfter}
-                                                </p>
+                                                </div>
                                             </div>
                                         </div>
                                         <span className="text-xs font-bold text-[#004d45]">Change</span>

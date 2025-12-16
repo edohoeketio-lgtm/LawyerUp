@@ -62,7 +62,10 @@ export default function ProfileContent() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [user, setUser] = useState<User | null>(null);
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         setUser(auth.getSession());
         if (shouldEdit) {
             setIsEditModalOpen(true);
@@ -321,7 +324,7 @@ export default function ProfileContent() {
 
                             <div className="space-y-4">
                                 {upcomingSessions.map((session: any) => {
-                                    const isJoinable = isSessionJoinable(session.date, session.time);
+                                    const isJoinable = mounted && isSessionJoinable(session.date, session.time);
 
                                     return (
                                         <div key={session.id} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">

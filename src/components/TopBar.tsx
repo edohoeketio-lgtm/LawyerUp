@@ -28,7 +28,10 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
 
     const [user, setUser] = useState<User | null>(null);
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         // Initial load
         setUser(auth.getSession());
 
@@ -83,7 +86,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                             }`}
                     >
                         <Bell size={20} />
-                        {unreadCount > 0 && (
+                        {mounted && unreadCount > 0 && (
                             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
                         )}
                     </button>
