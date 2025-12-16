@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Check, Loader2, FileText, X, ChevronDown, Map } from "lucide-react";
+import { Upload, Check, Loader2, FileText, X, ChevronDown, Map, Info } from "lucide-react";
 import { auth, User } from "@/utils/auth";
 import { allCountries } from "@/data/countries";
 import { countryRegions } from "@/data/regions";
@@ -122,7 +122,16 @@ export default function VerificationForm({ user }: { user: User }) {
                     )}
                 </div>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">Year Admitted</label>
+                    <div className="flex items-center gap-2 mb-2">
+                        <label className="text-sm font-medium text-gray-700">Year Admitted</label>
+                        <div className="group relative flex items-center">
+                            <Info size={14} className="text-gray-400 cursor-help" />
+                            <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 hidden w-64 -translate-x-1/2 rounded-lg bg-gray-900 px-3 py-2 text-xs leading-relaxed text-white opacity-0 shadow-lg transition-opacity group-hover:block group-hover:opacity-100 z-50">
+                                The year you were officially licensed to practice law (admitted to the Bar), not your graduation year.
+                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+                    </div>
                     <input
                         type="number"
                         required

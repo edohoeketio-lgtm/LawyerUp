@@ -1,15 +1,18 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User } from "@/utils/auth";
-import { Check, ArrowRight, Clock, Video, X, Briefcase, Users, DollarSign, ChevronDown, ChevronLeft, ChevronRight, Calendar as CalendarIcon, AlertCircle } from "lucide-react";
+import { Check, ArrowRight, Clock, Video, X, Briefcase, Users, DollarSign, ChevronDown, ChevronLeft, ChevronRight, Calendar as CalendarIcon, AlertCircle, Eye } from "lucide-react";
 import { bookings, getBookingLawyer } from "@/data/bookings";
 import { useToast } from "@/context/ToastContext";
 import StatusModal from "@/components/profile/StatusModal";
+import RequestDetailsModal from "@/components/dashboard/RequestDetailsModal";
+import { auth, User } from "@/utils/auth";
 
-export default function LawyerDashboard({ user }: { user: User | null }) {
+export default function LawyerDashboard({ user: initialUser }: { user: User | null }) {
+    const [user, setUser] = useState<User | null>(initialUser);
     const [greeting, setGreeting] = useState("Good morning");
     const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d">("7d");
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -25,6 +28,58 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
     const [showProfileCard, setShowProfileCard] = useState(true);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
+    // Request Modal State
+    const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+    const [selectedRequest, setSelectedRequest] = useState<any>(null);
+
+    // Rich Mock Data for Requests
+    const clientRequests = [
+        {
+            id: "REQ-001",
+            name: "John Doe",
+            type: "Consultation",
+            category: "Corporate Law",
+            date: "Tomorrow, 2:00 PM",
+            clientType: "Corporate",
+            location: "Lagos, Nigeria",
+            message: "We are looking to incorporate a new subsidiary and need advice on the regulatory requirements and tax implications for a tech entity."
+        },
+        {
+            id: "REQ-002",
+            name: "Sarah Smith",
+            type: "Mentorship",
+            category: "Career Advice",
+            date: "Fri, 10:00 AM",
+            clientType: "Individual",
+            location: "Abuja, Nigeria",
+            message: "I am a law student in my final year and would love to get some guidance on specializing in intellectual property law."
+        },
+        {
+            id: "REQ-003",
+            name: "Mike Johnson",
+            type: "Case Review",
+            category: "Property Law",
+            date: "Mon, 11:30 AM",
+            clientType: "Individual",
+            location: "Lekki, Lagos",
+            message: "I need someone to review a lease agreement for a commercial property. There are some clauses I am unsure about regarding liability."
+        }
+    ];
+
+    const handleViewRequest = (request: any) => {
+        setSelectedRequest(request);
+        setIsRequestModalOpen(true);
+    };
+
+    const handleAcceptRequest = (id: string) => {
+        setIsRequestModalOpen(false);
+        success("Request accepted! Setup meeting link sent.");
+    };
+
+    const handleDeclineRequest = (id: string) => {
+        setIsRequestModalOpen(false);
+        success("Request declined.");
+    };
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -76,7 +131,7 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
         const start = getCalendarDays(date, 'week')[0];
         const end = getCalendarDays(date, 'week')[6];
         const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
-        return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)}`;
+        return `${start.toLocaleDateString('en-GB', options)} - ${end.toLocaleDateString('en-GB', options)} `;
     };
 
     const navigateCalendar = (direction: 'prev' | 'next') => {
@@ -129,7 +184,7 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 className="font-serif text-3xl font-medium text-black">
-                        {greeting}, {user ? `Barr. ${user.lastName}` : "Counsel"}
+                        {greeting}, {user ? `Barr.${user.lastName} ` : "Counsel"}
                     </h2>
                     <p className="text-sm text-gray-500">Here's what's happening in your practice today.</p>
                 </div>
@@ -139,26 +194,10 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                         <span>Bar Verification Pending</span>
                     </div>
                 )}
+
                 {user?.verificationStatus === "verified" && (
                     <div className="flex items-center gap-2">
-                        {user.customStatus && (
-                            <div className="hidden md:flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700 border border-gray-100 mr-2">
-                                <span>{user.customStatus.emoji}</span>
-                                <span className="font-medium">{user.customStatus.text}</span>
-                                <span className="text-xs text-gray-400 border-l border-gray-200 pl-2 ml-1">
-                                    {user.customStatus.clearAfter === 'never' ? 'Always' : user.customStatus.clearAfter}
-                                </span>
-                            </div>
-                        )}
-                        <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-800 border border-green-100">
-                            <Check size={16} />
-                            <span>Verified Account</span>
-                        </div>
-                    </div>
-                )}
-                {user?.verificationStatus === "verified" && (
-                    <div className="flex items-center gap-2">
-                        {user.customStatus && (
+                        {user.customStatus ? (
                             <button
                                 onClick={() => setIsStatusModalOpen(true)}
                                 className="hidden md:flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700 border border-gray-100 mr-2 hover:bg-gray-100 transition-colors cursor-pointer"
@@ -169,20 +208,15 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                                     {user.customStatus.clearAfter === 'never' ? 'Always' : user.customStatus.clearAfter}
                                 </span>
                             </button>
-                        )}
-                        {!user?.customStatus && (
+                        ) : (
                             <button
                                 onClick={() => setIsStatusModalOpen(true)}
-                                className="hidden md:flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700 border border-gray-100 mr-2 hover:bg-gray-100 transition-colors cursor-pointer"
+                                className="hidden md:flex items-center gap-2 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700 border border-green-200 mr-2 hover:bg-green-100 transition-colors cursor-pointer"
                             >
-                                <Clock size={16} />
-                                <span className="font-medium">Set your status</span>
+                                <div className="h-2.5 w-2.5 rounded-full bg-green-600 animate-pulse"></div>
+                                <span className="font-medium">Available</span>
                             </button>
                         )}
-                        <div className="flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-800 border border-green-100">
-                            <Check size={16} />
-                            <span>Verified Account</span>
-                        </div>
                     </div>
                 )}
             </div>
@@ -191,8 +225,7 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
             {showProfileCard && (() => {
                 const hasBarVerification = user?.verificationStatus === "verified";
                 const hasServices = user?.services && user?.services.length > 0;
-                // Check if custom status is set
-                const hasAvailability = !!user?.customStatus;
+                const hasPayout = false; // Mock status
 
                 const steps = [
                     {
@@ -208,10 +241,10 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                         action: () => router.push("/dashboard/account?tab=services")
                     },
                     {
-                        done: hasAvailability,
-                        label: "Set Availability",
-                        subtext: "Let clients know when you're free",
-                        action: () => setIsStatusModalOpen(true)
+                        done: hasPayout,
+                        label: "Connect Payout Account",
+                        subtext: "Receive earnings directly to your bank",
+                        action: () => success("Redirecting to secure banking portal...")
                     }
                 ];
 
@@ -237,7 +270,7 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                             <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f7c164]">
                                 <div
                                     className="h-full rounded-full bg-[#523300] transition-all duration-300"
-                                    style={{ width: `${percentComplete}%` }}
+                                    style={{ width: `${percentComplete}% ` }}
                                 ></div>
                             </div>
                             <span className="text-xs font-medium">{percentComplete}% complete</span>
@@ -271,252 +304,206 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                 );
             })()}
 
-            {/* Stats Grid */}
-            <div className="grid gap-4 sm:grid-cols-3">
-                {stats.map((stat) => (
-                    <div key={stat.label} className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm flex flex-col justify-between">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className={`inline-flex h-12 w-12 items-center justify-center rounded-lg ${stat.bg} ${stat.color}`}>
-                                <stat.icon size={24} />
-                            </div>
-                            {stat.action && (
-                                <button
-                                    onClick={stat.action.onClick}
-                                    className="text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 hover:bg-green-100 transition-colors"
-                                >
-                                    {stat.action.label}
-                                </button>
-                            )}
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-                            <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                            {stat.subValue && (
-                                <p className="text-xs font-medium text-gray-400 mt-1">{stat.subValue}</p>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Analytics & Actions Grid */}
-            <div className="grid gap-8 lg:grid-cols-2">
-                {/* Analytics Chart */}
-                <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm h-full flex flex-col justify-between overflow-visible relative z-10">
-                    <div className="flex items-center justify-between mb-2">
-                        <div>
-                            <h3 className="text-base font-bold text-black">Profile Activity</h3>
-                            <div className="flex items-center gap-2 mt-1">
-                                <h2 className="text-2xl font-bold text-gray-900">
-                                    {timeRange === "7d" ? "135" : timeRange === "30d" ? "842" : "2,150"}
-                                    <span className="text-sm font-medium text-gray-500 ml-1">views</span>
-                                </h2>
-                                <div className="flex items-center gap-1 text-xs text-[#006056] font-bold bg-[#E6F0EE] px-2 py-0.5 rounded-full">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                        <polyline points="17 6 23 6 23 12"></polyline>
-                                    </svg>
-                                    {timeRange === "7d" ? "12.5%" : "8.2%"}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Filter Dropdown */}
-                        <div className="relative" ref={filterRef}>
-                            <button
-                                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-                            >
-                                {rangeLabels[timeRange]}
-                                <ChevronDown size={14} className={`transition-transform duration-200 ${isFilterOpen ? "rotate-180" : ""}`} />
-                            </button>
-
-                            {isFilterOpen && (
-                                <div className="absolute right-0 top-full mt-2 w-40 origin-top-right rounded-xl border border-gray-100 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                                    <div className="py-1">
-                                        {(Object.keys(rangeLabels) as Array<keyof typeof rangeLabels>).map((range) => (
-                                            <button
-                                                key={range}
-                                                onClick={() => {
-                                                    setTimeRange(range);
-                                                    setIsFilterOpen(false);
-                                                }}
-                                                className={`flex w-full items-center px-4 py-2 text-sm ${timeRange === range ? "bg-gray-50 text-[#006056] font-bold" : "text-gray-700 hover:bg-gray-50"
-                                                    }`}
-                                            >
-                                                {rangeLabels[range]}
-                                                {timeRange === range && <Check size={14} className="ml-auto" />}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="h-48 w-full">
-                        <ActivityChart range={timeRange} />
-                    </div>
-                </div>
-
-                {/* Quick Actions - Stacked */}
-                <div className="flex flex-col gap-4 justify-between h-full z-0">
-                    <button
-                        onClick={() => router.push('/dashboard/account?tab=services')}
-                        className="flex flex-1 items-center justify-between rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-[#006056] hover:shadow-md group items-center"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 text-gray-900 group-hover:bg-[#E6F0EE] group-hover:text-[#006056] transition-colors">
-                                <Briefcase size={22} />
-                            </div>
-                            <div className="text-left">
-                                <h4 className="font-bold text-base text-black group-hover:text-[#006056] transition-colors">Edit Services</h4>
-                                <p className="text-sm text-gray-500">Manage rates & offerings</p>
-                            </div>
-                        </div>
-                        <div className="h-8 w-8 rounded-full border border-gray-100 flex items-center justify-center group-hover:border-[#006056] group-hover:bg-[#006056] transition-all">
-                            <ArrowRight size={14} className="text-gray-300 group-hover:text-white transition-colors" />
-                        </div>
-                    </button>
-
-                    <button
-                        onClick={() => {
-                            navigator.clipboard.writeText(`${window.location.origin}/dashboard/lawyer/${user?.id}`);
-                            success("Profile link copied to clipboard!");
-                        }}
-                        className="flex flex-1 items-center justify-between rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-[#006056] hover:shadow-md group items-center"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 text-gray-900 group-hover:bg-[#E6F0EE] group-hover:text-[#006056] transition-colors">
-                                <Users size={22} />
-                            </div>
-                            <div className="text-left">
-                                <h4 className="font-bold text-base text-black group-hover:text-[#006056] transition-colors">Share Profile</h4>
-                                <p className="text-sm text-gray-500">Copy public link</p>
-                            </div>
-                        </div>
-                        <div className="h-8 w-8 rounded-full border border-gray-100 flex items-center justify-center group-hover:border-[#006056] group-hover:bg-[#006056] transition-all">
-                            <ArrowRight size={14} className="text-gray-300 group-hover:text-white transition-colors" />
-                        </div>
-                    </button>
-
-                    <button
-                        onClick={() => setIsStatusModalOpen(true)}
-                        className="flex flex-1 items-center justify-between rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-[#006056] hover:shadow-md group items-center"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 text-gray-900 group-hover:bg-[#E6F0EE] group-hover:text-[#006056] transition-colors">
-                                <Clock size={22} />
-                            </div>
-                            <div className="text-left">
-                                <h4 className="font-bold text-base text-black group-hover:text-[#006056] transition-colors">Availability</h4>
-                                <p className="text-sm text-gray-500">Set working hours</p>
-                            </div>
-                        </div>
-                        <div className="h-8 w-8 rounded-full border border-gray-100 flex items-center justify-center group-hover:border-[#006056] group-hover:bg-[#006056] transition-all">
-                            <ArrowRight size={14} className="text-gray-300 group-hover:text-white transition-colors" />
-                        </div>
-                    </button>
-                </div>
-            </div>
-
+            {/* Row 1: Business Overview (Earnings & Active Requests) */}
             <div className="grid gap-8 lg:grid-cols-3">
-                {/* Upcoming Sessions (Calendar Widget) */}
-                <div className="lg:col-span-2 space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-serif text-lg text-black">Upcoming Sessions</h3>
-                        <Link href="/dashboard/bookings" className="text-xs font-medium text-gray-500 hover:text-black">View all</Link>
+                {/* Earnings Hero Card */}
+                {/* Earnings Card (Compressed to 1 Col) */}
+                <div className="rounded-xl bg-[#004d45] p-6 text-white shadow-lg relative overflow-hidden group flex flex-col justify-between min-h-[300px]">
+                    {/* Decorative Background Texture */}
+                    <div className="absolute top-0 right-0 p-24 bg-[#006056] rounded-full -mr-12 -mt-12 opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
+                    <div className="absolute bottom-0 left-0 w-full h-24 opacity-20 pointer-events-none">
+                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full text-emerald-400 fill-current">
+                            <path d="M0 100 V 60 Q 30 40 50 70 T 100 50 V 100 H 0 Z" />
+                        </svg>
                     </div>
 
-                    <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300">
-                        <div className="mb-6 flex items-center justify-between text-black">
-                            <div className="flex items-center gap-2">
-                                <button onClick={() => navigateCalendar('prev')} className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"><ChevronLeft size={16} /></button>
-                                <span className="font-medium min-w-[140px] text-center">{formatDateRange(currentDate, calendarView)}</span>
-                                <button onClick={() => navigateCalendar('next')} className="rounded-full bg-gray-50 p-2 hover:bg-gray-100 transition-colors"><ChevronRight size={16} /></button>
+                    <div className="relative z-10">
+                        <p className="text-sm font-medium text-emerald-100 flex items-center gap-2">
+                            <DollarSign size={16} /> Total Earnings
+                        </p>
+                        <h3 className="text-3xl font-serif font-bold mt-2">₦150,000</h3>
+                        <p className="text-xs text-emerald-200 mt-1">Available: <span className="text-white font-bold">₦45,000</span></p>
+
+                        <div className="mt-4 space-y-3">
+                            <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
+                                <span className="text-emerald-200">This Month</span>
+                                <span className="font-bold">₦45,000</span>
                             </div>
-                            <div className="flex rounded-lg bg-gray-50 p-1">
-                                <button onClick={() => setCalendarView('week')} className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'week' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'}`}>Week</button>
-                                <button onClick={() => setCalendarView('month')} className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${calendarView === 'month' ? 'bg-white shadow-sm text-black' : 'text-gray-500 hover:text-black'}`}>Month</button>
+                            <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
+                                <span className="text-emerald-200">Pending</span>
+                                <span className="font-bold">₦12,500</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-emerald-200">Growth</span>
+                                <span className="font-bold text-emerald-300 flex items-center gap-1">
+                                    <span className="text-[10px]">▲</span> 12.5%
+                                </span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className={`grid gap-y-4 ${calendarView === 'week' ? 'grid-cols-7' : 'grid-cols-7'}`}>
-                            {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
-                                <div key={day} className="text-center text-[10px] font-bold text-gray-400 mb-2">{day}</div>
-                            ))}
-                            {calendarDays.map((day, i) => {
-                                const isToday = new Date().toDateString() === day.toDateString();
-                                const booking = getBookingForDate(day);
-                                const hasBooking = !!booking;
-                                const bookingLawyer = booking ? getBookingLawyer(booking) : null;
-                                const isCurrentMonth = day.getMonth() === currentDate.getMonth();
+                    <button
+                        onClick={() => success("Withdrawal initiated!")}
+                        className="relative z-10 w-full mt-6 bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg text-sm font-medium backdrop-blur-sm border border-white/10 transition-colors flex items-center justify-center gap-2"
+                    >
+                        Withdraw Funds <ArrowRight size={14} />
+                    </button>
+                </div>
 
-                                return (
-                                    <div key={i} className={`flex flex-col items-center space-y-1 ${!isCurrentMonth && calendarView === 'month' ? "opacity-30" : ""}`}>
-                                        <div className={`group relative flex h-9 w-9 items-center justify-center rounded-full text-sm font-medium transition-all cursor-default ${isToday ? "bg-[#004d45] text-white shadow-md transform scale-105" : hasBooking ? "bg-[#E6F0EE] text-[#006056] font-bold border border-[#006056] cursor-help" : "text-gray-600 hover:bg-gray-50"}`}>
-                                            {day.getDate()}
-                                            {hasBooking && !isToday && <div className="absolute -bottom-1 h-1 w-1 rounded-full bg-[#006056]"></div>}
-                                            {hasBooking && (
-                                                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 hidden w-48 flex-col gap-1 rounded-lg bg-black/90 p-3 text-[10px] text-white shadow-xl group-hover:flex">
-                                                    <div className="flex items-center gap-1.5 font-bold text-yellow-400"><Clock size={10} /> {booking.time}</div>
-                                                    <div className="font-semibold truncate">Client Session</div>
-                                                    <div className="text-gray-300 capitalize">{booking.type}</div>
-                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-2 rotate-45 bg-black/90"></div>
-                                                </div>
-                                            )}
+                {/* Active Requests (Leads) */}
+                {/* Active Requests (Expanded to 2 Cols) */}
+                <div className="lg:col-span-2 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-serif text-lg text-black">New Requests</h3>
+                            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600 animate-pulse">3 PENDING</span>
+                        </div>
+                        <Link href="/dashboard/bookings" className="text-xs font-medium text-gray-500 hover:text-black">View All</Link>
+                    </div>
+
+                    <div className="flex-1 rounded-xl border border-gray-100 bg-white shadow-sm p-4 overflow-y-auto min-h-[300px]">
+                        {clientRequests.map((req, i) => (
+                            <div key={i} className="group relative flex items-start gap-4 border-b border-gray-50 pb-4 last:border-0 last:pb-0 mb-4 last:mb-0 hover:bg-gray-50/50 p-2 -mx-2 rounded-lg transition-colors">
+                                <div className="h-12 w-12 flex-shrink-0 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-lg">
+                                    {req.name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <p className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                                {req.name}
+                                                <span className="text-[10px] font-normal text-gray-400">• {req.date}</span>
+                                            </p>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <span className="text-[10px] font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-md border border-gray-200">{req.category}</span>
+                                                <span className="text-[10px] text-gray-400">• {req.type}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
+                                    <p className="text-xs text-gray-500 mt-2 line-clamp-1 pr-4">"{req.message}"</p>
 
-                        <div className="mt-8 text-center border-t border-gray-50 pt-6">
-                            {nextBooking ? (
-                                <div className="inline-flex items-center gap-4 text-left p-3 rounded-xl bg-[#F2FFF2] border border-green-100 w-full">
-                                    <div className="h-10 w-10 flex flex-shrink-0 items-center justify-center rounded-full bg-white text-[#006056]">
-                                        <Video size={18} />
+                                    <div className="flex gap-3 mt-3">
+                                        <button
+                                            onClick={() => handleViewRequest(req)}
+                                            className="px-4 py-1.5 rounded-lg bg-[#004d45] text-xs font-bold text-white hover:bg-[#003a34] transition-colors"
+                                        >
+                                            View Details
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeclineRequest(req.id)}
+                                            className="px-4 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:bg-white hover:border-red-200 hover:text-red-600 transition-colors"
+                                        >
+                                            Decline
+                                        </button>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-bold text-[#004d45]">Upcoming: {nextBooking.type === 'consultation' ? 'Consultation' : 'Mentorship'}</p>
-                                        <p className="text-[10px] text-gray-500 truncate">{new Date(nextBooking.date).toLocaleDateString()} • {nextBooking.time}</p>
-                                    </div>
-                                    <button className="flex-shrink-0 rounded-lg bg-[#004d45] px-3 py-1.5 text-[10px] font-medium text-white hover:bg-[#003a34]">Join Call</button>
-                                </div>
-                            ) : (
-                                <p className="text-xs text-gray-500">No upcoming sessions. Time to relax!</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Client Requests (Pending) */}
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-serif text-lg text-black">New Requests</h3>
-                        <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-600">3</span>
-                    </div>
-
-                    <div className="rounded-xl border border-gray-100 bg-white shadow-sm p-4 space-y-4">
-                        {[1, 2].map((i) => (
-                            <div key={i} className="space-y-3 border-b border-gray-50 pb-4 last:border-0 last:pb-0">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-gray-200"></div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900">John Doe</p>
-                                        <p className="text-xs text-gray-500">Wants a consultation</p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-2">
-                                    <button className="flex-1 rounded-lg bg-[#004d45] py-1.5 text-xs font-medium text-white hover:bg-[#003a34]">
-                                        Accept
-                                    </button>
-                                    <button className="flex-1 rounded-lg border border-gray-200 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
-                                        Decline
-                                    </button>
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Row 2: Calendar (The Work) */}
+            <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 className="font-serif text-lg text-black">Upcoming Sessions</h3>
+                        <p className="text-xs text-gray-500">Manage your schedule</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Link href="/dashboard/bookings" className="text-xs font-medium text-gray-500 hover:text-black mr-4">View All</Link>
+                        <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-1">
+                            <button onClick={() => navigateCalendar('prev')} className="rounded-md p-1 hover:bg-white hover:shadow-sm transition-all"><ChevronLeft size={16} /></button>
+                            <span className="text-xs font-medium min-w-[120px] text-center">{formatDateRange(currentDate, calendarView)}</span>
+                            <button onClick={() => navigateCalendar('next')} className="rounded-md p-1 hover:bg-white hover:shadow-sm transition-all"><ChevronRight size={16} /></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={`grid gap-y-4 ${calendarView === 'week' ? 'grid-cols-7' : 'grid-cols-7'}`}>
+                    {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
+                        <div key={day} className="text-center text-[10px] font-bold text-gray-400 mb-2">{day}</div>
+                    ))}
+                    {calendarDays.map((day, i) => {
+                        const isToday = new Date().toDateString() === day.toDateString();
+                        const booking = getBookingForDate(day);
+                        const hasBooking = !!booking;
+                        const isCurrentMonth = day.getMonth() === currentDate.getMonth();
+
+                        return (
+                            <div key={i} className={`flex flex-col items-center space-y-1 ${!isCurrentMonth && calendarView === 'month' ? "opacity-30" : ""}`}>
+                                <div className={`group relative flex h-10 w-10 items-center justify-center rounded-xl text-sm font-medium transition-all cursor-default ${isToday ? "bg-[#004d45] text-white shadow-md transform scale-105" : hasBooking ? "bg-[#E6F0EE] text-[#006056] font-bold border border-[#006056] cursor-help" : "text-gray-600 hover:bg-gray-50"}`}>
+                                    {day.getDate()}
+                                    {hasBooking && !isToday && <div className="absolute -bottom-1 h-1 w-1 rounded-full bg-[#006056]"></div>}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Row 3: Growth & Quick Actions */}
+            <div className="grid gap-8 lg:grid-cols-3">
+                {/* Mini Metrics */}
+                <div className="space-y-4">
+                    <div className="rounded-xl border border-gray-100 bg-white p-5 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-gray-500 font-medium">Profile Views (30d)</p>
+                            <h4 className="text-2xl font-bold text-gray-900 mt-1">1,240</h4>
+                        </div>
+                        <div className="h-10 w-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <Users size={20} />
+                        </div>
+                    </div>
+                    <div className="rounded-xl border border-gray-100 bg-white p-5 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs text-gray-500 font-medium">R.E.P. Score</p>
+                            <h4 className="text-2xl font-bold text-gray-900 mt-1">4.9/5</h4>
+                        </div>
+                        <div className="h-10 w-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <Check size={20} />
+                        </div>
+                    </div>
+                    {/* Condensed Quick Actions */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <button
+                            onClick={() => router.push('/dashboard/account?tab=services')}
+                            className="flex flex-col items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-md group"
+                        >
+                            <Briefcase size={20} className="text-gray-400 group-hover:text-[#006056]" />
+                            <span className="text-xs font-bold text-gray-700">Services</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin} /dashboard/lawyer / ${user?.id} `);
+                                success("Link copied!");
+                            }}
+                            className="flex flex-col items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-[#006056] hover:shadow-md group"
+                        >
+                            <Users size={20} className="text-gray-400 group-hover:text-[#006056]" />
+                            <span className="text-xs font-bold text-gray-700">Share</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* Chart (Demoted to 2/3 width) */}
+                <div className="lg:col-span-2 rounded-xl border border-gray-100 bg-white p-6 shadow-sm relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-bold text-gray-900">Traffic History</h3>
+                        <div className="flex items-center gap-2">
+                            {(Object.keys(rangeLabels) as Array<keyof typeof rangeLabels>).map((range) => (
+                                <button
+                                    key={range}
+                                    onClick={() => setTimeRange(range)}
+                                    className={`text-xs px-2 py-1 rounded-md transition-colors ${timeRange === range ? "bg-[#004d45] text-white" : "text-gray-500 hover:bg-gray-100"}`}
+                                >
+                                    {range}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="h-48 w-full">
+                        <ActivityChart range={timeRange} />
                     </div>
                 </div>
             </div>
@@ -526,13 +513,23 @@ export default function LawyerDashboard({ user }: { user: User | null }) {
                 isOpen={isStatusModalOpen}
                 onClose={() => setIsStatusModalOpen(false)}
                 onSave={(data) => {
-                    const updatedUser = { ...user, ...data };
-                    // Dynamically import auth to assume client context
-                    import("@/utils/auth").then(({ auth }) => {
+                    if (user) {
+                        const updatedUser = { ...user, ...data };
                         auth.updateUser(data);
-                        window.location.reload();
-                    });
+                        setUser(updatedUser);
+                    }
+                    setIsStatusModalOpen(false);
+                    success("Status updated successfully");
                 }}
+            />
+
+            {/* Request Details Modal */}
+            <RequestDetailsModal
+                isOpen={isRequestModalOpen}
+                onClose={() => setIsRequestModalOpen(false)}
+                request={selectedRequest}
+                onAccept={handleAcceptRequest}
+                onDecline={handleDeclineRequest}
             />
         </div>
     );
@@ -591,12 +588,12 @@ function ActivityChart({ range }: { range: "7d" | "30d" | "90d" }) {
 
     const points = data.map((val, i) => [getX(i), getY(val)]);
     const d = points.reduce((acc, point, i, a) =>
-        i === 0 ? `M ${point[0]},${point[1]}` : `${acc} ${(() => {
+        i === 0 ? `M ${point[0]},${point[1]} ` : `${acc} ${(() => {
             const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point);
             const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true);
             return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`;
         })()
-            }`
+            } `
         , "");
 
     const areaPath = `${d} L ${width - padding},${height - bottomPadding} L ${leftPadding},${height - bottomPadding} Z`;
@@ -605,7 +602,7 @@ function ActivityChart({ range }: { range: "7d" | "30d" | "90d" }) {
 
     return (
         <div className="h-full w-full">
-            <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full overflow-visible" preserveAspectRatio="none">
+            <svg viewBox={`0 0 ${width} ${height} `} className="h-full w-full overflow-visible" preserveAspectRatio="none">
                 <defs>
                     <linearGradient id="appleGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#006056" stopOpacity="0.15" />

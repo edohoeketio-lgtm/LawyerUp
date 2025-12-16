@@ -32,6 +32,7 @@ export default function StatusModal({ isOpen, onClose, onSave }: StatusModalProp
     }, [isOpen]);
 
     const suggestions = [
+        { emoji: "🟢", text: "Available", duration: "Don't clear" },
         { emoji: "🗓️", text: "In a meeting", duration: "1 hour" },
         { emoji: "🚌", text: "Commuting", duration: "30 minutes" },
         { emoji: "🤒", text: "Out sick", duration: "Today" },
