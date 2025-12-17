@@ -84,6 +84,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     // Initialize with mock data on mount to avoid hydration mismatch
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setNotifications(MOCK_NOTIFICATIONS);
     }, []);
 

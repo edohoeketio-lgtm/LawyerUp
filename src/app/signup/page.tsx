@@ -9,7 +9,9 @@ import { Eye, EyeOff } from "lucide-react";
 
 import { useToast } from "@/context/ToastContext";
 
-export default function SignupPage() {
+import { Suspense } from "react";
+
+function SignupContent() {
     const { error: showError } = useToast();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -80,14 +82,6 @@ export default function SignupPage() {
         e.preventDefault();
         if (isValid) {
             setIsSubmitting(true);
-            // Handle valid submission with simulation delay
-            // console.log("Form submitted", formData, role); // Original line
-
-            // Simulate API call (Original line)
-            // await new Promise((resolve) => setTimeout(resolve, 2000)); // Original line
-
-            // const encodedName = encodeURIComponent(formData.name); // Original line
-            // router.push(`/otp?name=${encodedName}`); // Original line
             try {
                 // Register user locally
                 auth.registerUser({
@@ -277,5 +271,26 @@ export default function SignupPage() {
                 </div>
             </div>
         </main>
+    )
+}
+
+export default function SignupPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-white">
+                 <div className="flex flex-col items-center gap-2 animate-pulse">
+                        <Image
+                            src="/logo.svg"
+                            alt="Lawyer Up Logo"
+                            width={60}
+                            height={60}
+                            className="text-[#013328]"
+                        />
+                        <span className="font-serif text-sm tracking-widest text-[#013328] uppercase">Lawyer Up</span>
+                    </div>
+            </div>
+        }>
+            <SignupContent />
+        </Suspense>
     );
 }

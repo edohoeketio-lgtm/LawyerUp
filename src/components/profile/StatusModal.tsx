@@ -14,12 +14,13 @@ export default function StatusModal({ isOpen, onClose, onSave }: StatusModalProp
     const [statusText, setStatusText] = useState("");
     const [statusEmoji, setStatusEmoji] = useState("💬");
     const [clearAfter, setClearAfter] = useState("never");
-    const [recentStatuses, setRecentStatuses] = useState<any[]>([]);
+    const [recentStatuses, setRecentStatuses] = useState<{ emoji: string; text: string; clearAfter: string }[]>([]);
 
     useEffect(() => {
         if (isOpen) {
             const user = auth.getSession();
             if (user?.customStatus) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setStatusText(user.customStatus.text);
                 setStatusEmoji(user.customStatus.emoji);
                 setClearAfter(user.customStatus.clearAfter || "never");

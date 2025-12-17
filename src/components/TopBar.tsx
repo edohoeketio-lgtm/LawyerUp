@@ -31,6 +31,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
         // Initial load
         setUser(auth.getSession());

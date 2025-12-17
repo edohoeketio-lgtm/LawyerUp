@@ -17,6 +17,7 @@ export function MessageProvider({ children }: { children: React.ReactNode }) {
 
     // Load mock data on client side to avoid hydration mismatch with Dates
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setConversations(mockConversations);
     }, []);
 

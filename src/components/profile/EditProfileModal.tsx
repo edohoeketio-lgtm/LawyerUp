@@ -68,6 +68,7 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
 
     useEffect(() => {
         if (isOpen && initialData) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setFormData(prev => ({
                 ...prev,
                 ...initialData
@@ -82,6 +83,8 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
     const [languageSearch, setLanguageSearch] = useState("");
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const filteredLanguages = allLanguages.filter(l => l.toLowerCase().includes(languageSearch.toLowerCase()));
+
+    const [showStatusModal, setShowStatusModal] = useState(false);
 
     if (!isOpen) return null;
 
@@ -107,8 +110,6 @@ export default function EditProfileModal({ isOpen, onClose, onSave, initialData 
         onSave(formData);
         onClose();
     };
-
-    const [showStatusModal, setShowStatusModal] = useState(false);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
